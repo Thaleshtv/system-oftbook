@@ -1,10 +1,11 @@
-import * as Styled from './style'
+import './style.scss'
 import { useLogin } from './model'
 
 export const LoginView = (props: ReturnType<typeof useLogin>) => {
   return (
-    <Styled.Container>
-      <h1>Login</h1>
-    </Styled.Container>
+    <div className="container-1">
+      Página de login
+      <h1>Ola</h1>
+    </div>
   )
 }

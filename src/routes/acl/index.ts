@@ -1,22 +1,21 @@
 export enum Roles {
-  ADMIN = 'ADMIN',
-  USER = 'USER'
+  ADMINISTRADOR = 'ADMINISTRADOR',
+  USUARIO = 'USUARIO',
+  GERENTE = 'GERENTE'
 }
 
 type Role = keyof typeof Roles
 
-const SYSTEM_ROLES: { [key: number]: Role } = {
-  1: Roles.ADMIN,
-  2: Roles.USER
+export const SYSTEM_ROLES: { [key: string]: Role } = {
+  'administrador-geral': Roles.ADMINISTRADOR,
+  'usuario-comum': Roles.USUARIO,
+  'gerente-de-projeto': Roles.GERENTE
 }
 
 export const defaultAcl: Record<Role, { allow: boolean }> = {
-  [Roles.USER]: {
-    allow: false
-  },
-  [Roles.ADMIN]: {
-    allow: true
-  }
+  ADMINISTRADOR: { allow: true },
+  USUARIO: { allow: false },
+  GERENTE: { allow: false }
 }
 
 type Acl = typeof defaultAcl
@@ -27,8 +26,12 @@ export const isAllowed = ({
 }: {
   path: string
   acl: Acl
-  systemRole: number
+  systemRole: string
 }): boolean => {
-  const role = SYSTEM_ROLES[systemRole] || Roles.USER
+  if (!SYSTEM_ROLES[systemRole]) {
+    return false
+  }
+
+  const role = SYSTEM_ROLES[systemRole]
   return acl[role].allow
 }
