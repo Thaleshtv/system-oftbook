@@ -6,15 +6,6 @@ interface Tokens {
 }
 
 export interface User {
-  birth_date: string | null
-  company: string[]
-  email: string
-  first_name: string
-  group: number
-  id: string
-  last_login_at: string
-  last_name: string
-  picture: string | null
-  sex: string | null
+  role: string
   tokens: Tokens
 }

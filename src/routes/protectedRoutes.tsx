@@ -5,46 +5,55 @@ import { isAllowed, defaultAcl, Roles } from './acl'
 import * as Pages from '../pages'
 import { useAuthStore } from '../store/userStore'
 import { useToastStore } from '../store/toastStore'
+import { useEffect } from 'react'
 
-const protectedRoutesConfig = [
-  {
+const withProtection = (
+  Component: React.ComponentType,
+  path: string,
+  acl: Record<string, { allow: boolean }>
+) => {
+  return () => {
+    const { state } = useAuthStore()
+    const { dispatch: toast } = useToastStore()
+    const isAuthenticated = state.isAuthenticated
+
+    const allowed = isAllowed({
+      path,
+      acl,
+      systemRole: state.user?.role || ''
+    })
+
+    useEffect(() => {
+      if (!isAuthenticated) {
+        toast.setOpenToast('error', 'Sua sessão expirou')
+        window.location.href = '/'
+      }
+    }, [isAuthenticated, toast])
+
+    if (!isAuthenticated) return null
+
+    if (!allowed) {
+      window.location.href = '/not-found'
+      return null
+    }
+
+    return (
+      <AccessControl allowed={allowed}>
+        <Component />
+      </AccessControl>
+    )
+  }
+}
+
+export const protectedRoutes = [
+  createRoute({
+    getParentRoute: () => rootRoute,
     path: '/inicial-page',
-    element: Pages.InicialPage,
-    acl: {
+    component: withProtection(Pages.InicialPage, '/inicial-page', {
       ...defaultAcl,
       [Roles.ADMINISTRADOR]: { allow: true },
       [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: false }
-    }
-  }
-]
-
-export const protectedRoutes = protectedRoutesConfig.map(
-  ({ path, element: Component, acl }) =>
-    createRoute({
-      getParentRoute: () => rootRoute,
-      path,
-      component: () => {
-        const { state } = useAuthStore()
-        const { dispatch: toast } = useToastStore()
-
-        if (!state.isAuthenticated) {
-          toast.setOpenToast('error', 'Sua sessão expirou')
-          window.location.href = '/'
-          return null
-        }
-
-        const allowed = isAllowed({
-          path,
-          acl,
-          systemRole: ''
-        })
-
-        return (
-          <AccessControl allowed={allowed}>
-            <Component />
-          </AccessControl>
-        )
-      }
     })
-)
+  })
+]

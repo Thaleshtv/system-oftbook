@@ -4,7 +4,7 @@ import * as Pages from '../pages'
 
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/adad',
+  path: '/',
   component: Pages.Login
 })
 
