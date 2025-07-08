@@ -16,7 +16,7 @@ mkdir -p $NOME_DA_PASTA
 INDEX_PATH="$NOME_DA_PASTA/index.tsx"
 MODEL_PATH="$NOME_DA_PASTA/model.tsx"
 VIEW_PATH="$NOME_DA_PASTA/view.tsx"
-STYLE_PATH="$NOME_DA_PASTA/style.ts"
+STYLE_PATH="$NOME_DA_PASTA/style.scss"
 
 # Cria e escreve no arquivo index.tsx
 cat <<EOL > $INDEX_PATH
@@ -39,7 +39,7 @@ EOL
 
 # Cria e escreve no arquivo view.tsx
 cat <<EOL > $VIEW_PATH
-import * as Styled from './style'
+import './style.scss'
 import { use${NOME_DA_PASTA^} } from './model'
 
 export const ${NOME_DA_PASTA^}View = (props: ReturnType<typeof use${NOME_DA_PASTA^}>) => {
@@ -53,11 +53,9 @@ EOL
 
 # Cria e escreve no arquivo style.ts
 cat <<EOL > $STYLE_PATH
-import styled from 'styled-components'
-
-export const Container = styled.div\`
+.criacao {
   display: flex;
-\`
+}
 EOL
 
 echo "Arquivos criados com sucesso na pasta $NOME_DA_PASTA"
