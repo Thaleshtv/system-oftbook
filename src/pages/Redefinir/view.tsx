@@ -1,10 +1,10 @@
 import './style.scss'
-import { useLogin } from './model'
+import { useRedefinir } from './model'
 import loginImage from '../../assets/login.png'
 import Logo from '../../assets/altona.png'
 import { MdPerson, MdVpnKey } from 'react-icons/md' // Material Icons
 
-export const LoginView = (props: ReturnType<typeof useLogin>) => {
+export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
   const { form, handleSubmit, isLoading } = props
 
   return (
@@ -15,8 +15,10 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
           <form onSubmit={handleSubmit} className="space-y-5 form">
             <div className="header">
               <img src={Logo} alt="Logo Altona" />
-              <div className="title">Login</div>
-              <div className="subTitle">Seja bem vindo de volta! </div>
+              <div className="title">
+                Redefinir sua <br /> senha
+              </div>
+              <div className="subTitle">Informe o seu email</div>
             </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
@@ -38,32 +40,13 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
                 </p>
               )}
             </div>
-            <div>
-              <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
-                Senha
-              </label>
-              <div className="flex items-center border border-[#CACACA] rounded-[8px] bg-[#FAFAFA] px-[24px] py-[16px]">
-                <MdVpnKey className="text-gray-400 mr-2" />
-                <input
-                  type="password"
-                  {...form.register('password')}
-                  className="w-full outline-none text-[16px] bg-[#FAFAFA]"
-                  placeholder="********"
-                />
-              </div>
-              {form.formState.errors.password && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.password.message}
-                </p>
-              )}
-            </div>
 
             <div className="flex align-center justify-end">
               <a
-                onClick={props.handleDirectionRedefinir}
+                onClick={props.handleNavigationToLogin}
                 className="text-sm text-[#004080] text-right underline cursor-pointer"
               >
-                Esqueceu sua senha?
+                Lembrei minha senha
               </a>
             </div>
             <button
@@ -71,7 +54,7 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
               className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
               disabled={isLoading}
             >
-              {isLoading ? 'Carregando...' : 'Entrar'}
+              {isLoading ? 'Carregando...' : 'Enviar'}
             </button>
           </form>
         </div>

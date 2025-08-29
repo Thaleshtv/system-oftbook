@@ -8,4 +8,16 @@ export const indexRoute = createRoute({
   component: Pages.Login
 })
 
-export const publicRoutes = [indexRoute]
+export const redefinirRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/redefinir',
+  component: Pages.Redefinir
+})
+
+const newPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/nova-senha',
+  component: Pages.NewPassword
+})
+
+export const publicRoutes = [indexRoute, redefinirRoute, newPasswordRoute]

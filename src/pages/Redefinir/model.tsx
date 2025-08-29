@@ -16,7 +16,7 @@ const loginSchema = z.object({
 
 type LoginSchema = z.infer<typeof loginSchema>
 
-export const useLogin = () => {
+export const useRedefinir = () => {
   const router = useRouter<AppRouter>()
 
   const form = useForm<LoginSchema>({
@@ -38,14 +38,14 @@ export const useLogin = () => {
     loginMutation.mutate(data)
   })
 
-  const handleDirectionRedefinir = () => {
-    router.navigate({ to: '/redefinir' })
+  const handleNavigationToLogin = () => {
+    router.navigate({ to: '/nova-senha' })
   }
 
   return {
     form,
     handleSubmit,
     isLoading: loginMutation.isPending,
-    handleDirectionRedefinir
+    handleNavigationToLogin
   }
 }

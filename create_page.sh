@@ -1,61 +1,58 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Verifica se o nome da pasta foi passado como argumento
-if [ -z "$1" ]; then
-  echo "Por favor, forneça o nome da pasta."
+# Recebe o nome da pasta como argumento
+NOME_DA_PASTA=$1
+
+if [ -z "$NOME_DA_PASTA" ]; then
+  echo "Uso: $0 <nome_da_pasta>"
   exit 1
 fi
 
-# Nome da pasta a ser criada
-NOME_DA_PASTA=$1
+# Capitaliza a primeira letra
+NOME_CAPITALIZED="$(tr '[:lower:]' '[:upper:]' <<< ${NOME_DA_PASTA:0:1})${NOME_DA_PASTA:1}"
 
 # Cria a pasta
-mkdir -p $NOME_DA_PASTA
+mkdir -p "$NOME_DA_PASTA"
+cd "$NOME_DA_PASTA" || exit
 
-# Caminho completo dos arquivos a serem criados
-INDEX_PATH="$NOME_DA_PASTA/index.tsx"
-MODEL_PATH="$NOME_DA_PASTA/model.tsx"
-VIEW_PATH="$NOME_DA_PASTA/view.tsx"
-STYLE_PATH="$NOME_DA_PASTA/style.scss"
+# Cria os arquivos
+cat > index.tsx <<EOF
+import { use${NOME_CAPITALIZED} } from './model'
+import { ${NOME_CAPITALIZED}View } from './view'
 
-# Cria e escreve no arquivo index.tsx
-cat <<EOL > $INDEX_PATH
-import { use${NOME_DA_PASTA^} } from './model'
-import { ${NOME_DA_PASTA^}View } from './view'
+export const ${NOME_CAPITALIZED} = () => {
+  const model${NOME_CAPITALIZED} = use${NOME_CAPITALIZED}()
 
-export const ${NOME_DA_PASTA^} = () => {
-  const model${NOME_DA_PASTA^} = use${NOME_DA_PASTA^}()
-
-  return <${NOME_DA_PASTA^}View {...model${NOME_DA_PASTA^}} />
+  return <${NOME_CAPITALIZED}View {...model${NOME_CAPITALIZED}} />
 }
-EOL
+EOF
 
-# Cria e escreve no arquivo model.tsx
-cat <<EOL > $MODEL_PATH
-export const use${NOME_DA_PASTA^} = () => {
+cat > model.tsx <<EOF
+export const use${NOME_CAPITALIZED} = () => {
   return {}
 }
-EOL
+EOF
 
-# Cria e escreve no arquivo view.tsx
-cat <<EOL > $VIEW_PATH
+cat > view.tsx <<EOF
 import './style.scss'
-import { use${NOME_DA_PASTA^} } from './model'
+import { use${NOME_CAPITALIZED} } from './model'
+import * as Styled from './style'
 
-export const ${NOME_DA_PASTA^}View = (props: ReturnType<typeof use${NOME_DA_PASTA^}>) => {
+export const ${NOME_CAPITALIZED}View = (props: ReturnType<typeof use${NOME_CAPITALIZED}>) => {
   return (
     <Styled.Container>
-      <h1>${NOME_DA_PASTA^}</h1>
+      <h1>${NOME_CAPITALIZED}</h1>
     </Styled.Container>
   )
 }
-EOL
+EOF
 
-# Cria e escreve no arquivo style.ts
-cat <<EOL > $STYLE_PATH
-.criacao {
-  display: flex;
-}
-EOL
+cat > style.ts <<EOF
+import styled from 'styled-components'
 
-echo "Arquivos criados com sucesso na pasta $NOME_DA_PASTA"
+export const Container = styled.div\`
+  padding: 16px;
+\`
+EOF
+
+echo "Página $NOME_DA_PASTA criada com sucesso!"
