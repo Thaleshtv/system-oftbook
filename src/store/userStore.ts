@@ -6,7 +6,6 @@ interface AuthStore {
   state: {
     user: User | null
     isAuthenticated: boolean
-    registerCompleted: boolean
   }
   dispatch: {
     setUser: (userData: User) => void
@@ -23,19 +22,14 @@ export const useAuthStore = create<AuthStore>((set) => {
   return {
     state: {
       user: getUserFromCookies(),
-      isAuthenticated: getUserFromCookies() ? true : false,
-      registerCompleted: false
+      isAuthenticated: getUserFromCookies() ? true : false
     },
     dispatch: {
       setUser: (userData: User) => {
-        const registerCompleted =
-          userData.company.length > 0 && userData.birth_date !== null
-
         set(() => ({
           state: {
             user: userData,
-            isAuthenticated: true,
-            registerCompleted: registerCompleted
+            isAuthenticated: true
           }
         }))
         Cookies.set('user', JSON.stringify(userData))
@@ -44,8 +38,7 @@ export const useAuthStore = create<AuthStore>((set) => {
         set(() => ({
           state: {
             user: null,
-            isAuthenticated: false,
-            registerCompleted: false
+            isAuthenticated: false
           }
         }))
         Cookies.remove('user')

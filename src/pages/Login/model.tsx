@@ -11,7 +11,7 @@ import { Auth } from '../../services/auth'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
-  password: z.string().min(6, { message: 'Mínimo 6 caracteres' })
+  password: z.string().min(1, { message: 'Campo obrigatório' })
 })
 
 type LoginSchema = z.infer<typeof loginSchema>

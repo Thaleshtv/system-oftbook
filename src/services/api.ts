@@ -39,57 +39,57 @@ api.interceptors.request.use(
   }
 )
 
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      !isRouteExcluded(originalRequest.url)
-    ) {
-      originalRequest._retry = true
-      try {
-        await refreshAccessToken()
-        const { user } = useAuthStore.getState().state
-        if (user && user.tokens && user.tokens.access) {
-          originalRequest.headers.Authorization = `Bearer ${user.tokens.access}`
-        }
-        return api(originalRequest)
-      } catch (refreshError) {
-        return Promise.reject(error)
-      }
-    }
-    return Promise.reject(error)
-  }
-)
+// api.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config
+//     if (
+//       error.response &&
+//       error.response.status === 401 &&
+//       !originalRequest._retry &&
+//       !isRouteExcluded(originalRequest.url)
+//     ) {
+//       originalRequest._retry = true
+//       try {
+//         await refreshAccessToken()
+//         const { user } = useAuthStore.getState().state
+//         if (user && user.tokens && user.tokens.access) {
+//           originalRequest.headers.Authorization = `Bearer ${user.tokens.access}`
+//         }
+//         return api(originalRequest)
+//       } catch (refreshError) {
+//         return Promise.reject(error)
+//       }
+//     }
+//     return Promise.reject(error)
+//   }
+// )
 
-const refreshAccessToken = async () => {
-  try {
-    const response = await Auth.refreshToken()
-    if (response.status === 200) {
-      const { user } = useAuthStore.getState().state
-      const { setUser } = useAuthStore.getState().dispatch
-      if (user) {
-        setUser({
-          ...user,
-          tokens: {
-            ...user.tokens,
-            access: response.data.access
-          }
-        })
-      }
-    } else {
-      throw new Error('Failed to refresh access token')
-    }
-    return response
-  } catch (error) {
-    logout()
+// const refreshAccessToken = async () => {
+//   try {
+//     const response = await Auth.refreshToken()
+//     if (response.status === 200) {
+//       const { user } = useAuthStore.getState().state
+//       const { setUser } = useAuthStore.getState().dispatch
+//       if (user) {
+//         setUser({
+//           ...user,
+//           tokens: {
+//             ...user.tokens,
+//             access: response.data.access
+//           }
+//         })
+//       }
+//     } else {
+//       throw new Error('Failed to refresh access token')
+//     }
+//     return response
+//   } catch (error) {
+//     logout()
 
-    throw error
-  }
-}
+//     throw error
+//   }
+// }
 
 const logout = () => {
   const { logOut } = useAuthStore.getState().dispatch
