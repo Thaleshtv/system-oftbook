@@ -20,4 +20,15 @@ const newPasswordRoute = createRoute({
   component: Pages.NewPassword
 })
 
-export const publicRoutes = [indexRoute, redefinirRoute, newPasswordRoute]
+const connectionBankRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/conexao-banco',
+  component: Pages.ConnectionBank
+})
+
+export const publicRoutes = [
+  indexRoute,
+  redefinirRoute,
+  newPasswordRoute,
+  connectionBankRoute
+]

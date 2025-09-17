@@ -55,15 +55,15 @@ export const protectedRoutes = [
       [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: false }
     })
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/connection-bank',
-    component: withProtection(Pages.ConnectionBank, '/conexao-banco', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
-      [Roles.USUARIO]: { allow: false }
-    })
   })
+  // createRoute({
+  //   getParentRoute: () => rootRoute,
+  //   path: '/connection-bank',
+  //   component: withProtection(Pages.ConnectionBank, '/conexao-banco', {
+  //     ...defaultAcl,
+  //     [Roles.ADMINISTRADOR]: { allow: true },
+  //     [Roles.GERENTE]: { allow: true },
+  //     [Roles.USUARIO]: { allow: false }
+  //   })
+  // })
 ]
