@@ -26,9 +26,16 @@ const connectionBankRoute = createRoute({
   component: Pages.ConnectionBank
 })
 
+const connectionBankPerTablesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/conexao-banco/${tableId}',
+  component: Pages.ConnectionBankPerTables
+})
+
 export const publicRoutes = [
   indexRoute,
   redefinirRoute,
   newPasswordRoute,
-  connectionBankRoute
+  connectionBankRoute,
+  connectionBankPerTablesRoute
 ]

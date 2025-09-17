@@ -189,7 +189,11 @@ export const ConnectionBankView = (
             ]}
           >
             {objectExample.map((item, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                className="hover:bg-gray-100 cursor-pointer"
+                onClick={() => props.handleDirectToTable(item.name)}
+              >
                 <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
                   {item.name}
                 </td>

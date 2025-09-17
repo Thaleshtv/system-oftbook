@@ -25,6 +25,7 @@ export const PageComponent = ({
 
   const isConfigPath = location.pathname.startsWith('/configuracoes')
   const activeSub = location.pathname
+  console.log(isConfigPath)
 
   return (
     <div className="flex w-full h-screen">
@@ -96,7 +97,7 @@ export const PageComponent = ({
                   <li className="flex items-center gap-3 relative">
                     <span
                       className={`w-2 h-2 rounded-full relative z-10 ${
-                        activeSub === '/configuracoes/conexao-banco'
+                        activeSub.startsWith('/configuracoes/conexao-banco')
                           ? 'bg-[#004080]'
                           : 'bg-[#D8DBE4]'
                       }`}
@@ -104,7 +105,7 @@ export const PageComponent = ({
                     <Link
                       to="/configuracoes/conexao-banco"
                       className={`cursor-pointer ${
-                        activeSub === '/configuracoes/conexao-banco'
+                        activeSub.startsWith('/configuracoes/conexao-banco')
                           ? 'text-[#004080] font-medium'
                           : 'text-[#83899F] hover:underline'
                       }`}
