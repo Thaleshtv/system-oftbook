@@ -1,29 +1,12 @@
 import './style.scss'
 import { useConnectionBank } from './model'
 import { PageComponent } from '../../components/page-component'
-import {
-  MdArrowBack,
-  MdArrowBackIos,
-  MdOutlineArrowBack,
-  MdOutlineMoreVert,
-  MdOutlineStorage
-} from 'react-icons/md'
+import { MdOutlineMoreVert, MdOutlineStorage } from 'react-icons/md'
 import { Table } from '../../components/ui/table'
 
 export const ConnectionBankView = (
   props: ReturnType<typeof useConnectionBank>
 ) => {
-  const header = [
-    'Nome do banco',
-    'Driver',
-    'Server',
-    'Database',
-    'Schema',
-    'Tipo dados',
-    'Catálogo',
-    ''
-  ]
-
   const objectExample = [
     {
       name: 'Banco de Teste',

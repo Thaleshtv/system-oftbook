@@ -103,7 +103,7 @@ export const PageComponent = ({
                       }`}
                     />
                     <Link
-                      to="/configuracoes/conexao-banco"
+                      to="/configuracoes/conexao-bancos"
                       className={`cursor-pointer ${
                         activeSub.startsWith('/configuracoes/conexao-banco')
                           ? 'text-[#004080] font-medium'

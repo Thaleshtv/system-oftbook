@@ -4,6 +4,7 @@ import { Redefinir } from './Redefinir'
 import { NewPassword } from './NewPassword'
 import { ConnectionBank } from './ConnectionBank'
 import { ConnectionBankPerTables } from './ConnectionBankPerTables'
+import { ConnectionBankPerColumns } from './ConnectionBankPerColumns'
 
 export {
   Login,
@@ -11,5 +12,6 @@ export {
   Redefinir,
   NewPassword,
   ConnectionBank,
-  ConnectionBankPerTables
+  ConnectionBankPerTables,
+  ConnectionBankPerColumns
 }

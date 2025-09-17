@@ -6,7 +6,8 @@ export const useConnectionBank = () => {
   const handleDirectToTable = (tableId: string) => {
     if (!tableId) return
     router.navigate({
-      to: `/configuracoes/conexao-banco/${tableId}`
+      to: `/configuracoes/conexao-banco/$tableId`,
+      params: { tableId }
     })
   }
   return { handleDirectToTable }

@@ -22,14 +22,20 @@ const newPasswordRoute = createRoute({
 
 const connectionBankRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/configuracoes/conexao-banco',
+  path: '/configuracoes/conexao-bancos',
   component: Pages.ConnectionBank
 })
 
 const connectionBankPerTablesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/configuracoes/conexao-banco/${tableId}',
+  path: '/configuracoes/conexao-banco/$tableId',
   component: Pages.ConnectionBankPerTables
+})
+
+const connectionBankPerColumnsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/conexao-banco/$tableId/$columnId',
+  component: Pages.ConnectionBankPerColumns
 })
 
 export const publicRoutes = [
@@ -37,5 +43,6 @@ export const publicRoutes = [
   redefinirRoute,
   newPasswordRoute,
   connectionBankRoute,
-  connectionBankPerTablesRoute
+  connectionBankPerTablesRoute,
+  connectionBankPerColumnsRoute
 ]
