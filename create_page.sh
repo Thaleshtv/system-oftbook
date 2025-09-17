@@ -36,22 +36,21 @@ EOF
 cat > view.tsx <<EOF
 import './style.scss'
 import { use${NOME_CAPITALIZED} } from './model'
-import * as Styled from './style'
 
 export const ${NOME_CAPITALIZED}View = (props: ReturnType<typeof use${NOME_CAPITALIZED}>) => {
   return (
-    <Styled.Container>
+    <PageComponent
+      topbarIcon={<Md10K />}
+      topbarTitle="${NOME_CAPITALIZED}"
+    >
       <h1>${NOME_CAPITALIZED}</h1>
-    </Styled.Container>
+    </PageComponent>
   )
 }
 EOF
 
-cat > style.ts <<EOF
-import styled from 'styled-components'
+cat > style.scss <<EOF
 
-export const Container = styled.div\`
-  padding: 16px;
 \`
 EOF
 
