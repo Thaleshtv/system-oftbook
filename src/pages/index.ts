@@ -5,7 +5,8 @@ import { NewPassword } from './NewPassword'
 import { ConnectionBank } from './ConnectionBank'
 import { ConnectionBankPerTables } from './ConnectionBankPerTables'
 import { ConnectionBankPerColumns } from './ConnectionBankPerColumns'
-
+import { Groups } from './Groups'
+import { Group } from './Group'
 export {
   Login,
   InicialPage,
@@ -13,5 +14,7 @@ export {
   NewPassword,
   ConnectionBank,
   ConnectionBankPerTables,
-  ConnectionBankPerColumns
+  ConnectionBankPerColumns,
+  Groups,
+  Group
 }

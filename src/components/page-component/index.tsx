@@ -120,15 +120,15 @@ export const PageComponent = ({
                   <li className="flex items-center gap-3 relative">
                     <span
                       className={`w-2 h-2 rounded-full relative z-10 ${
-                        activeSub === '/configuracoes/grupos'
+                        activeSub.startsWith('/configuracoes/grupo')
                           ? 'bg-[#004080]'
                           : 'bg-[#D8DBE4]'
                       }`}
                     />
                     <Link
-                      to="/inicial-page"
+                      to="/configuracoes/grupos"
                       className={`cursor-pointer ${
-                        activeSub === '/configuracoes/grupos'
+                        activeSub.startsWith('/configuracoes/grupo')
                           ? 'text-[#004080] font-medium'
                           : 'text-[#83899F] hover:underline'
                       }`}

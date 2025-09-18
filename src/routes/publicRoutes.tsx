@@ -38,11 +38,25 @@ const connectionBankPerColumnsRoute = createRoute({
   component: Pages.ConnectionBankPerColumns
 })
 
+const groupsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/grupos',
+  component: Pages.Groups
+})
+
+const groupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/grupo/$groupId',
+  component: Pages.Group
+})
+
 export const publicRoutes = [
   indexRoute,
   redefinirRoute,
   newPasswordRoute,
   connectionBankRoute,
   connectionBankPerTablesRoute,
-  connectionBankPerColumnsRoute
+  connectionBankPerColumnsRoute,
+  groupsRoute,
+  groupRoute
 ]
