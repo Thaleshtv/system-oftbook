@@ -7,6 +7,8 @@ import { ConnectionBankPerTables } from './ConnectionBankPerTables'
 import { ConnectionBankPerColumns } from './ConnectionBankPerColumns'
 import { Groups } from './Groups'
 import { Group } from './Group'
+import { Agentes } from './Agentes'
+
 export {
   Login,
   InicialPage,
@@ -16,5 +18,6 @@ export {
   ConnectionBankPerTables,
   ConnectionBankPerColumns,
   Groups,
-  Group
+  Group,
+  Agentes
 }

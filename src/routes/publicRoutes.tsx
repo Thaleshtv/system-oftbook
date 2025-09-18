@@ -50,6 +50,12 @@ const groupRoute = createRoute({
   component: Pages.Group
 })
 
+const agentesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/configuracoes/agentes',
+  component: Pages.Agentes
+})
+
 export const publicRoutes = [
   indexRoute,
   redefinirRoute,
@@ -58,5 +64,6 @@ export const publicRoutes = [
   connectionBankPerTablesRoute,
   connectionBankPerColumnsRoute,
   groupsRoute,
-  groupRoute
+  groupRoute,
+  agentesRoute
 ]

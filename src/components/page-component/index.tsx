@@ -147,7 +147,7 @@ export const PageComponent = ({
                       }`}
                     />
                     <Link
-                      to="/inicial-page"
+                      to="/configuracoes/agentes"
                       className={`cursor-pointer ${
                         activeSub === '/configuracoes/agentes'
                           ? 'text-[#004080] font-medium'
