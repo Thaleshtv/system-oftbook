@@ -47,6 +47,7 @@ export const PageComponent = ({
           <ul className="flex flex-col gap-3">
             <li>
               <Link
+                disabled
                 to="/inicial-page"
                 className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
                   location.pathname === '/'
@@ -61,6 +62,7 @@ export const PageComponent = ({
 
             <li>
               <Link
+                disabled
                 to="/inicial-page"
                 className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
                   location.pathname.startsWith('/relatorios')
