@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { Auth } from './auth'
 import { useAuthStore } from '../store/userStore'
 import { AxiosRequestConfig } from 'axios'
 
@@ -10,7 +9,7 @@ const api = axios.create({
   baseURL
 })
 
-const excludedRoutes = ['']
+const excludedRoutes = ['/register', '/login', '/refresh-token']
 
 const isRouteExcluded = (url?: string) =>
   url ? excludedRoutes.some((route) => url.includes(route)) : false
@@ -90,10 +89,5 @@ api.interceptors.request.use(
 //     throw error
 //   }
 // }
-
-const logout = () => {
-  const { logOut } = useAuthStore.getState().dispatch
-  logOut()
-}
 
 export default api

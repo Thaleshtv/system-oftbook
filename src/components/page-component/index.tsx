@@ -25,7 +25,6 @@ export const PageComponent = ({
 
   const isConfigPath = location.pathname.startsWith('/configuracoes')
   const activeSub = location.pathname
-  console.log(isConfigPath)
 
   return (
     <div className="flex w-full h-screen">

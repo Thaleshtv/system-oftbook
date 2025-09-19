@@ -5,14 +5,13 @@ import {
   MdStorage,
   MdOutlineSettings,
   MdOutlineAutoAwesome,
-  MdOutlineCheck,
   MdOutlineCheckBox,
   MdOutlineChat,
-  MdOutlineAddChart,
   MdOutlineInsights,
   MdOutlineBarChart
 } from 'react-icons/md'
 import { AiOutlineConsoleSql } from 'react-icons/ai'
+import { ModalConfig } from './components/modal-config'
 
 export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
   return (
@@ -29,7 +28,11 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
             <button>
               <MdOutlineAutoAwesome size={28} className="mr-3 text-[#000]/46" />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                props.setModalConfig(true)
+              }}
+            >
               <MdOutlineSettings size={28} className="text-[#000]/46" />
             </button>
           </div>
@@ -43,7 +46,11 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
             <button>
               <MdOutlineAutoAwesome size={28} className="mr-3 text-[#000]/46" />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                props.setModalConfig(true)
+              }}
+            >
               <MdOutlineSettings size={28} className="text-[#000]/46" />
             </button>
           </div>
@@ -57,7 +64,11 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
             <button>
               <MdOutlineAutoAwesome size={28} className="mr-3 text-[#000]/46" />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                props.setModalConfig(true)
+              }}
+            >
               <MdOutlineSettings size={28} className="text-[#000]/46" />
             </button>
           </div>
@@ -72,7 +83,11 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
             <button>
               <MdOutlineAutoAwesome size={28} className="mr-3 text-[#000]/46" />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                props.setModalConfig(true)
+              }}
+            >
               <MdOutlineSettings size={28} className="text-[#000]/46" />
             </button>
           </div>
@@ -86,12 +101,22 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
             <button>
               <MdOutlineAutoAwesome size={28} className="mr-3 text-[#000]/46" />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                props.setModalConfig(true)
+              }}
+            >
               <MdOutlineSettings size={28} className="text-[#000]/46" />
             </button>
           </div>
         </div>
       </div>
+      {props.modalConfig && (
+        <ModalConfig
+          onClose={() => props.setModalConfig(false)}
+          onSave={() => {}}
+        />
+      )}
     </PageComponent>
   )
 }
