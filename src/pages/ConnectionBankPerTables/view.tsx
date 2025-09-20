@@ -3,37 +3,17 @@ import { useConnectionBankPerTables } from './model'
 import { PageComponent } from '../../components/page-component'
 import { MdArrowBackIosNew, MdOutlineMoreVert, MdStorage } from 'react-icons/md'
 import { Table } from '../../components/ui/table'
+import { ActionMenu } from '../../components/ui/action-menu'
+import { ModalConfirm } from '../../components/ui/modal-confirmation'
+import { ModalEditTable } from './components/modal-edit'
 
 export const ConnectionBankPerTablesView = (
   props: ReturnType<typeof useConnectionBankPerTables>
 ) => {
-  const objectExample = [
-    {
-      name: 'users',
-      description: 'Tabela de usuários do sistema',
-      columnCount: 12,
-      pendingIssues: 2,
-      isActive: true
-    },
-    {
-      name: 'orders',
-      description: 'Tabela de pedidos realizados',
-      columnCount: 8,
-      pendingIssues: 0,
-      isActive: true
-    },
-    {
-      name: 'products',
-      description: 'Tabela de produtos disponíveis',
-      columnCount: 15,
-      pendingIssues: 1,
-      isActive: false
-    }
-  ]
   return (
     <PageComponent
       topbarIcon={<MdStorage />}
-      topbarTitle="Conexão: [Banco de produção]"
+      topbarTitle={`Conexão: [${props.getConnectionByIdQuery.data?.nome}]`}
     >
       <button
         onClick={props.handleBack}
@@ -70,35 +50,97 @@ export const ConnectionBankPerTablesView = (
           'Ação'
         ]}
       >
-        {objectExample.map((item, index) => (
+        {props.getTablesQuery.data?.map((item, index) => (
           <tr
             key={index}
             className="hover:bg-gray-100 cursor-pointer"
-            onClick={() => props.handleDirectToColumn(item.name)}
+            onClick={() => props.handleDirectToColumn(item.id.toString())}
           >
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.name}
+              {item.nome}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.description}
+              {item.descricao}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.columnCount}
+              {item.qtd_colunas}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
-              <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
-                Pendência: {item.pendingIssues}
-              </span>
+              {item.descricao ? (
+                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
+                  Sem pendências
+                </span>
+              ) : (
+                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
+                  Pendência: {item.descricao ? item.descricao : '1'}
+                </span>
+              )}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.isActive ? 'Sim' : 'Não'}
+              SIM
             </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              <MdOutlineMoreVert size={20} className="cursor-pointer" />
+            <td
+              className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ActionMenu
+                trigger={
+                  <MdOutlineMoreVert
+                    size={20}
+                    className="mx-auto cursor-pointer"
+                  />
+                }
+              >
+                <button
+                  onClick={() => {
+                    props.setModalEditOpen(true)
+                    props.setSelectedTableId(item.id.toString())
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => {
+                    props.setSelectedTableId(item.id.toString())
+                    props.handleOpenModalConfirm(
+                      `Tem certeza que deseja apagar a tabela [${item.nome}]?`
+                    )
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Apagar
+                </button>
+              </ActionMenu>
             </td>
           </tr>
         ))}
       </Table>
+      {props.modalConfirmOpen && (
+        <ModalConfirm
+          onCancel={() => props.setModalConfirmOpen(false)}
+          onConfirm={async () => {
+            props.deleteTableMutation.mutate(props.selectedTableId)
+          }}
+          question={props.textModalConfirm}
+          loading={props.deleteTableMutation.isPending}
+        />
+      )}
+
+      {props.modalEditOpen && (
+        <ModalEditTable
+          onClose={() => props.setModalEditOpen(false)}
+          data={props.getTableByIdQuery.data}
+          onSave={(data) =>
+            props.updateTableMutation.mutate({
+              tableId: props.selectedTableId,
+              data
+            })
+          }
+          loading={props.getTableByIdQuery.isLoading}
+          loadingSave={props.updateTableMutation.isPending}
+        />
+      )}
     </PageComponent>
   )
 }

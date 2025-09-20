@@ -1,6 +1,6 @@
 import api from './api'
 
-interface ITableResponse {
+export interface ITableResponse {
   id: number
   nome: string
   descricao: string
@@ -8,15 +8,16 @@ interface ITableResponse {
   conexao_id: number
 }
 
-interface ITablePayload {
+export interface ITablePayload {
   nome: string
   descricao: string
   conexao_id: number
+  qtd_colunas: number
 }
 
 export const Tables = {
   getTables: async (conexao_id: string): Promise<ITableResponse[]> => {
-    const response = await api.get(`tabelas/?conexao_id=${conexao_id}`, {
+    const response = await api.get(`tabelas/${conexao_id}`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
