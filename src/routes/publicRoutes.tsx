@@ -28,13 +28,13 @@ const connectionBankRoute = createRoute({
 
 const connectionBankPerTablesRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/configuracoes/conexao-banco/$tableId',
+  path: '/configuracoes/conexao-banco/$connectionId',
   component: Pages.ConnectionBankPerTables
 })
 
 const connectionBankPerColumnsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/configuracoes/conexao-banco/$tableId/$columnId',
+  path: '/configuracoes/conexao-banco/$connectionId/$tableId',
   component: Pages.ConnectionBankPerColumns
 })
 

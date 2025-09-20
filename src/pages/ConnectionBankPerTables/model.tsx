@@ -16,18 +16,18 @@ export const useConnectionBankPerTables = () => {
 
   const [modalEditOpen, setModalEditOpen] = useState(false)
 
-  const { tableId } = useParams({
-    from: '/configuracoes/conexao-banco/$tableId'
+  const { connectionId } = useParams({
+    from: '/configuracoes/conexao-banco/$connectionId'
   })
 
   const getConnectionByIdQuery = useQuery({
-    queryKey: ['getConnectionId', tableId],
+    queryKey: ['getConnectionId', connectionId],
     queryFn: async () => {
-      if (!tableId) throw new Error('ID não definido')
-      const response = await Connections.getConnectionById(tableId)
+      if (!connectionId) throw new Error('ID não definido')
+      const response = await Connections.getConnectionById(connectionId)
       return response
     },
-    enabled: !!tableId
+    enabled: !!connectionId
   })
 
   const getTableByIdQuery = useQuery({
@@ -41,13 +41,13 @@ export const useConnectionBankPerTables = () => {
   })
 
   const getTablesQuery = useQuery({
-    queryKey: ['getTablesById', tableId],
+    queryKey: ['getTablesById', connectionId],
     queryFn: async () => {
-      if (!tableId) throw new Error('ID não definido')
-      const response = await Tables.getTables(tableId)
+      if (!connectionId) throw new Error('ID não definido')
+      const response = await Tables.getTables(connectionId)
       return response
     },
-    enabled: !!tableId
+    enabled: !!connectionId
   })
 
   const updateTableMutation = useMutation({
@@ -113,11 +113,14 @@ export const useConnectionBankPerTables = () => {
     setTextModalConfirm('')
   }
 
-  const handleDirectToColumn = (columnId: string) => {
-    if (!columnId) return
+  const handleDirectToColumn = (tableId: string) => {
+    if (!tableId) return
     router.navigate({
-      to: `/configuracoes/conexao-banco/$tableId/$columnId`,
-      params: { tableId: tableId, columnId }
+      to: `/configuracoes/conexao-banco/$connectionId/$tableId`,
+      params: {
+        connectionId: connectionId,
+        tableId: tableId
+      }
     })
   }
   return {

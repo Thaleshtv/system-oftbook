@@ -9,6 +9,8 @@ import {
   MdStorage
 } from 'react-icons/md'
 import { Table } from '../../components/ui/table'
+import { ActionMenu } from '../../components/ui/action-menu'
+import { ModalConfirm } from '../../components/ui/modal-confirmation'
 
 export const ConnectionBankPerColumnsView = (
   props: ReturnType<typeof useConnectionBankPerColumns>
@@ -39,7 +41,7 @@ export const ConnectionBankPerColumnsView = (
   return (
     <PageComponent
       topbarIcon={<MdStorage />}
-      topbarTitle="Tabela [usuarios] | Conexao [banco de prod]"
+      topbarTitle={`Tabela ${props.getTableByIdQuery.data?.nome} | Conexao ${props.getConnectionByIdQuery.data?.nome}`}
     >
       <button
         onClick={props.handleBack}
@@ -89,30 +91,71 @@ export const ConnectionBankPerColumnsView = (
           ''
         ]}
       >
-        {objectExample.map((item, index) => (
+        {props.getColumnsQuery.data?.map((item, index) => (
           <tr key={index} className="hover:bg-gray-100s ">
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.name}
+              {item.nome}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.description}
+              {item.descricao}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.columnType}
+              {item.tipo}
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
-              {item.pendingIssues}
+              VER BACK
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.isActive ? 'Sim' : 'Não'}
+              VER BACK
             </td>
 
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              <MdOutlineMoreVert size={20} className="cursor-pointer" />
+            <td
+              className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ActionMenu
+                trigger={
+                  <MdOutlineMoreVert
+                    size={20}
+                    className="mx-auto cursor-pointer"
+                  />
+                }
+              >
+                <button
+                  onClick={() => {
+                    props.setModalEditOpen(true)
+                    props.setSelectedColumnId(item.id.toString())
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => {
+                    props.setSelectedColumnId(item.id.toString())
+                    props.handleOpenModalConfirm(
+                      `Tem certeza que deseja apagar a coluna [${item.nome}]?`
+                    )
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Apagar
+                </button>
+              </ActionMenu>
             </td>
           </tr>
         ))}
       </Table>
+      {props.modalConfirmOpen && (
+        <ModalConfirm
+          onCancel={() => props.handleCloseModalConfirm()}
+          onConfirm={async () => {
+            props.deleteColumnMutation.mutate(props.selectedColumnId)
+          }}
+          question={props.textModalConfirm}
+          loading={props.deleteColumnMutation.isPending}
+        />
+      )}
     </PageComponent>
   )
 }

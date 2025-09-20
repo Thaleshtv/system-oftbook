@@ -88,8 +88,11 @@ export const useConnectionBank = () => {
   const handleDirectToTable = (tableId: string) => {
     if (!tableId) return
     router.navigate({
-      to: `/configuracoes/conexao-banco/$tableId`,
-      params: { tableId }
+      to: '/configuracoes/conexao-banco/$connectionId/$tableId',
+      params: {
+        connectionId: connectionIdSelected,
+        tableId
+      }
     })
   }
 
