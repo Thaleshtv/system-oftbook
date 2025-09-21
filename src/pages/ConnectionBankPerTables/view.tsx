@@ -104,7 +104,7 @@ export const ConnectionBankPerTablesView = (
                   onClick={() => {
                     props.setSelectedTableId(item.id.toString())
                     props.handleOpenModalConfirm(
-                      `Tem certeza que deseja apagar a tabela [${item.nome}]?`
+                      `Tem certeza que deseja apagar a tabela [${item.nome}] ?`
                     )
                   }}
                   className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"

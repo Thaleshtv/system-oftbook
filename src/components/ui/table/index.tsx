@@ -19,6 +19,7 @@ export const Table: React.FC<TableProps> = ({
   onNextPage
 }) => {
   const rows = React.Children.toArray(children)
+  const hasData = rows.length > 0
 
   return (
     <div className="w-full">
@@ -37,34 +38,51 @@ export const Table: React.FC<TableProps> = ({
             ))}
           </tr>
         </thead>
-        <tbody>{children}</tbody>
+        <tbody>
+          {hasData ? (
+            children
+          ) : (
+            <tr>
+              <td
+                colSpan={headers.length}
+                className="px-4 py-2.5 text-center font-light text-[#71717A]"
+              >
+                Nenhum item encontrado
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
 
-      <div className="flex items-center justify-between mt-4 text-[14px] text-[#0A1B39]">
-        <span className="text-[#71717A]">
-          {rows.length} de {rows.length} linhas nesta página
-        </span>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onPrevPage}
-            className="p-[10px] border border-[#D9D9D9] rounded-[8px] hover:bg-gray-200 transition flex items-center justify-center"
-          >
-            <MdArrowBackIos size={10} />
-          </button>
-
-          <span>
-            Página {currentPage} de {totalPages}
+      {hasData && (
+        <div className="flex items-center justify-between mt-4 text-[14px] text-[#0A1B39]">
+          <span className="text-[#71717A]">
+            {rows.length} de {rows.length} linhas nesta página
           </span>
 
-          <button
-            onClick={onNextPage}
-            className="p-[10px] border border-[#D9D9D9] rounded-[8px] bg-[#004080] hover:bg-gray-200 transition flex items-center justify-center"
-          >
-            <MdArrowBackIos size={10} className="rotate-180" color="#fff" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onPrevPage}
+              disabled={currentPage === 1}
+              className="p-[10px] border border-[#D9D9D9] rounded-[8px] hover:bg-gray-200 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <MdArrowBackIos size={10} />
+            </button>
+
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+
+            <button
+              onClick={onNextPage}
+              disabled={currentPage === totalPages}
+              className="p-[10px] border border-[#D9D9D9] rounded-[8px] bg-[#004080] hover:bg-gray-200 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <MdArrowBackIos size={10} className="rotate-180" color="#fff" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
