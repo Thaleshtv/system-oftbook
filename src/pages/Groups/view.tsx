@@ -16,9 +16,15 @@ export const GroupsView = (props: ReturnType<typeof useGroups>) => {
   if (props.getGroupsQuery.isLoading) {
     return (
       <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupos">
-        <ListPageSkeleton 
+        <ListPageSkeleton
           showForm={true}
-          tableHeaders={['Nome do grupos', 'Qtd Tabelas', 'Qtd Usuários', 'Ativo', '']}
+          tableHeaders={[
+            'Nome do grupos',
+            'Qtd Tabelas',
+            'Qtd Usuários',
+            'Ativo',
+            ''
+          ]}
           tableRows={5}
         />
       </PageComponent>

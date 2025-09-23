@@ -17,7 +17,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 }) => {
   const baseClasses = 'bg-gray-200'
   const animationClass = animation ? 'animate-pulse' : ''
-  
+
   const variantClasses = {
     text: 'rounded',
     rectangular: 'rounded',
@@ -50,7 +50,9 @@ export const AgentCardSkeleton: React.FC = () => (
 )
 
 // Skeleton para linha de tabela
-export const TableRowSkeleton: React.FC<{ columns: number }> = ({ columns }) => (
+export const TableRowSkeleton: React.FC<{ columns: number }> = ({
+  columns
+}) => (
   <tr>
     {Array.from({ length: columns }).map((_, index) => (
       <td key={index} className="px-4 py-3 border-b border-[#E4E4E7]">
@@ -61,16 +63,19 @@ export const TableRowSkeleton: React.FC<{ columns: number }> = ({ columns }) => 
 )
 
 // Skeleton para tabela completa
-export const TableSkeleton: React.FC<{ headers: string[]; rows?: number }> = ({ 
-  headers, 
-  rows = 5 
+export const TableSkeleton: React.FC<{ headers: string[]; rows?: number }> = ({
+  headers,
+  rows = 5
 }) => (
   <div className="w-full">
     <table className="w-full border-collapse">
       <thead>
         <tr className="bg-[#F8F9FA]">
           {headers.map((header, index) => (
-            <th key={index} className="text-left px-4 py-3 text-[#1E1E1E] font-semibold text-[14px] border-b border-[#E4E4E7]">
+            <th
+              key={index}
+              className="text-left px-4 py-3 text-[#1E1E1E] font-semibold text-[14px] border-b border-[#E4E4E7]"
+            >
               {header}
             </th>
           ))}
@@ -109,12 +114,12 @@ export const FormSkeleton: React.FC = () => (
 )
 
 // Skeleton para página de listagem
-export const ListPageSkeleton: React.FC<{ 
+export const ListPageSkeleton: React.FC<{
   showForm?: boolean
   tableHeaders?: string[]
   tableRows?: number
-}> = ({ 
-  showForm = false, 
+}> = ({
+  showForm = false,
   tableHeaders = ['Coluna 1', 'Coluna 2', 'Coluna 3', ''],
   tableRows = 5
 }) => (
@@ -125,13 +130,13 @@ export const ListPageSkeleton: React.FC<{
         <Skeleton width="200px" height="24px" />
       </div>
     </div>
-    
+
     {showForm && (
       <div className="mb-[24px]">
         <FormSkeleton />
       </div>
     )}
-    
+
     <TableSkeleton headers={tableHeaders} rows={tableRows} />
   </div>
 )

@@ -11,12 +11,12 @@ import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 export const ConnectionBankPerTablesView = (
   props: ReturnType<typeof useConnectionBankPerTables>
 ) => {
-  if (props.getTablesQuery.isLoading || props.getConnectionByIdQuery.isLoading) {
+  if (
+    props.getTablesQuery.isLoading ||
+    props.getConnectionByIdQuery.isLoading
+  ) {
     return (
-      <PageComponent
-        topbarIcon={<MdStorage />}
-        topbarTitle="Carregando..."
-      >
+      <PageComponent topbarIcon={<MdStorage />} topbarTitle="Carregando...">
         <div className="space-y-6">
           <div className="flex items-center gap-1">
             <Skeleton variant="circular" width="9px" height="9px" />
@@ -36,7 +36,7 @@ export const ConnectionBankPerTablesView = (
             </div>
             <Skeleton width="150px" height="12px" />
           </div>
-          <TableSkeleton 
+          <TableSkeleton
             headers={[
               'Nome da tabela',
               'Descrição ',

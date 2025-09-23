@@ -30,8 +30,11 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
             </div>
             <Skeleton width="150px" height="44px" />
           </div>
-          <TableSkeleton headers={['Nome da tabela', 'Banco de dados ', '']} rows={5} />
-          
+          <TableSkeleton
+            headers={['Nome da tabela', 'Banco de dados ', '']}
+            rows={5}
+          />
+
           <div className="mb-[35px] mt-[60px] flex items-center justify-between">
             <div className="flex items-center gap-[10px]">
               <Skeleton variant="circular" width="14px" height="14px" />

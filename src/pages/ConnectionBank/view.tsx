@@ -21,7 +21,7 @@ export const ConnectionBankView = (
         topbarTitle="Conexão com o banco"
         topbarIcon={<MdOutlineStorage size={20} />}
       >
-        <ListPageSkeleton 
+        <ListPageSkeleton
           showForm={true}
           tableHeaders={[
             'Nome',
