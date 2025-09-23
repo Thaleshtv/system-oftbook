@@ -1,21 +1,14 @@
-.chat-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+/* 
+ * Estilos SCSS antigos - agora usando Tailwind CSS
+ * Mantendo apenas estilos de mensagens que ainda podem ser necessários
+ */
 
-.chat-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  margin: 0 auto;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #D9D9D9;
-  overflow: hidden;
-}
+/* 
+ * Estilos de mensagens antigos - agora implementados com Tailwind CSS
+ * Comentado para evitar conflitos
+ */
 
+/*
 .messages-area {
   flex: 1;
   padding: 24px;
@@ -140,23 +133,9 @@
     transform: none;
   }
 }
+*/ 
 
-// Scrollbar customizada para área de mensagens
-.messages-area {
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #D9D9D9;
-    border-radius: 3px;
-
-    &:hover {
-      background: #C0C0C0;
-    }
-  }
-}
+/* 
+ * Arquivo SCSS vazio - todo o estilo foi migrado para Tailwind CSS
+ * Mantendo o arquivo para evitar erros de importação
+ */
