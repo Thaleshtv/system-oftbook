@@ -26,7 +26,6 @@ interface ChatPageComponentProps {
   onCreateNewPasta?: () => void
   // Props para estados de loading
   isLoadingInitialData?: boolean
-  isCreatingSession?: boolean
 }
 
 export const ChatPageComponent = ({
@@ -40,8 +39,7 @@ export const ChatPageComponent = ({
   onCreateNewSessao,
   onArchiveSessao,
   onCreateNewPasta,
-  isLoadingInitialData = false,
-  isCreatingSession = false
+  isLoadingInitialData = false
 }: ChatPageComponentProps) => {
   return (
     <div className="flex w-full h-screen">

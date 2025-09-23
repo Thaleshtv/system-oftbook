@@ -27,6 +27,7 @@ export const useChat = () => {
   const [isLoadingInitialData, setIsLoadingInitialData] = useState(false)
   const [isLoadingSessao, setIsLoadingSessao] = useState(false)
   const [isCreatingSession, setIsCreatingSession] = useState(false)
+  const [graphEnabled, setGraphEnabled] = useState(true)
 
   const {
     state: { user }
@@ -144,18 +145,11 @@ export const useChat = () => {
     setIsLoadingResponse(true)
 
     try {
-      // Salvar mensagem do usuário
-      await Sessoes.addMensagem(currentSessao.id, {
-        role: 'user',
-        content: text.trim(),
-        sessao_id: currentSessao.id
-      })
-
       // Enviar para conversação
       const response: IConversacaoResponse = await Conversacoes.conversar({
         sessao_id: currentSessao.id,
         pergunta: text.trim(),
-        graph: true
+        graph: graphEnabled
       })
 
       // Adicionar resposta do bot
@@ -168,13 +162,6 @@ export const useChat = () => {
 
       setMessages((prev) => [...prev, botMessage])
 
-      // Salvar mensagem do bot
-      await Sessoes.addMensagem(currentSessao.id, {
-        role: 'assistant',
-        content: response.resposta,
-        sessao_id: currentSessao.id
-      })
-
       // Atualizar gráfico e insights se disponíveis
       if (response.graph) {
         setGraph(response.graph)
@@ -182,10 +169,6 @@ export const useChat = () => {
       if (response.insight) {
         setInsight(response.insight)
       }
-
-      // Recarregar a sessão atual para obter dados atualizados
-      const updatedSessao = await Sessoes.getSessaoById(currentSessao.id)
-      setCurrentSessao(updatedSessao)
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error)
       showToast('error', 'Erro ao enviar mensagem. Tente novamente.')
@@ -255,6 +238,8 @@ export const useChat = () => {
     isLoadingInitialData,
     isLoadingSessao,
     isCreatingSession,
+    graphEnabled,
+    setGraphEnabled,
     createNewSessao,
     selectSessao,
     archiveSessao,

@@ -11,6 +11,7 @@ import {
   MdThumbDown
 } from 'react-icons/md'
 import { GraphSkeleton, InsightSkeleton } from '../../components/ui/skeleton'
+import { ChartComponent } from '../../components/ui/chart'
 
 export const ChatView = (props: ReturnType<typeof useChat>) => {
   const {
@@ -25,7 +26,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
     insight,
     isLoadingResponse,
     isLoadingInitialData,
-    isCreatingSession,
+    graphEnabled,
+    setGraphEnabled,
     createNewSessao,
     selectSessao,
     archiveSessao,
@@ -68,7 +70,6 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
       onCreateNewSessao={handleCreateNewSession}
       onArchiveSessao={archiveSessao}
       isLoadingInitialData={isLoadingInitialData}
-      isCreatingSession={isCreatingSession}
     >
       <div className="h-full flex flex-col lg:flex-row">
         {/* Coluna esquerda: Gráficos e Insights - com padding */}
@@ -83,10 +84,9 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                   <h3 className="text-sm font-medium text-gray-700 m-0">
                     Gráfico Gerado
                   </h3>
-                  <div
-                    className="flex-1 bg-gray-50 rounded-xl p-4 overflow-auto"
-                    dangerouslySetInnerHTML={{ __html: graph }}
-                  />
+                  <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-auto">
+                    <ChartComponent chartData={graph} />
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
@@ -266,11 +266,25 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-[#E4E4E7]"
                 style={{ backgroundColor: 'rgba(217, 217, 217, 0.12)' }}
               >
-                {/* Ícone da lâmpada */}
-                <MdOutlineLightbulb
-                  size={20}
-                  className="text-[#004080] flex-shrink-0"
-                />
+                {/* Ícone da lâmpada - clicável para toggle do graph */}
+                <button
+                  onClick={() => setGraphEnabled(!graphEnabled)}
+                  className={`flex-shrink-0 p-1 rounded-full transition-all duration-200 ${
+                    graphEnabled
+                      ? 'text-yellow-500 bg-yellow-50 shadow-lg'
+                      : 'text-gray-400 hover:text-yellow-500'
+                  }`}
+                  title={`${
+                    graphEnabled ? 'Desabilitar' : 'Habilitar'
+                  } geração de gráficos e insights`}
+                >
+                  <MdOutlineLightbulb
+                    size={20}
+                    className={`transition-all duration-200 ${
+                      graphEnabled ? 'transform scale-110' : ''
+                    }`}
+                  />
+                </button>
 
                 {/* Input */}
                 <input
