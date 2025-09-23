@@ -72,12 +72,12 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
       onArchiveSessao={archiveSessao}
       isLoadingInitialData={isLoadingInitialData}
     >
-      <div className="h-full flex flex-col lg:flex-row">
-        {/* Coluna esquerda: Gráficos e Insights - com padding */}
-        <div className="flex-1 p-6 flex flex-col gap-6 lg:flex-col md:flex-row md:h-[300px] lg:h-auto">
-          {/* Seção de Gráficos */}
-          <div className="flex-1 bg-white rounded-2xl border border-gray-200 flex flex-col overflow-hidden min-h-0 min-h-[250px] md:min-h-0">
-            <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
+      <div className="h-full flex flex-col lg:flex-row overflow-hidden">
+        {/* Coluna esquerda: Gráficos e Insights - com scroll próprio */}
+        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+          {/* Seção de Gráficos - altura fixa */}
+          <div className="bg-white rounded-2xl border border-gray-200 flex flex-col h-[450px]">
+            <div className="flex-1 p-6 flex flex-col gap-4 overflow-hidden">
               {isLoadingResponse && !graph ? (
                 <GraphSkeleton />
               ) : graph ? (
@@ -85,7 +85,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                   <h3 className="text-sm font-medium text-gray-700 m-0">
                     Gráfico Gerado
                   </h3>
-                  <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-auto">
+                  <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-hidden">
                     <ChartComponent chartData={graph} />
                   </div>
                 </div>
@@ -99,10 +99,10 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 </div>
               )}
             </div>
-          </div>{' '}
-          {/* Seção de Insights */}
-          <div className="flex-1 bg-white rounded-2xl border border-gray-200 flex flex-col overflow-hidden min-h-0 min-h-[250px] md:min-h-0">
-            <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
+          </div>
+          {/* Seção de Insights - altura fixa */}
+          <div className="bg-white rounded-2xl border border-gray-200 flex flex-col h-[400px]">
+            <div className="flex-1 p-6 flex flex-col gap-4 overflow-hidden">
               <h3 className="text-sm font-medium text-gray-700 m-0">
                 Insights
               </h3>
@@ -130,8 +130,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
           </div>
         </div>
 
-        {/* Coluna direita: Chat - sem padding superior/inferior, com borda esquerda */}
-        <div className="flex-1 border-t border-gray-200 lg:border-t-0 lg:border-l lg:border-gray-200 flex flex-col min-h-0 h-[400px] md:h-[500px] lg:h-auto">
+        {/* Coluna direita: Chat - fixo, sem scroll próprio */}
+        <div className="flex-1 border-t border-gray-200 lg:border-t-0 lg:border-l lg:border-gray-200 flex flex-col min-h-0 lg:h-full">
           <div className="h-full flex flex-col bg-white lg:rounded-r-2xl overflow-hidden">
             {/* Área de mensagens */}
             <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4 min-h-0">
