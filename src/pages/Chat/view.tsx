@@ -110,8 +110,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 <InsightSkeleton />
               ) : insight ? (
                 <div className="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 overflow-auto">
-                  <MarkdownRenderer 
-                    content={insight} 
+                  <MarkdownRenderer
+                    content={insight}
                     variant="insight"
                     className="text-sm text-blue-800 leading-relaxed"
                   />
@@ -180,8 +180,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                             borderRadius: '0 12px 12px 12px'
                           }}
                         >
-                          <MarkdownRenderer 
-                            content={message.text} 
+                          <MarkdownRenderer
+                            content={message.text}
                             variant="chat"
                             className="text-sm leading-normal m-0"
                           />

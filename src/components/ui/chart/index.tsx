@@ -51,15 +51,31 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
     // Função para detectar se os dados são monetários
     const isMonetaryData = (): boolean => {
       // Verifica se há palavras-chave monetárias no título ou labels
-      const monetaryKeywords = ['valor', 'preço', 'custo', 'receita', 'faturamento', 'lucro', 'vendas', 'real', 'reais', 'R$', 'BRL']
+      const monetaryKeywords = [
+        'valor',
+        'preço',
+        'custo',
+        'receita',
+        'faturamento',
+        'lucro',
+        'vendas',
+        'real',
+        'reais',
+        'R$',
+        'BRL'
+      ]
       const textToCheck = [
         config.title?.text || '',
         config.xaxis?.title?.text || '',
         config.yaxis?.title?.text || '',
         ...(config.series?.map((s: any) => s.name || '') || [])
-      ].join(' ').toLowerCase()
-      
-      return monetaryKeywords.some(keyword => textToCheck.includes(keyword.toLowerCase()))
+      ]
+        .join(' ')
+        .toLowerCase()
+
+      return monetaryKeywords.some((keyword) =>
+        textToCheck.includes(keyword.toLowerCase())
+      )
     }
 
     // Formatação monetária brasileira
@@ -106,7 +122,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
       ],
       dataLabels: {
         enabled: false,
-        formatter: function(val: number) {
+        formatter: function (val: number) {
           return isMonetaryData() ? formatBRL(val) : val.toString()
         }
       },
@@ -125,14 +141,14 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
       },
       yaxis: {
         labels: {
-          formatter: function(val: number) {
+          formatter: function (val: number) {
             return isMonetaryData() ? formatBRL(val) : val.toString()
           }
         }
       },
       tooltip: {
         y: {
-          formatter: function(val: number) {
+          formatter: function (val: number) {
             return isMonetaryData() ? formatBRL(val) : val.toString()
           }
         }

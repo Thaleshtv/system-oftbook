@@ -8,8 +8,8 @@ interface MarkdownRendererProps {
   variant?: 'default' | 'chat' | 'insight'
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ 
-  content, 
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+  content,
   className = '',
   variant = 'default'
 }) => {
@@ -53,52 +53,56 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   return (
     <div className={`markdown-content ${className}`}>
-      <ReactMarkdown 
+      <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           // Customização dos elementos HTML gerados
-          h1: ({children}) => <h1 className={styles.h1}>{children}</h1>,
-          h2: ({children}) => <h2 className={styles.h2}>{children}</h2>,
-          h3: ({children}) => <h3 className={styles.h3}>{children}</h3>,
-          p: ({children}) => <p className={styles.p}>{children}</p>,
-          ul: ({children}) => <ul className={styles.ul}>{children}</ul>,
-          ol: ({children}) => <ol className={styles.ol}>{children}</ol>,
-          li: ({children}) => <li className={styles.li}>{children}</li>,
-          strong: ({children}) => <strong className="font-semibold">{children}</strong>,
-          em: ({children}) => <em className="italic">{children}</em>,
-          code: ({children}) => (
+          h1: ({ children }) => <h1 className={styles.h1}>{children}</h1>,
+          h2: ({ children }) => <h2 className={styles.h2}>{children}</h2>,
+          h3: ({ children }) => <h3 className={styles.h3}>{children}</h3>,
+          p: ({ children }) => <p className={styles.p}>{children}</p>,
+          ul: ({ children }) => <ul className={styles.ul}>{children}</ul>,
+          ol: ({ children }) => <ol className={styles.ol}>{children}</ol>,
+          li: ({ children }) => <li className={styles.li}>{children}</li>,
+          strong: ({ children }) => (
+            <strong className="font-semibold">{children}</strong>
+          ),
+          em: ({ children }) => <em className="italic">{children}</em>,
+          code: ({ children }) => (
             <code className="bg-gray-100 bg-opacity-70 px-1 py-0.5 rounded text-sm font-mono">
               {children}
             </code>
           ),
-          pre: ({children}) => (
+          pre: ({ children }) => (
             <pre className="bg-gray-100 bg-opacity-70 p-3 rounded-md overflow-x-auto mb-2 text-sm">
               {children}
             </pre>
           ),
-          blockquote: ({children}) => (
+          blockquote: ({ children }) => (
             <blockquote className="border-l-3 border-current pl-3 ml-2 italic opacity-80 mb-2">
               {children}
             </blockquote>
           ),
-          table: ({children}) => (
+          table: ({ children }) => (
             <div className="overflow-x-auto mb-2">
               <table className="min-w-full border-collapse border border-gray-300 border-opacity-50 text-sm">
                 {children}
               </table>
             </div>
           ),
-          thead: ({children}) => (
+          thead: ({ children }) => (
             <thead className="bg-gray-50 bg-opacity-50">{children}</thead>
           ),
-          th: ({children}) => (
+          th: ({ children }) => (
             <th className="border border-gray-300 border-opacity-50 px-2 py-1 text-left font-medium">
               {children}
             </th>
           ),
-          td: ({children}) => (
-            <td className="border border-gray-300 border-opacity-50 px-2 py-1">{children}</td>
-          ),
+          td: ({ children }) => (
+            <td className="border border-gray-300 border-opacity-50 px-2 py-1">
+              {children}
+            </td>
+          )
         }}
       >
         {content}
