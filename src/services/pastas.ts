@@ -72,11 +72,15 @@ export const Pastas = {
   },
 
   archivePasta: async (pastaId: string): Promise<IPastaResponse> => {
-    const response = await api.patch(`pastas/${pastaId}/archive`, {}, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true'
+    const response = await api.patch(
+      `pastas/${pastaId}/archive`,
+      {},
+      {
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        }
       }
-    })
+    )
     return response.data as IPastaResponse
   }
 }

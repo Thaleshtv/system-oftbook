@@ -13,7 +13,9 @@ export interface IConversacaoResponse {
 }
 
 export const Conversacoes = {
-  conversar: async (payload: IConversacaoPayload): Promise<IConversacaoResponse> => {
+  conversar: async (
+    payload: IConversacaoPayload
+  ): Promise<IConversacaoResponse> => {
     const response = await api.post('conversacoes/', payload, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
