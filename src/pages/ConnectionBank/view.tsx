@@ -6,6 +6,7 @@ import { Table } from '../../components/ui/table'
 import { ActionMenu } from '../../components/ui/action-menu'
 import { ModalConfirm } from '../../components/ui/modal-confirmation'
 import { ModalEdit } from './components/modal-edit-connection'
+import { ListPageSkeleton } from '../../components/ui/skeleton'
 
 export const ConnectionBankView = (
   props: ReturnType<typeof useConnectionBank>
@@ -13,6 +14,30 @@ export const ConnectionBankView = (
   const { form, onSubmit } = props
   const { register, formState } = form
   const { errors } = formState
+
+  if (props.getConnectionsQuery.isLoading) {
+    return (
+      <PageComponent
+        topbarTitle="Conexão com o banco"
+        topbarIcon={<MdOutlineStorage size={20} />}
+      >
+        <ListPageSkeleton 
+          showForm={true}
+          tableHeaders={[
+            'Nome',
+            'Driver',
+            'Server',
+            'Database',
+            'Schema',
+            'Tipo de banco',
+            'Catalogo',
+            ''
+          ]}
+          tableRows={5}
+        />
+      </PageComponent>
+    )
+  }
 
   return (
     <PageComponent

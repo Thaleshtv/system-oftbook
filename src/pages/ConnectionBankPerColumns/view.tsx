@@ -11,33 +11,65 @@ import {
 import { Table } from '../../components/ui/table'
 import { ActionMenu } from '../../components/ui/action-menu'
 import { ModalConfirm } from '../../components/ui/modal-confirmation'
+import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 
 export const ConnectionBankPerColumnsView = (
   props: ReturnType<typeof useConnectionBankPerColumns>
 ) => {
-  const objectExample = [
-    {
-      name: 'id',
-      description: 'Identificador único do usuário',
-      columnType: 'INTEGER',
-      pendingIssues: 0,
-      isActive: true
-    },
-    {
-      name: 'username',
-      description: 'Nome de usuário para login',
-      columnType: 'VARCHAR(50)',
-      pendingIssues: 1,
-      isActive: true
-    },
-    {
-      name: 'email',
-      description: 'Endereço de e-mail do usuário',
-      columnType: 'VARCHAR(100)',
-      pendingIssues: 0,
-      isActive: false
-    }
-  ]
+  if (props.getColumnsQuery.isLoading || props.getTableByIdQuery.isLoading || props.getConnectionByIdQuery.isLoading) {
+    return (
+      <PageComponent
+        topbarIcon={<MdStorage />}
+        topbarTitle="Carregando..."
+      >
+        <div className="space-y-6">
+          <div className="flex items-center gap-1">
+            <Skeleton variant="circular" width="9px" height="9px" />
+            <Skeleton width="60px" height="13px" />
+          </div>
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-3">
+              <div className="w-full h-[139px] px-[24px] py-[12px] bg-[#F0F0F042] rounded-[8px] border border-[#E4E4E7] flex flex-col justify-between">
+                <Skeleton width="150px" height="15px" />
+                <div className="flex items-center gap-1 justify-end">
+                  <Skeleton variant="circular" width="6px" height="6px" />
+                  <Skeleton width="30px" height="10px" />
+                </div>
+              </div>
+            </div>
+            <div className="col-span-3">
+              <div className="w-full h-[139px] px-[24px] py-[12px] bg-[#F0F0F042] rounded-[8px] border border-[#E4E4E7] flex flex-col justify-between">
+                <Skeleton width="150px" height="15px" />
+                <div className="flex items-center gap-1 justify-end">
+                  <Skeleton variant="circular" width="6px" height="6px" />
+                  <Skeleton width="30px" height="10px" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <Skeleton variant="circular" width="14px" height="14px" />
+              <Skeleton width="200px" height="24px" />
+            </div>
+            <Skeleton width="150px" height="12px" />
+          </div>
+          <TableSkeleton 
+            headers={[
+              'Nome da coluna',
+              'Descrição',
+              'Tipo da coluna',
+              'Pendências',
+              'Ativa',
+              'Ação'
+            ]}
+            rows={5}
+          />
+        </div>
+      </PageComponent>
+    )
+  }
+
   return (
     <PageComponent
       topbarIcon={<MdStorage />}

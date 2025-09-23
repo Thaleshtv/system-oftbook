@@ -2,7 +2,7 @@ import './style.scss'
 import { useRedefinir } from './model'
 import loginImage from '../../assets/login.png'
 import Logo from '../../assets/altona.png'
-import { MdPerson, MdVpnKey } from 'react-icons/md' // Material Icons
+import { MdPerson } from 'react-icons/md' // Material Icons
 
 export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
   const { form, handleSubmit, isLoading } = props
@@ -54,7 +54,14 @@ export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
               className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
               disabled={isLoading}
             >
-              {isLoading ? 'Carregando...' : 'Enviar'}
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Enviando...</span>
+                </div>
+              ) : (
+                'Enviar'
+              )}
             </button>
           </form>
         </div>

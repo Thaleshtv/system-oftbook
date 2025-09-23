@@ -14,6 +14,7 @@ import {
 import { AiOutlineConsoleSql } from 'react-icons/ai'
 import { ModalConfig } from './components/modal-config'
 import { ModalPrompt } from './components/modal-prompt'
+import { AgentCardSkeleton } from '../../components/ui/skeleton'
 
 // Função para obter ícone baseado no nome do agente
 const getIconForAgente = (nome: string) => {
@@ -55,8 +56,10 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
   if (props.loading) {
     return (
       <PageComponent topbarIcon={<MdStorage />} topbarTitle="Agentes">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-lg text-gray-600">Carregando agentes...</div>
+        <div className="flex items-center gap-[18px] flex-wrap">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <AgentCardSkeleton key={index} />
+          ))}
         </div>
       </PageComponent>
     )

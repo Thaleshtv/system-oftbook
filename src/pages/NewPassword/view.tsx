@@ -2,7 +2,7 @@ import { useNewPassword } from './model'
 import './styles.scss'
 import loginImage from '../../assets/login.png'
 import Logo from '../../assets/altona.png'
-import { MdPerson, MdVpnKey } from 'react-icons/md' // Material Icons
+import { MdVpnKey } from 'react-icons/md' // Material Icons
 
 export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
   const { form, handleSubmit, isLoading } = props
@@ -66,7 +66,14 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
               className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
               disabled={isLoading}
             >
-              {isLoading ? 'Carregando...' : 'Redefinir'}
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Redefinindo...</span>
+                </div>
+              ) : (
+                'Redefinir'
+              )}
             </button>
           </form>
         </div>

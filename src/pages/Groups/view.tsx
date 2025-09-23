@@ -6,11 +6,24 @@ import { Table } from '../../components/ui/table'
 import { ActionMenu } from '../../components/ui/action-menu'
 import { ModalEditGroup } from './components/modal-edit'
 import { ModalConfirm } from '../../components/ui/modal-confirmation'
+import { ListPageSkeleton } from '../../components/ui/skeleton'
 
 export const GroupsView = (props: ReturnType<typeof useGroups>) => {
   const { form, onSubmit } = props
   const { register, formState } = form
   const { errors } = formState
+
+  if (props.getGroupsQuery.isLoading) {
+    return (
+      <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupos">
+        <ListPageSkeleton 
+          showForm={true}
+          tableHeaders={['Nome do grupos', 'Qtd Tabelas', 'Qtd Usuários', 'Ativo', '']}
+          tableRows={5}
+        />
+      </PageComponent>
+    )
+  }
 
   return (
     <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupos">

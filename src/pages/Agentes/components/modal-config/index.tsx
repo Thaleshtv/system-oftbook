@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Modelos, IModeloResponse } from '../../../../services/modelos'
 import { ApiKeys, IApiKeyResponse } from '../../../../services/apiKeys'
 import { IAgenteResponse } from '../../../../services/agentes'
+import { Skeleton } from '../../../../components/ui/skeleton'
 
 // Schema Zod
 const configSchema = z.object({
@@ -87,9 +88,30 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
     return (
       <div className="fixed inset-0 bg-[#000]/20 flex items-center justify-center z-[9999]">
         <div className="w-[600px] bg-white rounded-[18px] shadow-lg p-[32px]">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-gray-600">
-              Carregando configurações...
+          <div className="flex items-center justify-between mb-6">
+            <Skeleton width="200px" height="24px" />
+            <Skeleton variant="circular" width="24px" height="24px" />
+          </div>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Skeleton width="120px" height="14px" />
+              <Skeleton height="44px" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton width="100px" height="14px" />
+              <Skeleton height="44px" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton width="140px" height="14px" />
+              <Skeleton height="44px" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton width="160px" height="14px" />
+              <Skeleton height="44px" />
+            </div>
+            <div className="flex justify-end gap-3">
+              <Skeleton width="80px" height="44px" />
+              <Skeleton width="80px" height="44px" />
             </div>
           </div>
         </div>

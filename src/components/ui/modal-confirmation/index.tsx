@@ -45,12 +45,19 @@ export const ModalConfirm = ({
           <button
             type="button"
             onClick={onConfirm}
-            className={`px-[24px] py-[12px] text-[14px] text-white bg-[#004080] rounded-[8px] ${
+            className={`px-[24px] py-[12px] text-[14px] text-white bg-[#004080] rounded-[8px] flex items-center justify-center ${
               loading ? 'opacity-70 cursor-not-allowed' : ''
             }`}
             disabled={loading}
           >
-            {loading ? 'Carregando...' : 'Sim'}
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Processando...</span>
+              </div>
+            ) : (
+              'Sim'
+            )}
           </button>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { PageComponent } from '../../components/page-component'
 import {
   MdAccountBox,
   MdArrowBackIosNew,
-  MdOutlineAccountCircle,
   MdOutlineMoreVert,
   MdStorage
 } from 'react-icons/md'
@@ -13,8 +12,39 @@ import { ModalGrupoTabela } from './modal-grupo-tabela'
 import { ModalGrupoUsuario } from './modal-grupo-usuario'
 import { ActionMenu } from '../../components/ui/action-menu'
 import { ModalConfirm } from '../../components/ui/modal-confirmation'
+import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 
 export const GroupView = (props: ReturnType<typeof useGroup>) => {
+  if (props.getGroupIdQuery.isLoading || props.getGroupUsersQuery.isLoading) {
+    return (
+      <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupo">
+        <div className="space-y-6">
+          <div className="flex items-center gap-1">
+            <Skeleton variant="circular" width="9px" height="9px" />
+            <Skeleton width="60px" height="13px" />
+          </div>
+          <div className="mb-[35px] mt-[27px] flex items-center justify-between">
+            <div className="flex items-center gap-[10px]">
+              <Skeleton variant="circular" width="14px" height="14px" />
+              <Skeleton width="200px" height="24px" />
+            </div>
+            <Skeleton width="150px" height="44px" />
+          </div>
+          <TableSkeleton headers={['Nome da tabela', 'Banco de dados ', '']} rows={5} />
+          
+          <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+            <div className="flex items-center gap-[10px]">
+              <Skeleton variant="circular" width="14px" height="14px" />
+              <Skeleton width="200px" height="24px" />
+            </div>
+            <Skeleton width="150px" height="44px" />
+          </div>
+          <TableSkeleton headers={['Nome do usuário', 'E-mail', '']} rows={5} />
+        </div>
+      </PageComponent>
+    )
+  }
+
   return (
     <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupo">
       <button

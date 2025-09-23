@@ -71,7 +71,14 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
               className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
               disabled={isLoading}
             >
-              {isLoading ? 'Carregando...' : 'Entrar'}
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Entrando...</span>
+                </div>
+              ) : (
+                'Entrar'
+              )}
             </button>
           </form>
         </div>
