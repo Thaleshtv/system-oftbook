@@ -4,7 +4,8 @@ import {
   MdOutlineHistory,
   MdOutlineAdd,
   MdOutlineLogout,
-  MdArchive
+  MdArchive,
+  MdArrowBackIosNew
 } from 'react-icons/md'
 
 import { ReactNode, ReactElement } from 'react'
@@ -24,6 +25,7 @@ interface ChatPageComponentProps {
   onCreateNewSessao?: () => void
   onArchiveSessao?: (sessaoId: string) => void
   onCreateNewPasta?: () => void
+  onBack?: () => void
   // Props para estados de loading
   isLoadingInitialData?: boolean
 }
@@ -39,6 +41,7 @@ export const ChatPageComponent = ({
   onCreateNewSessao,
   onArchiveSessao,
   onCreateNewPasta,
+  onBack,
   isLoadingInitialData = false
 }: ChatPageComponentProps) => {
   return (
@@ -189,9 +192,20 @@ export const ChatPageComponent = ({
 
       {/* Topbar */}
       <div className="fixed left-[276px] top-0 right-0 h-[88px] border-b border-[#D9D9D9] bg-white flex items-center justify-between px-6 z-20">
-        <div className="flex items-center gap-3 text-[#1D1D1D]">
-          {topbarIcon}
-          <span className="text-[24px] font-medium">{topbarTitle}</span>
+        <div className="flex flex-col text-[#1D1D1D]">
+          <div className="flex items-center gap-3">
+            {topbarIcon}
+            <span className="text-[24px] font-medium">{topbarTitle}</span>
+          </div>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1 cursor-pointer text-[13px] font-medium text-[#121623] mt-1"
+            >
+              <MdArrowBackIosNew size={9} />
+              Voltar
+            </button>
+          )}
         </div>
         <img src={Altona} alt="Altona" />
       </div>

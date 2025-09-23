@@ -32,7 +32,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
     createNewSessao,
     selectSessao,
     archiveSessao,
-    evaluateMessage
+    evaluateMessage,
+    handleBack
   } = props
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -70,6 +71,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
       onSelectSessao={selectSessao}
       onCreateNewSessao={handleCreateNewSession}
       onArchiveSessao={archiveSessao}
+      onBack={handleBack}
       isLoadingInitialData={isLoadingInitialData}
     >
       <div className="h-full flex flex-col lg:flex-row overflow-hidden">
