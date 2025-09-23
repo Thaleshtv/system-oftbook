@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md'
 import { AiOutlineConsoleSql } from 'react-icons/ai'
 import { ModalConfig } from './components/modal-config'
+import { ModalPrompt } from './components/modal-prompt'
 
 // Função para obter ícone baseado no nome do agente
 const getIconForAgente = (nome: string) => {
@@ -95,7 +96,12 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
                   Código: {agente.nome}
                 </div>
                 <div className="flex items-center gap-[10px]">
-                  <button>
+                  <button
+                    onClick={() => {
+                      props.setSelectedAgente(agente)
+                      props.setModalPrompt(true)
+                    }}
+                  >
                     <MdOutlineAutoAwesome
                       size={28}
                       className="mr-3 text-[#000]/46"
@@ -118,6 +124,12 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
         <ModalConfig
           onClose={() => props.setModalConfig(false)}
           onSave={() => {}}
+        />
+      )}
+      {props.modalPrompt && (
+        <ModalPrompt
+          onClose={() => props.setModalPrompt(false)}
+          agente={props.selectedAgente}
         />
       )}
     </PageComponent>
