@@ -8,6 +8,7 @@ import { ConnectionBankPerColumns } from './ConnectionBankPerColumns'
 import { Groups } from './Groups'
 import { Group } from './Group'
 import { Agentes } from './Agentes'
+import { Chat } from './Chat'
 
 export {
   Login,
@@ -19,5 +20,6 @@ export {
   ConnectionBankPerColumns,
   Groups,
   Group,
-  Agentes
+  Agentes,
+  Chat
 }

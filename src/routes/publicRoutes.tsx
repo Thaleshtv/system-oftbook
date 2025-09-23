@@ -56,6 +56,12 @@ const agentesRoute = createRoute({
   component: Pages.Agentes
 })
 
+const chatRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/chat',
+  component: Pages.Chat
+})
+
 export const publicRoutes = [
   indexRoute,
   redefinirRoute,
@@ -65,5 +71,6 @@ export const publicRoutes = [
   connectionBankPerColumnsRoute,
   groupsRoute,
   groupRoute,
-  agentesRoute
+  agentesRoute,
+  chatRoute
 ]
