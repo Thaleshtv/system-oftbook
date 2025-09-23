@@ -12,6 +12,7 @@ import {
 } from 'react-icons/md'
 import { GraphSkeleton, InsightSkeleton } from '../../components/ui/skeleton'
 import { ChartComponent } from '../../components/ui/chart'
+import { MarkdownRenderer } from '../../components/ui/markdown-renderer'
 
 export const ChatView = (props: ReturnType<typeof useChat>) => {
   const {
@@ -109,9 +110,11 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 <InsightSkeleton />
               ) : insight ? (
                 <div className="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 overflow-auto">
-                  <p className="text-sm text-blue-800 leading-relaxed whitespace-pre-wrap">
-                    {insight}
-                  </p>
+                  <MarkdownRenderer 
+                    content={insight} 
+                    variant="insight"
+                    className="text-sm text-blue-800 leading-relaxed"
+                  />
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
@@ -177,9 +180,11 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                             borderRadius: '0 12px 12px 12px'
                           }}
                         >
-                          <p className="text-sm leading-normal m-0">
-                            {message.text}
-                          </p>
+                          <MarkdownRenderer 
+                            content={message.text} 
+                            variant="chat"
+                            className="text-sm leading-normal m-0"
+                          />
                         </div>
                         {/* Botões de avaliação para mensagens do bot */}
                         <div className="flex items-center gap-2 ml-2">

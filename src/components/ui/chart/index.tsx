@@ -48,11 +48,33 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
   try {
     const config: ChartConfig = JSON.parse(chartData)
 
+    // Função para detectar se os dados são monetários
+    const isMonetaryData = (): boolean => {
+      // Verifica se há palavras-chave monetárias no título ou labels
+      const monetaryKeywords = ['valor', 'preço', 'custo', 'receita', 'faturamento', 'lucro', 'vendas', 'real', 'reais', 'R$', 'BRL']
+      const textToCheck = [
+        config.title?.text || '',
+        config.xaxis?.title?.text || '',
+        config.yaxis?.title?.text || '',
+        ...(config.series?.map((s: any) => s.name || '') || [])
+      ].join(' ').toLowerCase()
+      
+      return monetaryKeywords.some(keyword => textToCheck.includes(keyword.toLowerCase()))
+    }
+
+    // Formatação monetária brasileira
+    const formatBRL = (value: number) => {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(value)
+    }
+
     // Configurações padrão do ApexCharts
     const defaultOptions: ApexOptions = {
       chart: {
         type: config.chart.type,
-        height: config.chart.height || 350,
+        height: config.chart.height || 450, // Aumentado de 350 para 450
         toolbar: {
           show: true,
           tools: {
@@ -83,7 +105,10 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
         '#17becf'
       ],
       dataLabels: {
-        enabled: false
+        enabled: false,
+        formatter: function(val: number) {
+          return isMonetaryData() ? formatBRL(val) : val.toString()
+        }
       },
       stroke: {
         curve: 'smooth',
@@ -97,6 +122,20 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
         show: true,
         position: 'top',
         horizontalAlign: 'left'
+      },
+      yaxis: {
+        labels: {
+          formatter: function(val: number) {
+            return isMonetaryData() ? formatBRL(val) : val.toString()
+          }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(val: number) {
+            return isMonetaryData() ? formatBRL(val) : val.toString()
+          }
+        }
       }
     }
 
@@ -119,7 +158,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
           options={finalOptions}
           series={config.series}
           type={config.chart.type}
-          height={config.chart.height || 350}
+          height={config.chart.height || 450}
         />
       </div>
     )
