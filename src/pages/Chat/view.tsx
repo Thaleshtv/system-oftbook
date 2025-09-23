@@ -6,11 +6,31 @@ import {
   MdOutlineSend,
   MdOutlineInsights,
   MdOutlineBarChart,
-  MdOutlineLightbulb
+  MdOutlineLightbulb,
+  MdThumbUp,
+  MdThumbDown
 } from 'react-icons/md'
+import { GraphSkeleton, InsightSkeleton } from '../../components/ui/skeleton'
 
 export const ChatView = (props: ReturnType<typeof useChat>) => {
-  const { messages, currentMessage, setCurrentMessage, sendMessage } = props
+  const {
+    messages,
+    currentMessage,
+    setCurrentMessage,
+    sendMessage,
+    currentSessao,
+    sessoes,
+    pastas,
+    graph,
+    insight,
+    isLoadingResponse,
+    isLoadingInitialData,
+    isCreatingSession,
+    createNewSessao,
+    selectSessao,
+    archiveSessao,
+    evaluateMessage
+  } = props
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -32,10 +52,23 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
     }
   }
 
+  const handleCreateNewSession = () => {
+    const sessionName = `Nova Sessão ${new Date().toLocaleDateString('pt-BR')}`
+    createNewSessao(sessionName, 'Sessão criada automaticamente')
+  }
+
   return (
     <ChatPageComponent
-      topbarTitle="Chat"
+      topbarTitle={currentSessao ? `Chat - ${currentSessao.nome}` : 'Chat'}
       topbarIcon={<MdOutlineChat size={24} />}
+      sessoes={sessoes}
+      pastas={pastas}
+      currentSessao={currentSessao}
+      onSelectSessao={selectSessao}
+      onCreateNewSessao={handleCreateNewSession}
+      onArchiveSessao={archiveSessao}
+      isLoadingInitialData={isLoadingInitialData}
+      isCreatingSession={isCreatingSession}
     >
       <div className="h-full flex flex-col lg:flex-row">
         {/* Coluna esquerda: Gráficos e Insights - com padding */}
@@ -43,26 +76,53 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
           {/* Seção de Gráficos */}
           <div className="flex-1 bg-white rounded-2xl border border-gray-200 flex flex-col overflow-hidden min-h-0 min-h-[250px] md:min-h-0">
             <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-              {/* Placeholder para gráficos */}
-              <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
-                <MdOutlineBarChart size={48} />
-                <span className="text-sm">Gráfico será exibido aqui</span>
-              </div>
+              {isLoadingResponse && !graph ? (
+                <GraphSkeleton />
+              ) : graph ? (
+                <div className="flex-1 flex flex-col gap-4">
+                  <h3 className="text-sm font-medium text-gray-700 m-0">
+                    Gráfico Gerado
+                  </h3>
+                  <div
+                    className="flex-1 bg-gray-50 rounded-xl p-4 overflow-auto"
+                    dangerouslySetInnerHTML={{ __html: graph }}
+                  />
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
+                  <MdOutlineBarChart size={48} />
+                  <span className="text-sm">Gráfico será exibido aqui</span>
+                  <span className="text-xs text-center px-4">
+                    Faça uma pergunta que requeira visualização de dados
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-
+          </div>{' '}
           {/* Seção de Insights */}
           <div className="flex-1 bg-white rounded-2xl border border-gray-200 flex flex-col overflow-hidden min-h-0 min-h-[250px] md:min-h-0">
             <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-              {/* Título simples para insights */}
               <h3 className="text-sm font-medium text-gray-700 m-0">
                 Insights
               </h3>
-              {/* Placeholder para insights */}
-              <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
-                <MdOutlineInsights size={48} />
-                <span className="text-sm">Insights serão exibidos aqui</span>
-              </div>
+              {isLoadingResponse && !insight ? (
+                <InsightSkeleton />
+              ) : insight ? (
+                <div className="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 overflow-auto">
+                  <p className="text-sm text-blue-800 leading-relaxed whitespace-pre-wrap">
+                    {insight}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
+                  <MdOutlineInsights size={48} />
+                  <span className="text-sm">Insights serão exibidos aqui</span>
+                  <span className="text-xs text-center px-4">
+                    Os insights aparecerão automaticamente com as respostas da
+                    IA
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -109,16 +169,47 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                         Inteligência Artificial
                       </span>
                       {/* Balão da IA */}
-                      <div
-                        className="border border-[#E4E4E7] text-gray-800 px-4 py-3"
-                        style={{
-                          backgroundColor: 'rgba(230, 230, 230, 0.26)',
-                          borderRadius: '0 12px 12px 12px'
-                        }}
-                      >
-                        <p className="text-sm leading-normal m-0">
-                          {message.text}
-                        </p>
+                      <div className="flex flex-col gap-2">
+                        <div
+                          className="border border-[#E4E4E7] text-gray-800 px-4 py-3"
+                          style={{
+                            backgroundColor: 'rgba(230, 230, 230, 0.26)',
+                            borderRadius: '0 12px 12px 12px'
+                          }}
+                        >
+                          <p className="text-sm leading-normal m-0">
+                            {message.text}
+                          </p>
+                        </div>
+                        {/* Botões de avaliação para mensagens do bot */}
+                        <div className="flex items-center gap-2 ml-2">
+                          <button
+                            onClick={() =>
+                              evaluateMessage(message.id, 'positive')
+                            }
+                            className={`p-1 rounded-full transition-colors ${
+                              message.avaliacao === 'positive'
+                                ? 'bg-green-100 text-green-600'
+                                : 'text-gray-400 hover:text-green-600 hover:bg-green-50'
+                            }`}
+                            title="Avaliar positivamente"
+                          >
+                            <MdThumbUp size={16} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              evaluateMessage(message.id, 'negative')
+                            }
+                            className={`p-1 rounded-full transition-colors ${
+                              message.avaliacao === 'negative'
+                                ? 'bg-red-100 text-red-600'
+                                : 'text-gray-400 hover:text-red-600 hover:bg-red-50'
+                            }`}
+                            title="Avaliar negativamente"
+                          >
+                            <MdThumbDown size={16} />
+                          </button>
+                        </div>
                       </div>
                       {/* Horário fora do balão - canto direito */}
                       <span className="text-xs opacity-70 text-gray-500 self-end mr-4">
@@ -131,6 +222,40 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                   )}
                 </div>
               ))}
+              {/* Indicador de carregamento */}
+              {isLoadingResponse && (
+                <div className="flex justify-start">
+                  <div className="flex flex-col gap-2 max-w-[70%]">
+                    <span className="text-xs text-gray-500">
+                      Inteligência Artificial
+                    </span>
+                    <div
+                      className="border border-[#E4E4E7] text-gray-800 px-4 py-3"
+                      style={{
+                        backgroundColor: 'rgba(230, 230, 230, 0.26)',
+                        borderRadius: '0 12px 12px 12px'
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                          <div
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                            style={{ animationDelay: '0.1s' }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                            style={{ animationDelay: '0.2s' }}
+                          ></div>
+                        </div>
+                        <span className="text-sm text-gray-600">
+                          Pensando...
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* Elemento invisível para scroll automático */}
               <div ref={messagesEndRef} />
             </div>
@@ -160,12 +285,16 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 {/* Ícone de enviar */}
                 <button
                   onClick={handleSendMessage}
-                  disabled={!currentMessage.trim()}
+                  disabled={!currentMessage.trim() || isLoadingResponse}
                   className="flex-shrink-0 p-1 bg-transparent border-none cursor-pointer transition-colors duration-200 disabled:cursor-not-allowed"
                 >
                   <MdOutlineSend
                     size={20}
-                    className="text-[#004080] disabled:text-gray-400"
+                    className={`${
+                      !currentMessage.trim() || isLoadingResponse
+                        ? 'text-gray-400'
+                        : 'text-[#004080]'
+                    }`}
                   />
                 </button>
               </div>

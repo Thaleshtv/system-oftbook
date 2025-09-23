@@ -140,3 +140,88 @@ export const ListPageSkeleton: React.FC<{
     <TableSkeleton headers={tableHeaders} rows={tableRows} />
   </div>
 )
+
+// Skeleton para mensagem de chat
+export const ChatMessageSkeleton: React.FC<{ sender: 'user' | 'bot' }> = ({
+  sender
+}) => (
+  <div
+    className={`flex w-full ${
+      sender === 'user' ? 'justify-end' : 'justify-start'
+    }`}
+  >
+    <div
+      className={`flex flex-col gap-2 max-w-[70%] ${
+        sender === 'user' ? 'items-end' : 'items-start'
+      }`}
+    >
+      <Skeleton width="60px" height="12px" />
+      <div
+        className={`px-4 py-3 ${
+          sender === 'user'
+            ? 'bg-blue-100 rounded-l-3xl rounded-tr-3xl rounded-br-sm'
+            : 'bg-gray-100 rounded-r-3xl rounded-tl-3xl rounded-bl-sm'
+        }`}
+      >
+        <Skeleton width="200px" height="16px" className="mb-2" />
+        <Skeleton width="150px" height="16px" />
+      </div>
+      <Skeleton width="40px" height="10px" />
+    </div>
+  </div>
+)
+
+// Skeleton para lista de sessões na sidebar
+export const SessionListSkeleton: React.FC<{ count?: number }> = ({
+  count = 3
+}) => (
+  <div className="flex flex-col gap-2">
+    {Array.from({ length: count }).map((_, index) => (
+      <div
+        key={index}
+        className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px]"
+      >
+        <Skeleton variant="circular" width="18px" height="18px" />
+        <div className="flex-1">
+          <Skeleton width="80%" height="14px" className="mb-1" />
+          <Skeleton width="60%" height="10px" />
+        </div>
+      </div>
+    ))}
+  </div>
+)
+
+// Skeleton para gráfico
+export const GraphSkeleton: React.FC = () => (
+  <div className="flex-1 flex flex-col gap-4">
+    <Skeleton width="120px" height="14px" />
+    <div className="flex-1 bg-gray-50 rounded-xl p-4 flex flex-col gap-3 min-h-[200px]">
+      <Skeleton width="100%" height="20px" />
+      <div className="flex-1 flex items-end gap-2">
+        <Skeleton width="40px" height="60px" />
+        <Skeleton width="40px" height="80px" />
+        <Skeleton width="40px" height="40px" />
+        <Skeleton width="40px" height="100px" />
+        <Skeleton width="40px" height="60px" />
+      </div>
+      <Skeleton width="100%" height="16px" />
+    </div>
+  </div>
+)
+
+// Skeleton para insights
+export const InsightSkeleton: React.FC = () => (
+  <div className="flex-1 flex flex-col gap-4">
+    <Skeleton width="80px" height="14px" />
+    <div className="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col gap-2 min-h-[200px]">
+      <Skeleton width="100%" height="14px" />
+      <Skeleton width="90%" height="14px" />
+      <Skeleton width="95%" height="14px" />
+      <Skeleton width="85%" height="14px" />
+      <div className="mt-4">
+        <Skeleton width="70%" height="14px" />
+        <Skeleton width="80%" height="14px" className="mt-2" />
+      </div>
+    </div>
+  </div>
+)

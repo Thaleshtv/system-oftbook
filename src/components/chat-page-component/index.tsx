@@ -3,25 +3,46 @@ import {
   MdOutlineChat,
   MdOutlineHistory,
   MdOutlineAdd,
-  MdOutlineLogout
+  MdOutlineLogout,
+  MdArchive
 } from 'react-icons/md'
-import { useRouterState } from '@tanstack/react-router'
+
 import { ReactNode, ReactElement } from 'react'
 import Altona from '../../assets/altona.svg'
+import { ISessaoResponse } from '../../services/sessoes'
+import { SessionListSkeleton } from '../ui/skeleton'
 
 interface ChatPageComponentProps {
   children: ReactNode
   topbarTitle: string
   topbarIcon: ReactElement
+  // Props para integração com sessões e pastas
+  sessoes?: ISessaoResponse[]
+  pastas?: string[]
+  currentSessao?: ISessaoResponse | null
+  onSelectSessao?: (sessaoId: string) => void
+  onCreateNewSessao?: () => void
+  onArchiveSessao?: (sessaoId: string) => void
+  onCreateNewPasta?: () => void
+  // Props para estados de loading
+  isLoadingInitialData?: boolean
+  isCreatingSession?: boolean
 }
 
 export const ChatPageComponent = ({
   children,
   topbarTitle,
-  topbarIcon
+  topbarIcon,
+  sessoes = [],
+  pastas = [],
+  currentSessao,
+  onSelectSessao,
+  onCreateNewSessao,
+  onArchiveSessao,
+  onCreateNewPasta,
+  isLoadingInitialData = false,
+  isCreatingSession = false
 }: ChatPageComponentProps) => {
-  const { location } = useRouterState()
-
   return (
     <div className="flex w-full h-screen">
       {/* Sidebar fixo */}
@@ -46,110 +67,116 @@ export const ChatPageComponent = ({
                 <h3 className="text-[14px] font-medium text-[#0A1B39]">
                   Pastas
                 </h3>
-                <button className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-gray-200 text-[#83899F]">
+                <button
+                  onClick={onCreateNewPasta}
+                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-gray-200 text-[#83899F]"
+                >
                   <MdOutlineAdd size={16} />
                 </button>
               </div>
               <ul className="flex flex-col gap-2">
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineFolder size={18} />
-                    Trabalho
-                  </div>
-                </li>
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineFolder size={18} />
-                    Pessoal
-                  </div>
-                </li>
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineFolder size={18} />
-                    Projetos
-                  </div>
-                </li>
+                {pastas.length > 0 ? (
+                  pastas.map((pasta, index) => (
+                    <li key={index}>
+                      <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
+                        <MdOutlineFolder size={18} />
+                        {pasta}
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <li>
+                    <div className="px-[16px] py-[8px] text-[12px] text-[#83899F] italic">
+                      Nenhuma pasta encontrada
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
 
-            {/* Chats */}
+            {/* Chats Ativos */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[14px] font-medium text-[#0A1B39]">
                   Chats
                 </h3>
-                <button className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-gray-200 text-[#83899F]">
+                <button
+                  onClick={onCreateNewSessao}
+                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-gray-200 text-[#83899F]"
+                >
                   <MdOutlineAdd size={16} />
                 </button>
               </div>
-              <ul className="flex flex-col gap-2">
-                <li>
-                  <div
-                    className={`px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] ${
-                      location.pathname === '/chat/1'
-                        ? 'bg-gray-200 text-[#004080]'
-                        : 'hover:bg-gray-100 text-[#83899F]'
-                    }`}
-                  >
-                    <MdOutlineChat size={18} />
-                    Chat sobre React
-                  </div>
-                </li>
-                <li>
-                  <div
-                    className={`px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] ${
-                      location.pathname === '/chat/2'
-                        ? 'bg-gray-200 text-[#004080]'
-                        : 'hover:bg-gray-100 text-[#83899F]'
-                    }`}
-                  >
-                    <MdOutlineChat size={18} />
-                    Dúvidas TypeScript
-                  </div>
-                </li>
-                <li>
-                  <div
-                    className={`px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] ${
-                      location.pathname === '/chat/3'
-                        ? 'bg-gray-200 text-[#004080]'
-                        : 'hover:bg-gray-100 text-[#83899F]'
-                    }`}
-                  >
-                    <MdOutlineChat size={18} />
-                    Arquitetura Sistema
-                  </div>
-                </li>
+              <ul className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                {isLoadingInitialData ? (
+                  <SessionListSkeleton count={3} />
+                ) : sessoes.filter((s) => !s.arquivada).length > 0 ? (
+                  sessoes
+                    .filter((s) => !s.arquivada)
+                    .map((sessao) => (
+                      <li key={sessao.id}>
+                        <div className="group relative">
+                          <div
+                            onClick={() => onSelectSessao?.(sessao.id)}
+                            className={`px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] ${
+                              currentSessao?.id === sessao.id
+                                ? 'bg-gray-200 text-[#004080]'
+                                : 'hover:bg-gray-100 text-[#83899F]'
+                            }`}
+                          >
+                            <MdOutlineChat size={18} />
+                            <span className="flex-1 truncate">
+                              {sessao.nome}
+                            </span>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onArchiveSessao?.(sessao.id)
+                            }}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-600 rounded transition-all"
+                            title="Arquivar sessão"
+                          >
+                            <MdArchive size={12} />
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                ) : (
+                  <li>
+                    <div className="px-[16px] py-[8px] text-[12px] text-[#83899F] italic">
+                      Nenhum chat ativo
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
 
-            {/* Chats Recentes */}
-            <div>
-              <div className="flex items-center mb-3">
-                <h3 className="text-[14px] font-medium text-[#0A1B39]">
-                  Chats Recentes
-                </h3>
+            {/* Chats Arquivados */}
+            {sessoes.filter((s) => s.arquivada).length > 0 && (
+              <div>
+                <div className="flex items-center mb-3">
+                  <h3 className="text-[14px] font-medium text-[#0A1B39]">
+                    Chats Arquivados
+                  </h3>
+                </div>
+                <ul className="flex flex-col gap-2 max-h-32 overflow-y-auto">
+                  {sessoes
+                    .filter((s) => s.arquivada)
+                    .map((sessao) => (
+                      <li key={sessao.id}>
+                        <div
+                          onClick={() => onSelectSessao?.(sessao.id)}
+                          className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]"
+                        >
+                          <MdOutlineHistory size={18} />
+                          <span className="flex-1 truncate">{sessao.nome}</span>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
               </div>
-              <ul className="flex flex-col gap-2">
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineHistory size={18} />
-                    Configuração Docker
-                  </div>
-                </li>
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineHistory size={18} />
-                    API REST Tutorial
-                  </div>
-                </li>
-                <li>
-                  <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                    <MdOutlineHistory size={18} />
-                    Git Commands
-                  </div>
-                </li>
-              </ul>
-            </div>
+            )}
           </div>
         </div>
 
