@@ -1,47 +1,41 @@
 import Cookies from 'js-cookie'
 import { create } from 'zustand'
-import { User } from '../types/userType'
 
 interface AuthStore {
   state: {
-    user: User | null
-    isAuthenticated: boolean
+    token: string | null
   }
   dispatch: {
-    setUser: (userData: User) => void
+    setToken: (token: string) => void
     logOut: () => void
   }
 }
 
-const getUserFromCookies = (): User | null => {
-  const userCookie = Cookies.get('user')
-  return userCookie ? JSON.parse(userCookie) : null
+const getTokenFromCookies = (): string | null => {
+  return Cookies.get('token') || null
 }
 
 export const useAuthStore = create<AuthStore>((set) => {
   return {
     state: {
-      user: getUserFromCookies(),
-      isAuthenticated: getUserFromCookies() ? true : false
+      token: getTokenFromCookies()
     },
     dispatch: {
-      setUser: (userData: User) => {
+      setToken: (token: string) => {
         set(() => ({
           state: {
-            user: userData,
-            isAuthenticated: true
+            token: token
           }
         }))
-        Cookies.set('user', JSON.stringify(userData))
+        Cookies.set('token', token)
       },
       logOut: () => {
         set(() => ({
           state: {
-            user: null,
-            isAuthenticated: false
+            token: null
           }
         }))
-        Cookies.remove('user')
+        Cookies.remove('token')
       }
     }
   }

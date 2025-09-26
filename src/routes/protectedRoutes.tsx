@@ -15,12 +15,12 @@ const withProtection = (
   return () => {
     const { state } = useAuthStore()
     const { dispatch: toast } = useToastStore()
-    const isAuthenticated = state.isAuthenticated
+    const isAuthenticated = !!state.token
 
     const allowed = isAllowed({
       path,
       acl,
-      systemRole: state.user?.role || ''
+      systemRole: ''
     })
 
     useEffect(() => {
@@ -55,15 +55,87 @@ export const protectedRoutes = [
       [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: false }
     })
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/conexao-bancos',
+    component: withProtection(
+      Pages.ConnectionBank,
+      '/configuracoes/conexao-bancos',
+      {
+        ...defaultAcl,
+        [Roles.ADMINISTRADOR]: { allow: true },
+        [Roles.GERENTE]: { allow: true },
+        [Roles.USUARIO]: { allow: true }
+      }
+    )
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/conexao-banco/$connectionId',
+    component: withProtection(
+      Pages.ConnectionBankPerTables,
+      '/configuracoes/conexao-banco/$connectionId',
+      {
+        ...defaultAcl,
+        [Roles.ADMINISTRADOR]: { allow: true },
+        [Roles.GERENTE]: { allow: true },
+        [Roles.USUARIO]: { allow: true }
+      }
+    )
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/conexao-banco/$connectionId/$tableId',
+    component: withProtection(
+      Pages.ConnectionBankPerColumns,
+      '/configuracoes/conexao-banco/$connectionId/$tableId',
+      {
+        ...defaultAcl,
+        [Roles.ADMINISTRADOR]: { allow: true },
+        [Roles.GERENTE]: { allow: true },
+        [Roles.USUARIO]: { allow: true }
+      }
+    )
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/grupos',
+    component: withProtection(Pages.Groups, '/configuracoes/grupos', {
+      ...defaultAcl,
+      [Roles.ADMINISTRADOR]: { allow: true },
+      [Roles.GERENTE]: { allow: true },
+      [Roles.USUARIO]: { allow: true }
+    })
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/grupo/$groupId',
+    component: withProtection(Pages.Group, '/configuracoes/grupo/$groupId', {
+      ...defaultAcl,
+      [Roles.ADMINISTRADOR]: { allow: true },
+      [Roles.GERENTE]: { allow: true },
+      [Roles.USUARIO]: { allow: true }
+    })
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/configuracoes/agentes',
+    component: withProtection(Pages.Agentes, '/configuracoes/agentes', {
+      ...defaultAcl,
+      [Roles.ADMINISTRADOR]: { allow: true },
+      [Roles.GERENTE]: { allow: true },
+      [Roles.USUARIO]: { allow: true }
+    })
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/chat/$token',
+    component: withProtection(Pages.Chat, '/chat/$token', {
+      ...defaultAcl,
+      [Roles.ADMINISTRADOR]: { allow: true },
+      [Roles.GERENTE]: { allow: true },
+      [Roles.USUARIO]: { allow: true }
+    })
   })
-  // createRoute({
-  //   getParentRoute: () => rootRoute,
-  //   path: '/connection-bank',
-  //   component: withProtection(Pages.ConnectionBank, '/conexao-banco', {
-  //     ...defaultAcl,
-  //     [Roles.ADMINISTRADOR]: { allow: true },
-  //     [Roles.GERENTE]: { allow: true },
-  //     [Roles.USUARIO]: { allow: false }
-  //   })
-  // })
 ]

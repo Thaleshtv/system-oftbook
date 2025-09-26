@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import { useAuthStore } from '../store/userStore'
 import { AxiosRequestConfig } from 'axios'
 
@@ -15,13 +14,10 @@ const isRouteExcluded = (url?: string) =>
   url ? excludedRoutes.some((route) => url.includes(route)) : false
 
 const setAuthorizationHeader = (config: AxiosRequestConfig): void => {
-  const userJSON = Cookies.get('user')
+  const { token } = useAuthStore.getState().state
 
-  if (userJSON && config.headers) {
-    const { tokens } = JSON.parse(userJSON)
-    if (tokens && tokens.access) {
-      config.headers.Authorization = `Bearer ${tokens.access}`
-    }
+  if (token && config.headers) {
+    config.headers.Authorization = `${token}`
   }
 }
 

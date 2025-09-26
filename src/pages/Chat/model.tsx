@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from '@tanstack/react-router'
+import { useRouter, useParams } from '@tanstack/react-router'
 import { Conversacoes, IConversacaoResponse } from '../../services/conversacoes'
 import { Sessoes, ISessaoResponse } from '../../services/sessoes'
 import { Pastas } from '../../services/pastas'
@@ -31,13 +31,22 @@ export const useChat = () => {
   const [graphEnabled, setGraphEnabled] = useState(true)
 
   const router = useRouter()
+  const params = useParams({ from: '/chat/$token' })
 
   const {
-    state: { user }
+    dispatch: { setToken }
   } = useAuthStore()
+
   const {
     dispatch: { setOpenToast }
   } = useToastStore()
+
+  // Capturar token da URL e armazenar no store
+  useEffect(() => {
+    if (params.token) {
+      setToken(params.token)
+    }
+  }, [params.token, setToken])
 
   const showToast = (
     type: 'info' | 'success' | 'warning' | 'error',
@@ -109,11 +118,6 @@ export const useChat = () => {
   }
 
   const createNewSessao = async (nome: string, descricao: string = '') => {
-    if (!user?.name) {
-      showToast('error', 'Usuário não encontrado')
-      return
-    }
-
     try {
       setIsCreatingSession(true)
       // Limpar gráficos e insights ao criar nova sessão
@@ -122,7 +126,7 @@ export const useChat = () => {
       const newSessao = await Sessoes.createSessao({
         nome,
         descricao,
-        usuario_id: user.name // Using name as ID since User type doesn't have id
+        usuario_id: 'user' // Usando valor padrão já que não temos mais o objeto user
       })
       setSessoes((prev) => [newSessao, ...prev])
       setCurrentSessao(newSessao)
