@@ -163,18 +163,28 @@ export const PageComponent = ({
             </li>
 
             <li>
-              <Link
-                to="/chat/$token"
-                params={{ token: state.token || '' }}
-                className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                  location.pathname.startsWith('/chat')
-                    ? 'bg-gray-200 text-[#004080]'
-                    : 'hover:bg-gray-200 text-[#0A1B39]'
-                }`}
-              >
-                <MdOutlineChat size={20} />
-                Chat
-              </Link>
+              {state.token ? (
+                <Link
+                  to="/chat/$token"
+                  params={{ token: state.token }}
+                  className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
+                    location.pathname.startsWith('/chat')
+                      ? 'bg-gray-200 text-[#004080]'
+                      : 'hover:bg-gray-200 text-[#0A1B39]'
+                  }`}
+                >
+                  <MdOutlineChat size={20} />
+                  Chat
+                </Link>
+              ) : (
+                <div
+                  className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-not-allowed text-[14px] text-gray-400"
+                  title="Faça login para acessar o chat"
+                >
+                  <MdOutlineChat size={20} />
+                  Chat
+                </div>
+              )}
             </li>
           </ul>
         </div>

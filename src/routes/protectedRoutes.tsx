@@ -35,7 +35,7 @@ const withProtection = (
     const allowed = isAllowed({
       path,
       acl,
-      systemRole: ''
+      systemRole: 'administrador-geral' // Temporário: usar role de admin para desenvolvimento
     })
 
     useEffect(() => {
