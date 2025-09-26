@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { useToastStore } from '../../store/toastStore'
 import { useState } from 'react'
-import { ITablePayload } from '../../services/tables'
 
 const groupSchema = z.object({
   nome: z.string().min(1, 'Nome é obrigatório'),

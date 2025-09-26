@@ -17,21 +17,8 @@ RUN npm config set registry https://registry.npmjs.org/ && \
 # Copie o código
 COPY . .
 
-# Build da aplicação
-RUN npm run build
+# Exponha a porta do Vite
+EXPOSE 5173
 
-# Use nginx para servir
-FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
-
-# Configuração simples do nginx
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Rode o servidor de desenvolvimento
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]

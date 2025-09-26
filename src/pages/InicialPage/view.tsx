@@ -2,6 +2,7 @@ import './style.scss'
 import { useInicialPage } from './model'
 
 export const InicialPageView = (props: ReturnType<typeof useInicialPage>) => {
+  console.log('InicialPageView props', props)
   return (
     <div className="inicial-page">
       <h1>Bem-vindo à Página Inicial</h1>
