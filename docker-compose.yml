@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  altona-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: altona-system
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - altona-network
+
+  # Caso você queira rodar em modo desenvolvimento
+  altona-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: altona-system-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=5173
+    restart: unless-stopped
+    profiles:
+      - dev
+    networks:
+      - altona-network
+
+networks:
+  altona-network:
+    driver: bridge
