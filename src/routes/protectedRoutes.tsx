@@ -5,7 +5,7 @@ import { isAllowed, defaultAcl, Roles } from './acl'
 import * as Pages from '../pages'
 import { useAuthStore } from '../store/userStore'
 import { useToastStore } from '../store/toastStore'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const withProtection = (
   Component: React.ComponentType,
@@ -13,8 +13,23 @@ const withProtection = (
   acl: Record<string, { allow: boolean }>
 ) => {
   return () => {
-    const { state } = useAuthStore()
+    const { state, dispatch } = useAuthStore()
     const { dispatch: toast } = useToastStore()
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+
+    useEffect(() => {
+      if (path.includes('/chat/$token')) {
+        const currentPath = window.location.pathname
+        const tokenMatch = currentPath.match(/\/chat\/([^\/]+)/)
+        if (tokenMatch && tokenMatch[1] && !state.token) {
+          dispatch.setToken(tokenMatch[1])
+          setIsCheckingAuth(false)
+          return
+        }
+      }
+      setIsCheckingAuth(false)
+    }, [path, state.token, dispatch])
+
     const isAuthenticated = !!state.token
 
     const allowed = isAllowed({
@@ -24,11 +39,15 @@ const withProtection = (
     })
 
     useEffect(() => {
-      if (!isAuthenticated) {
+      if (!isCheckingAuth && !isAuthenticated) {
         toast.setOpenToast('error', 'Sua sessão expirou')
         window.location.href = '/'
       }
-    }, [isAuthenticated, toast])
+    }, [isAuthenticated, toast, isCheckingAuth])
+
+    if (isCheckingAuth) {
+      return <div>Carregando...</div>
+    }
 
     if (!isAuthenticated) return null
 

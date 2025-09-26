@@ -20,4 +20,22 @@ const newPasswordRoute = createRoute({
   component: Pages.NewPassword
 })
 
-export const publicRoutes = [indexRoute, redefinirRoute, newPasswordRoute]
+const notFoundRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/not-found',
+  component: Pages.NotFound
+})
+
+const catchAllRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '*',
+  component: Pages.NotFound
+})
+
+export const publicRoutes = [
+  indexRoute,
+  redefinirRoute,
+  newPasswordRoute,
+  notFoundRoute,
+  catchAllRoute
+]

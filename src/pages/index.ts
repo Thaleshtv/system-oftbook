@@ -9,6 +9,7 @@ import { Groups } from './Groups'
 import { Group } from './Group'
 import { Agentes } from './Agentes'
 import { Chat } from './Chat'
+import { NotFound } from './NotFound'
 
 export {
   Login,
@@ -21,5 +22,6 @@ export {
   Groups,
   Group,
   Agentes,
-  Chat
+  Chat,
+  NotFound
 }
