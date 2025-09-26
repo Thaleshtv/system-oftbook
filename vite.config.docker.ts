@@ -10,20 +10,20 @@ export default defineConfig(({ mode }) => ({
     port: 5173,
     // Configurações para melhor performance em VPN
     hmr: {
-      clientPort: 5173,
+      clientPort: 5173
     },
     watch: {
       usePolling: true,
-      interval: 1000,
+      interval: 1000
     },
     // Configurações de proxy para evitar problemas de CORS em desenvolvimento
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false,
-      },
-    },
+        secure: false
+      }
+    }
   },
   build: {
     outDir: 'dist',
@@ -34,15 +34,15 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['@tanstack/react-router'],
-          ui: ['react-icons', 'react-toastify'],
-        },
-      },
-    },
+          ui: ['react-icons', 'react-toastify']
+        }
+      }
+    }
   },
   // Configurações para resolver módulos
   resolve: {
     alias: {
-      '@': '/src',
-    },
-  },
+      '@': '/src'
+    }
+  }
 }))
