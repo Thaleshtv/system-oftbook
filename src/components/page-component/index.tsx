@@ -9,6 +9,7 @@ import {
 import { Link, useRouterState } from '@tanstack/react-router'
 import { ReactNode, ReactElement } from 'react'
 import Altona from '../../assets/altona.svg'
+import { useAuthStore } from '../../store/userStore'
 
 interface PageComponentProps {
   children: ReactNode
@@ -22,6 +23,7 @@ export const PageComponent = ({
   topbarIcon
 }: PageComponentProps) => {
   const { location } = useRouterState()
+  const { state } = useAuthStore()
 
   const isConfigPath = location.pathname.startsWith('/configuracoes')
   const activeSub = location.pathname
@@ -162,7 +164,8 @@ export const PageComponent = ({
 
             <li>
               <Link
-                to="/chat"
+                to="/chat/$token"
+                params={{ token: state.token || '' }}
                 className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
                   location.pathname.startsWith('/chat')
                     ? 'bg-gray-200 text-[#004080]'
