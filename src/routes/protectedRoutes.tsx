@@ -22,7 +22,9 @@ const withProtection = (
         const currentPath = window.location.pathname
         const tokenMatch = currentPath.match(/\/chat\/([^\/]+)/)
         if (tokenMatch && tokenMatch[1] && !state.token) {
-          dispatch.setToken(tokenMatch[1])
+          // Decodifica o token da URL para tratar caracteres especiais como %
+          const decodedToken = decodeURIComponent(tokenMatch[1])
+          dispatch.setToken(decodedToken)
           setIsCheckingAuth(false)
           return
         }

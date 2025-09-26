@@ -17,7 +17,9 @@ const setAuthorizationHeader = (config: AxiosRequestConfig): void => {
   const { token } = useAuthStore.getState().state
 
   if (token && config.headers) {
-    config.headers.Authorization = `${token}`
+    // Decodifica o token para tratar caracteres especiais como %
+    const decodedToken = decodeURIComponent(token)
+    config.headers.Authorization = `${decodedToken}`
   }
 }
 
