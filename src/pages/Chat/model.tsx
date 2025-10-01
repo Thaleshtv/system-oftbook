@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useRouter, useParams } from '@tanstack/react-router'
+import { useRouter, useParams, useLocation } from '@tanstack/react-router'
 import { Conversacoes, IConversacaoResponse } from '../../services/conversacoes'
 import { Sessoes, ISessaoResponse } from '../../services/sessoes'
 import { Pastas } from '../../services/pastas'
@@ -29,6 +29,7 @@ export const useChat = () => {
   const [isLoadingSessao, setIsLoadingSessao] = useState(false)
   const [isCreatingSession, setIsCreatingSession] = useState(false)
   const [graphEnabled, setGraphEnabled] = useState(true)
+  const location = useLocation()
 
   const router = useRouter()
   const params = useParams({ from: '/chat/$token' })
@@ -44,8 +45,11 @@ export const useChat = () => {
   // Capturar token da URL e armazenar no store
   useEffect(() => {
     if (params.token) {
-      const raw = encodeURIComponent(params.token)
-      setToken(raw)
+      const rawPath = location.pathname
+
+      const rawToken = rawPath.replace(/^\/chat\//, '')
+
+      setToken(rawToken)
     }
   }, [params.token, setToken])
 
