@@ -44,9 +44,8 @@ export const useChat = () => {
   // Capturar token da URL e armazenar no store
   useEffect(() => {
     if (params.token) {
-      // Decodifica o token da URL para tratar caracteres especiais como %
-      const decodedToken = decodeURIComponent(params.token)
-      setToken(decodedToken)
+      const raw = encodeURIComponent(params.token)
+      setToken(raw)
     }
   }, [params.token, setToken])
 
