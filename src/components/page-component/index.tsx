@@ -165,8 +165,8 @@ export const PageComponent = ({
             <li>
               {state.token ? (
                 <Link
-                  to="/chat/$token"
-                  params={{ token: state.token }}
+                  //@ts-ignore
+                  to={`/chat/${state.token}`}
                   className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
                     location.pathname.startsWith('/chat')
                       ? 'bg-gray-200 text-[#004080]'

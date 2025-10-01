@@ -18,17 +18,6 @@ const withProtection = (
     const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
     useEffect(() => {
-      if (path.includes('/chat/$token')) {
-        const currentPath = window.location.pathname
-        const tokenMatch = currentPath.match(/\/chat\/([^\/]+)/)
-        if (tokenMatch && tokenMatch[1] && !state.token) {
-          // Decodifica o token da URL para tratar caracteres especiais como %
-          const decodedToken = decodeURIComponent(tokenMatch[1])
-          dispatch.setToken(decodedToken)
-          setIsCheckingAuth(false)
-          return
-        }
-      }
       setIsCheckingAuth(false)
     }, [path, state.token, dispatch])
 
