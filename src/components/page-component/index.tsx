@@ -10,6 +10,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { ReactNode, ReactElement } from 'react'
 import Altona from '../../assets/altona.svg'
 import { useAuthStore } from '../../store/userStore'
+import { isAllowed, defaultAcl, Roles } from '../../routes/acl'
 
 interface PageComponentProps {
   children: ReactNode
@@ -27,6 +28,40 @@ export const PageComponent = ({
 
   const isConfigPath = location.pathname.startsWith('/configuracoes')
   const activeSub = location.pathname
+
+  const checkPermission = (path: string, customAcl?: any) => {
+    return isAllowed({
+      path,
+      acl: customAcl || defaultAcl,
+      systemRole: state.user?.role || 'usuario'
+    })
+  }
+
+  const menuPermissions = {
+    dashboard: checkPermission('/inicial-page', {
+      ...defaultAcl
+    }),
+    reports: checkPermission('/relatorios', {
+      ...defaultAcl
+    }),
+    configurations: checkPermission('/configuracoes', {
+      ...defaultAcl
+    }),
+    connectionBank: checkPermission('/configuracoes/conexao-bancos', {
+      ...defaultAcl
+    }),
+    groups: checkPermission('/configuracoes/grupos', {
+      ...defaultAcl
+    }),
+    agents: checkPermission('/configuracoes/agentes', {
+      ...defaultAcl
+    }),
+    chat: checkPermission('/chat', {
+      ...defaultAcl,
+      [Roles.ADMINISTRADOR]: { allow: true },
+      [Roles.USUARIO]: { allow: true }
+    })
+  }
 
   return (
     <div className="flex w-full h-screen">
@@ -48,146 +83,160 @@ export const PageComponent = ({
 
           {/* Menu */}
           <ul className="flex flex-col gap-3">
-            <li>
-              <Link
-                disabled
-                to="/inicial-page"
-                className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                  location.pathname === '/'
-                    ? 'bg-gray-200 text-[#004080]'
-                    : 'hover:bg-gray-200 text-[#0A1B39]'
-                }`}
-              >
-                <MdOutlineDashboard size={20} />
-                Dashboard
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                disabled
-                to="/inicial-page"
-                className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                  location.pathname.startsWith('/relatorios')
-                    ? 'bg-gray-200 text-[#004080]'
-                    : 'hover:bg-gray-200 text-[#0A1B39]'
-                }`}
-              >
-                <MdOutlineListAlt size={20} />
-                Relatórios
-              </Link>
-            </li>
-
-            {/* Configurações */}
-            <li className="flex flex-col">
-              <div
-                className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                  isConfigPath
-                    ? 'bg-gray-200 text-[#004080] border border-[#D9D9D9]'
-                    : 'hover:bg-gray-200 text-[#0A1B39] border border-[#D9D9D9]'
-                }`}
-              >
-                <MdOutlineSettings size={20} />
-                Configurações
-                <MdOutlineArrowDropDown
-                  size={20}
-                  className={`ml-auto transition-transform ${
-                    isConfigPath ? 'rotate-180' : 'rotate-0'
-                  }`}
-                />
-              </div>
-
-              {isConfigPath && (
-                <ul className="ml-[24px] mt-[16px] flex flex-col gap-[16px] relative text-[14px]">
-                  <li className="flex items-center gap-3 relative">
-                    <span
-                      className={`w-2 h-2 rounded-full relative z-10 ${
-                        activeSub.startsWith('/configuracoes/conexao-banco')
-                          ? 'bg-[#004080]'
-                          : 'bg-[#D8DBE4]'
-                      }`}
-                    />
-                    <Link
-                      to="/configuracoes/conexao-bancos"
-                      className={`cursor-pointer ${
-                        activeSub.startsWith('/configuracoes/conexao-banco')
-                          ? 'text-[#004080] font-medium'
-                          : 'text-[#83899F] hover:underline'
-                      }`}
-                    >
-                      Conexão com o banco
-                    </Link>
-                    <span className="absolute left-[3px] top-2 bottom-[-16px] w-[1px] bg-[#D9D9D9]" />
-                  </li>
-
-                  <li className="flex items-center gap-3 relative">
-                    <span
-                      className={`w-2 h-2 rounded-full relative z-10 ${
-                        activeSub.startsWith('/configuracoes/grupo')
-                          ? 'bg-[#004080]'
-                          : 'bg-[#D8DBE4]'
-                      }`}
-                    />
-                    <Link
-                      to="/configuracoes/grupos"
-                      className={`cursor-pointer ${
-                        activeSub.startsWith('/configuracoes/grupo')
-                          ? 'text-[#004080] font-medium'
-                          : 'text-[#83899F] hover:underline'
-                      }`}
-                    >
-                      Grupos
-                    </Link>
-                    <span className="absolute left-[3px] top-2 bottom-[-16px] w-[1px] bg-[#D9D9D9]" />
-                  </li>
-
-                  <li className="flex items-center gap-3 relative">
-                    <span
-                      className={`w-2 h-2 rounded-full relative z-10 ${
-                        activeSub === '/configuracoes/agentes'
-                          ? 'bg-[#004080]'
-                          : 'bg-[#D8DBE4]'
-                      }`}
-                    />
-                    <Link
-                      to="/configuracoes/agentes"
-                      className={`cursor-pointer ${
-                        activeSub === '/configuracoes/agentes'
-                          ? 'text-[#004080] font-medium'
-                          : 'text-[#83899F] hover:underline'
-                      }`}
-                    >
-                      Agentes
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            <li>
-              {state.token ? (
+            {menuPermissions.dashboard && (
+              <li>
                 <Link
-                  //@ts-ignore
-                  to={`/chat/${state.token}`}
+                  disabled
+                  to="/inicial-page"
                   className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                    location.pathname.startsWith('/chat')
+                    location.pathname === '/'
                       ? 'bg-gray-200 text-[#004080]'
                       : 'hover:bg-gray-200 text-[#0A1B39]'
                   }`}
                 >
-                  <MdOutlineChat size={20} />
-                  Chat
+                  <MdOutlineDashboard size={20} />
+                  Dashboard
                 </Link>
-              ) : (
-                <div
-                  className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-not-allowed text-[14px] text-gray-400"
-                  title="Faça login para acessar o chat"
+              </li>
+            )}
+
+            {menuPermissions.reports && (
+              <li>
+                <Link
+                  disabled
+                  to="/inicial-page"
+                  className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
+                    location.pathname.startsWith('/relatorios')
+                      ? 'bg-gray-200 text-[#004080]'
+                      : 'hover:bg-gray-200 text-[#0A1B39]'
+                  }`}
                 >
-                  <MdOutlineChat size={20} />
-                  Chat
+                  <MdOutlineListAlt size={20} />
+                  Relatórios
+                </Link>
+              </li>
+            )}
+
+            {/* Configurações */}
+            {menuPermissions.configurations && (
+              <li className="flex flex-col">
+                <div
+                  className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
+                    isConfigPath
+                      ? 'bg-gray-200 text-[#004080] border border-[#D9D9D9]'
+                      : 'hover:bg-gray-200 text-[#0A1B39] border border-[#D9D9D9]'
+                  }`}
+                >
+                  <MdOutlineSettings size={20} />
+                  Configurações
+                  <MdOutlineArrowDropDown
+                    size={20}
+                    className={`ml-auto transition-transform ${
+                      isConfigPath ? 'rotate-180' : 'rotate-0'
+                    }`}
+                  />
                 </div>
-              )}
-            </li>
+
+                {isConfigPath && (
+                  <ul className="ml-[24px] mt-[16px] flex flex-col gap-[16px] relative text-[14px]">
+                    {menuPermissions.connectionBank && (
+                      <li className="flex items-center gap-3 relative">
+                        <span
+                          className={`w-2 h-2 rounded-full relative z-10 ${
+                            activeSub.startsWith('/configuracoes/conexao-banco')
+                              ? 'bg-[#004080]'
+                              : 'bg-[#D8DBE4]'
+                          }`}
+                        />
+                        <Link
+                          to="/configuracoes/conexao-bancos"
+                          className={`cursor-pointer ${
+                            activeSub.startsWith('/configuracoes/conexao-banco')
+                              ? 'text-[#004080] font-medium'
+                              : 'text-[#83899F] hover:underline'
+                          }`}
+                        >
+                          Conexão com o banco
+                        </Link>
+                        <span className="absolute left-[3px] top-2 bottom-[-16px] w-[1px] bg-[#D9D9D9]" />
+                      </li>
+                    )}
+
+                    {menuPermissions.groups && (
+                      <li className="flex items-center gap-3 relative">
+                        <span
+                          className={`w-2 h-2 rounded-full relative z-10 ${
+                            activeSub.startsWith('/configuracoes/grupo')
+                              ? 'bg-[#004080]'
+                              : 'bg-[#D8DBE4]'
+                          }`}
+                        />
+                        <Link
+                          to="/configuracoes/grupos"
+                          className={`cursor-pointer ${
+                            activeSub.startsWith('/configuracoes/grupo')
+                              ? 'text-[#004080] font-medium'
+                              : 'text-[#83899F] hover:underline'
+                          }`}
+                        >
+                          Grupos
+                        </Link>
+                        <span className="absolute left-[3px] top-2 bottom-[-16px] w-[1px] bg-[#D9D9D9]" />
+                      </li>
+                    )}
+
+                    {menuPermissions.agents && (
+                      <li className="flex items-center gap-3 relative">
+                        <span
+                          className={`w-2 h-2 rounded-full relative z-10 ${
+                            activeSub === '/configuracoes/agentes'
+                              ? 'bg-[#004080]'
+                              : 'bg-[#D8DBE4]'
+                          }`}
+                        />
+                        <Link
+                          to="/configuracoes/agentes"
+                          className={`cursor-pointer ${
+                            activeSub === '/configuracoes/agentes'
+                              ? 'text-[#004080] font-medium'
+                              : 'text-[#83899F] hover:underline'
+                          }`}
+                        >
+                          Agentes
+                        </Link>
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </li>
+            )}
+
+            {menuPermissions.chat && (
+              <li>
+                {state.token ? (
+                  <Link
+                    //@ts-ignore
+                    to={`/chat/${state.token}`}
+                    className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
+                      location.pathname.startsWith('/chat')
+                        ? 'bg-gray-200 text-[#004080]'
+                        : 'hover:bg-gray-200 text-[#0A1B39]'
+                    }`}
+                  >
+                    <MdOutlineChat size={20} />
+                    Chat
+                  </Link>
+                ) : (
+                  <div
+                    className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-not-allowed text-[14px] text-gray-400"
+                    title="Faça login para acessar o chat"
+                  >
+                    <MdOutlineChat size={20} />
+                    Chat
+                  </div>
+                )}
+              </li>
+            )}
           </ul>
         </div>
 

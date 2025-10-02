@@ -26,7 +26,7 @@ const withProtection = (
     const allowed = isAllowed({
       path,
       acl,
-      systemRole: 'administrador-geral' // Temporário: usar role de admin para desenvolvimento
+      systemRole: state.user?.role || 'usuario'
     })
 
     useEffect(() => {
@@ -62,7 +62,6 @@ export const protectedRoutes = [
     component: withProtection(Pages.InicialPage, '/inicial-page', {
       ...defaultAcl,
       [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: false }
     })
   }),
@@ -73,10 +72,7 @@ export const protectedRoutes = [
       Pages.ConnectionBank,
       '/configuracoes/conexao-bancos',
       {
-        ...defaultAcl,
-        [Roles.ADMINISTRADOR]: { allow: true },
-        [Roles.GERENTE]: { allow: true },
-        [Roles.USUARIO]: { allow: true }
+        ...defaultAcl
       }
     )
   }),
@@ -87,10 +83,7 @@ export const protectedRoutes = [
       Pages.ConnectionBankPerTables,
       '/configuracoes/conexao-banco/$connectionId',
       {
-        ...defaultAcl,
-        [Roles.ADMINISTRADOR]: { allow: true },
-        [Roles.GERENTE]: { allow: true },
-        [Roles.USUARIO]: { allow: true }
+        ...defaultAcl
       }
     )
   }),
@@ -101,10 +94,7 @@ export const protectedRoutes = [
       Pages.ConnectionBankPerColumns,
       '/configuracoes/conexao-banco/$connectionId/$tableId',
       {
-        ...defaultAcl,
-        [Roles.ADMINISTRADOR]: { allow: true },
-        [Roles.GERENTE]: { allow: true },
-        [Roles.USUARIO]: { allow: true }
+        ...defaultAcl
       }
     )
   }),
@@ -114,7 +104,6 @@ export const protectedRoutes = [
     component: withProtection(Pages.Groups, '/configuracoes/grupos', {
       ...defaultAcl,
       [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: true }
     })
   }),
@@ -122,20 +111,14 @@ export const protectedRoutes = [
     getParentRoute: () => rootRoute,
     path: '/configuracoes/grupo/$groupId',
     component: withProtection(Pages.Group, '/configuracoes/grupo/$groupId', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
-      [Roles.USUARIO]: { allow: true }
+      ...defaultAcl
     })
   }),
   createRoute({
     getParentRoute: () => rootRoute,
     path: '/configuracoes/agentes',
     component: withProtection(Pages.Agentes, '/configuracoes/agentes', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
-      [Roles.USUARIO]: { allow: true }
+      ...defaultAcl
     })
   })
 ]

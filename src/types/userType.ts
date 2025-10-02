@@ -1,9 +1,9 @@
 export interface User {
   name: string
-  role: string
+  role: 'administrador' | 'usuario'
 }
 
 export interface UserApiResponse {
   user: string
-  privilegio: string
+  privilegio: 'administrador' | 'usuario'
 }

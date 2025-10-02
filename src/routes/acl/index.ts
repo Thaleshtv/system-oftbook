@@ -1,21 +1,18 @@
 export enum Roles {
   ADMINISTRADOR = 'ADMINISTRADOR',
-  USUARIO = 'USUARIO',
-  GERENTE = 'GERENTE'
+  USUARIO = 'USUARIO'
 }
 
 type Role = keyof typeof Roles
 
 export const SYSTEM_ROLES: { [key: string]: Role } = {
-  'administrador-geral': Roles.ADMINISTRADOR,
-  'usuario-comum': Roles.USUARIO,
-  'gerente-de-projeto': Roles.GERENTE
+  administrador: Roles.ADMINISTRADOR,
+  usuario: Roles.USUARIO
 }
 
 export const defaultAcl: Record<Role, { allow: boolean }> = {
   ADMINISTRADOR: { allow: true },
-  USUARIO: { allow: false },
-  GERENTE: { allow: false }
+  USUARIO: { allow: false }
 }
 
 type Acl = typeof defaultAcl
