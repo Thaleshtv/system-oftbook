@@ -137,15 +137,5 @@ export const protectedRoutes = [
       [Roles.GERENTE]: { allow: true },
       [Roles.USUARIO]: { allow: true }
     })
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/chat/$token',
-    component: withProtection(Pages.Chat, '/chat/$token', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.GERENTE]: { allow: true },
-      [Roles.USUARIO]: { allow: true }
-    })
   })
 ]
