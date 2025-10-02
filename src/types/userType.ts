@@ -1,4 +1,9 @@
 export interface User {
-  role: string
   name: string
+  role: string
+}
+
+export interface UserApiResponse {
+  user: string
+  privilegio: string
 }
