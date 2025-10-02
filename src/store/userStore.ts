@@ -33,7 +33,7 @@ const fetchUserData = async (token: string): Promise<User | null> => {
     console.log(response)
 
     return {
-      name: response.data.user,
+      name: response.data.nome,
       role: response.data.privilegio
     }
   } catch (error) {

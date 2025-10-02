@@ -4,6 +4,8 @@ export interface User {
 }
 
 export interface UserApiResponse {
-  user: string
+  usuario: string
   privilegio: 'administrador' | 'usuario'
+  nome: string
+  mensagem: string
 }
