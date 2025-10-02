@@ -45,6 +45,12 @@ export const ChatPageComponent = ({
 }: ChatPageComponentProps) => {
   const { state } = useAuthStore()
 
+  // Função para extrair apenas o primeiro nome
+  const getFirstName = (fullName?: string) => {
+    if (!fullName) return ''
+    return fullName.split(' ')[0]
+  }
+
   return (
     <div className="flex w-full h-screen">
       {/* Sidebar fixo */}
@@ -57,7 +63,7 @@ export const ChatPageComponent = ({
             </div>
             <div className="flex flex-col leading-[1]">
               <span className="font-bold text-[#0A1B39]">
-                {state.user?.name}
+                {getFirstName(state.user?.name)}
               </span>
               <span className="text-sm text-[#83899F]">{state.user?.role}</span>
             </div>
