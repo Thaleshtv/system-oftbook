@@ -12,12 +12,12 @@ import { ReactNode, ReactElement } from 'react'
 import Altona from '../../assets/altona.svg'
 import { ISessaoResponse } from '../../services/sessoes'
 import { SessionListSkeleton } from '../ui/skeleton'
+import { useAuthStore } from '../../store/userStore'
 
 interface ChatPageComponentProps {
   children: ReactNode
   topbarTitle: string
   topbarIcon: ReactElement
-  // Props para integração com sessões e pastas
   sessoes?: ISessaoResponse[]
   pastas?: string[]
   currentSessao?: ISessaoResponse | null
@@ -26,7 +26,6 @@ interface ChatPageComponentProps {
   onArchiveSessao?: (sessaoId: string) => void
   onCreateNewPasta?: () => void
   onBack?: () => void
-  // Props para estados de loading
   isLoadingInitialData?: boolean
 }
 
@@ -44,6 +43,8 @@ export const ChatPageComponent = ({
   onBack,
   isLoadingInitialData = false
 }: ChatPageComponentProps) => {
+  const { state } = useAuthStore()
+
   return (
     <div className="flex w-full h-screen">
       {/* Sidebar fixo */}
@@ -55,8 +56,10 @@ export const ChatPageComponent = ({
               A
             </div>
             <div className="flex flex-col leading-[1]">
-              <span className="font-bold text-[#0A1B39]">Thales Hipólito</span>
-              <span className="text-sm text-[#83899F]">Desenvolvedor</span>
+              <span className="font-bold text-[#0A1B39]">
+                {state.user?.name}
+              </span>
+              <span className="text-sm text-[#83899F]">{state.user?.role}</span>
             </div>
           </div>
 

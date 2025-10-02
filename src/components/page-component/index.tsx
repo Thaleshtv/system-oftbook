@@ -39,8 +39,10 @@ export const PageComponent = ({
               A
             </div>
             <div className="flex flex-col leading-[1]">
-              <span className="font-bold text-[#0A1B39]">Thales Hipólito</span>
-              <span className="text-sm text-[#83899F]">Desenvolvedor</span>
+              <span className="font-bold text-[#0A1B39]">
+                {state.user?.name}
+              </span>
+              <span className="text-sm text-[#83899F]">{state.user?.role}</span>
             </div>
           </div>
 
