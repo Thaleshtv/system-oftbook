@@ -32,6 +32,14 @@ export const PageComponent = ({
     return fullName.split(' ')[0]
   }
 
+  // Função para lidar com o logout
+  const handleLogout = () => {
+    const token = state.token
+    if (token) {
+      window.location.href = `https://hub.altona.com.br/Investimentos_18Producao/hubCallback.aspx?${token}`
+    }
+  }
+
   const isConfigPath = location.pathname.startsWith('/configuracoes')
   const activeSub = location.pathname
 
@@ -248,7 +256,10 @@ export const PageComponent = ({
 
         {/* Sair */}
         <div className="mt-6">
-          <div className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-red-100 cursor-pointer text-[14px] text-[#676E85] font-medium">
+          <div
+            onClick={handleLogout}
+            className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-red-100 cursor-pointer text-[14px] text-[#676E85] font-medium"
+          >
             <MdOutlineLogout size={20} />
             Sair
           </div>
