@@ -51,6 +51,13 @@ export const ChatPageComponent = ({
     return fullName.split(' ')[0]
   }
 
+  const handleLogout = () => {
+    const token = state.token
+    if (token) {
+      window.location.href = `https://hub.altona.com.br/Investimentos_18Producao/hubCallback.aspx?${token}`
+    }
+  }
+
   return (
     <div className="flex w-full h-screen">
       {/* Sidebar fixo */}
@@ -192,7 +199,10 @@ export const ChatPageComponent = ({
 
         {/* Sair */}
         <div className="mt-6">
-          <div className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-red-100 cursor-pointer text-[14px] text-[#676E85] font-medium">
+          <div
+            onClick={handleLogout}
+            className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-red-100 cursor-pointer text-[14px] text-[#676E85] font-medium"
+          >
             <MdOutlineLogout size={20} />
             Sair
           </div>
