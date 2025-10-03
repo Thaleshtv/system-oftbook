@@ -82,12 +82,22 @@ export const useChat = () => {
         })
       )
       setMessages(chatMessages)
-    } else {
-      // Mensagem de boas-vindas se não houver sessão ativa
+    } else if (currentSessao) {
+      // Se há uma sessão ativa mas sem histórico, mostrar mensagem de boas-vindas
       setMessages([
         {
           id: 'welcome',
-          text: 'Olá! Como posso ajudá-lo hoje? Crie uma nova sessão para começarmos a conversar.',
+          text: 'Olá! Como posso ajudá-lo hoje? Estou pronto para responder suas perguntas e gerar insights sobre seus dados.',
+          sender: 'bot',
+          timestamp: new Date()
+        }
+      ])
+    } else {
+      // Se não há sessão ativa
+      setMessages([
+        {
+          id: 'welcome',
+          text: 'Olá! Como posso ajudá-lo hoje? Aguarde enquanto preparo uma nova sessão de chat para você.',
           sender: 'bot',
           timestamp: new Date()
         }
@@ -113,6 +123,28 @@ export const useChat = () => {
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         )[0]
         setCurrentSessao(latestSessao)
+      } else {
+        // Se não há sessões ativas, criar uma automaticamente
+        const sessionName = `Chat ${new Date().toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}`
+        
+        try {
+          const newSessao = await Sessoes.createSessao({
+            nome: sessionName,
+            descricao: 'Sessão criada automaticamente',
+            usuario_id: 'user'
+          })
+          setSessoes([newSessao])
+          setCurrentSessao(newSessao)
+        } catch (createError) {
+          console.error('Erro ao criar sessão automática:', createError)
+          showToast('error', 'Erro ao criar sessão inicial')
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar dados iniciais:', error)
