@@ -132,7 +132,7 @@ export const useChat = () => {
           hour: '2-digit',
           minute: '2-digit'
         })}`
-        
+
         try {
           const newSessao = await Sessoes.createSessao({
             nome: sessionName,
