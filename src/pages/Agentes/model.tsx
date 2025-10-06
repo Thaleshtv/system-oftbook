@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Agentes, IAgenteResponse } from '../../services/agentes'
+import { useToastStore } from '../../store/toastStore'
 
 export const useAgentes = () => {
   const [modalConfig, setModalConfig] = useState(false)
@@ -11,6 +12,8 @@ export const useAgentes = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [updatingPrompt, setUpdatingPrompt] = useState(false)
+
+  const { dispatch: dispatchToast } = useToastStore()
 
   const fetchAgentes = async () => {
     try {
@@ -64,6 +67,9 @@ export const useAgentes = () => {
       throw err
     } finally {
       setUpdatingPrompt(false)
+      if (!error) {
+        dispatchToast.setOpenToast('success', 'Prompt atualizado com sucesso!')
+      }
     }
   }
 
