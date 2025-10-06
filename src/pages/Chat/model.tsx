@@ -224,6 +224,9 @@ export const useChat = () => {
       if (response.insight) {
         setInsight(response.insight)
       }
+
+      // Recarregar a sessão para obter os IDs reais das mensagens
+      await reloadCurrentSessao()
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error)
       showToast('error', 'Erro ao enviar mensagem. Tente novamente.')
@@ -245,6 +248,17 @@ export const useChat = () => {
       showToast('error', 'Erro ao carregar sessão')
     } finally {
       setIsLoadingSessao(false)
+    }
+  }
+
+  const reloadCurrentSessao = async () => {
+    if (!currentSessao) return
+    
+    try {
+      const sessao = await Sessoes.getSessaoById(currentSessao.id)
+      setCurrentSessao(sessao)
+    } catch (error) {
+      console.error('Erro ao recarregar sessão:', error)
     }
   }
 
