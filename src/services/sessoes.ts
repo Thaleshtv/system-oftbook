@@ -91,9 +91,10 @@ export const Sessoes = {
     avaliacao: string
   ): Promise<IMensagemResponse> => {
     const response = await api.patch(
-      `sessoes/mensagens/${mensagemId}/avaliacao?avaliacao=${avaliacao}`,
+      `sessoes/mensagens/${mensagemId}/avaliacao`,
       null,
       {
+        params: { avaliacao },
         headers: {
           'ngrok-skip-browser-warning': 'true'
         }
