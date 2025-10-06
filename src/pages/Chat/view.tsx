@@ -152,7 +152,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 Gerar Relatório
               </button>
             </div>
-            
+
             {/* Área de mensagens */}
             <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4 min-h-0">
               {messages.map((message) => (
