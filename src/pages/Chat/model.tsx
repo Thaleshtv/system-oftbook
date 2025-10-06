@@ -253,7 +253,7 @@ export const useChat = () => {
 
   const reloadCurrentSessao = async () => {
     if (!currentSessao) return
-    
+
     try {
       const sessao = await Sessoes.getSessaoById(currentSessao.id)
       setCurrentSessao(sessao)
