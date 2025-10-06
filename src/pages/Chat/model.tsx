@@ -5,6 +5,8 @@ import { Sessoes, ISessaoResponse } from '../../services/sessoes'
 import { Pastas } from '../../services/pastas'
 import { useAuthStore } from '../../store/userStore'
 import { useToastStore } from '../../store/toastStore'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 interface ChatMessage {
   id: string
@@ -302,6 +304,140 @@ export const useChat = () => {
     })
   }
 
+  const generateChatReport = async () => {
+    try {
+      // Criar um elemento temporário para renderizar o conteúdo do chat
+      const reportElement = document.createElement('div')
+      reportElement.style.position = 'absolute'
+      reportElement.style.top = '-9999px'
+      reportElement.style.left = '-9999px'
+      reportElement.style.width = '800px'
+      reportElement.style.padding = '20px'
+      reportElement.style.backgroundColor = 'white'
+      reportElement.style.fontFamily = 'Arial, sans-serif'
+      
+      // Criar o cabeçalho do relatório
+      const header = document.createElement('div')
+      header.style.marginBottom = '30px'
+      header.style.borderBottom = '2px solid #004080'
+      header.style.paddingBottom = '20px'
+      
+      const title = document.createElement('h1')
+      title.style.color = '#004080'
+      title.style.fontSize = '24px'
+      title.style.margin = '0 0 10px 0'
+      title.textContent = `Relatório de Chat - ${currentSessao?.nome || 'Chat'}`
+      
+      const dateInfo = document.createElement('p')
+      dateInfo.style.color = '#666'
+      dateInfo.style.fontSize = '14px'
+      dateInfo.style.margin = '0'
+      dateInfo.textContent = `Gerado em: ${new Date().toLocaleString('pt-BR')}`
+      
+      header.appendChild(title)
+      header.appendChild(dateInfo)
+      
+      // Criar área de mensagens
+      const messagesContainer = document.createElement('div')
+      messagesContainer.style.marginTop = '20px'
+      
+      messages.forEach((message) => {
+        const messageDiv = document.createElement('div')
+        messageDiv.style.marginBottom = '20px'
+        messageDiv.style.padding = '15px'
+        messageDiv.style.borderRadius = '8px'
+        messageDiv.style.border = '1px solid #e5e5e5'
+        
+        if (message.sender === 'user') {
+          messageDiv.style.backgroundColor = '#f0f8ff'
+          messageDiv.style.marginLeft = '100px'
+        } else {
+          messageDiv.style.backgroundColor = '#f9f9f9'
+          messageDiv.style.marginRight = '100px'
+        }
+        
+        // Nome do remetente
+        const senderName = document.createElement('div')
+        senderName.style.fontWeight = 'bold'
+        senderName.style.color = message.sender === 'user' ? '#004080' : '#333'
+        senderName.style.marginBottom = '8px'
+        senderName.style.fontSize = '14px'
+        senderName.textContent = message.sender === 'user' ? 'Você' : 'Inteligência Artificial'
+        
+        // Conteúdo da mensagem
+        const messageContent = document.createElement('div')
+        messageContent.style.fontSize = '13px'
+        messageContent.style.lineHeight = '1.5'
+        messageContent.style.color = '#333'
+        messageContent.style.marginBottom = '8px'
+        messageContent.textContent = message.text
+        
+        // Timestamp
+        const timestamp = document.createElement('div')
+        timestamp.style.fontSize = '11px'
+        timestamp.style.color = '#666'
+        timestamp.style.textAlign = 'right'
+        timestamp.textContent = message.timestamp.toLocaleString('pt-BR')
+        
+        messageDiv.appendChild(senderName)
+        messageDiv.appendChild(messageContent)
+        messageDiv.appendChild(timestamp)
+        messagesContainer.appendChild(messageDiv)
+      })
+      
+      // Adicionar elementos ao container principal
+      reportElement.appendChild(header)
+      reportElement.appendChild(messagesContainer)
+      
+      // Adicionar ao DOM temporariamente
+      document.body.appendChild(reportElement)
+      
+      // Capturar como imagem
+      const canvas = await html2canvas(reportElement, {
+        backgroundColor: 'white',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      })
+      
+      // Remover elemento temporário
+      document.body.removeChild(reportElement)
+      
+      // Criar PDF
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const imgData = canvas.toDataURL('image/png')
+      
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 295 // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+      
+      let position = 0
+      
+      // Adicionar primeira página
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+      
+      // Adicionar páginas adicionais se necessário
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+      
+      // Fazer download do PDF
+      const fileName = `chat-report-${currentSessao?.nome || 'chat'}-${new Date().toISOString().split('T')[0]}.pdf`
+      pdf.save(fileName)
+      
+      showToast('success', 'Relatório gerado com sucesso!')
+      
+    } catch (error) {
+      console.error('Erro ao gerar relatório:', error)
+      showToast('error', 'Erro ao gerar relatório. Tente novamente.')
+    }
+  }
+
   return {
     messages,
     currentMessage,
@@ -323,6 +459,7 @@ export const useChat = () => {
     archiveSessao,
     evaluateMessage,
     refreshData: loadInitialData,
-    handleBack
+    handleBack,
+    generateChatReport
   }
 }

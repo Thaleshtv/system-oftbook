@@ -8,7 +8,8 @@ import {
   MdOutlineBarChart,
   MdOutlineLightbulb,
   MdThumbUp,
-  MdThumbDown
+  MdThumbDown,
+  MdOutlineFileDownload
 } from 'react-icons/md'
 import { GraphSkeleton, InsightSkeleton } from '../../components/ui/skeleton'
 import { ChartComponent } from '../../components/ui/chart'
@@ -33,7 +34,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
     selectSessao,
     archiveSessao,
     evaluateMessage,
-    handleBack
+    handleBack,
+    generateChatReport
   } = props
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -135,6 +137,22 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
         {/* Coluna direita: Chat - fixo, sem scroll próprio */}
         <div className="flex-1 border-t border-gray-200 lg:border-t-0 lg:border-l lg:border-gray-200 flex flex-col min-h-0 lg:h-full">
           <div className="h-full flex flex-col bg-white lg:rounded-r-2xl overflow-hidden">
+            {/* Cabeçalho do chat com botão de relatório */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-800 m-0">
+                Conversa
+              </h3>
+              <button
+                onClick={generateChatReport}
+                disabled={messages.length === 0}
+                className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                title="Gerar relatório PDF"
+              >
+                <MdOutlineFileDownload size={16} />
+                Gerar Relatório
+              </button>
+            </div>
+            
             {/* Área de mensagens */}
             <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4 min-h-0">
               {messages.map((message) => (
