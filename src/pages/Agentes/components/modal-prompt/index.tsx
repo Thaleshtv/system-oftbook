@@ -5,13 +5,23 @@ import { IAgenteResponse } from '../../../../services/agentes'
 interface ModalPromptProps {
   onClose: () => void
   agente: IAgenteResponse | null
-  onUpdatePrompt: (agenteId: string, newPrompt: string) => Promise<IAgenteResponse>
+  onUpdatePrompt: (
+    agenteId: string,
+    newPrompt: string
+  ) => Promise<IAgenteResponse>
   isUpdating: boolean
 }
 
-export const ModalPrompt = ({ onClose, agente, onUpdatePrompt, isUpdating }: ModalPromptProps) => {
+export const ModalPrompt = ({
+  onClose,
+  agente,
+  onUpdatePrompt,
+  isUpdating
+}: ModalPromptProps) => {
   const [isEditing, setIsEditing] = useState(false)
-  const [editedPrompt, setEditedPrompt] = useState(agente?.prompt_template || '')
+  const [editedPrompt, setEditedPrompt] = useState(
+    agente?.prompt_template || ''
+  )
   const [saveError, setSaveError] = useState<string | null>(null)
 
   if (!agente) {
@@ -63,12 +73,13 @@ export const ModalPrompt = ({ onClose, agente, onUpdatePrompt, isUpdating }: Mod
         <div className="flex flex-col gap-[4px] mt-[24px]">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[16px] text-[#141414]">Template do Prompt</div>
+              <div className="text-[16px] text-[#141414]">
+                Template do Prompt
+              </div>
               <div className="text-[12px] text-[#141414]/50">
-                {isEditing 
-                  ? 'Edite o template de prompt do agente' 
-                  : 'Este é o template de prompt usado pelo agente'
-                }
+                {isEditing
+                  ? 'Edite o template de prompt do agente'
+                  : 'Este é o template de prompt usado pelo agente'}
               </div>
             </div>
             {!isEditing && (

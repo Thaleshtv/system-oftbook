@@ -30,9 +30,9 @@ export const useAgentes = () => {
     try {
       setUpdatingPrompt(true)
       setError(null)
-      
+
       // Buscar os dados atuais do agente
-      const currentAgente = agentes.find(agente => agente.id === agenteId)
+      const currentAgente = agentes.find((agente) => agente.id === agenteId)
       if (!currentAgente) {
         throw new Error('Agente não encontrado')
       }
@@ -46,8 +46,8 @@ export const useAgentes = () => {
       })
 
       // Atualizar a lista local de agentes
-      setAgentes(prevAgentes => 
-        prevAgentes.map(agente => 
+      setAgentes((prevAgentes) =>
+        prevAgentes.map((agente) =>
           agente.id === agenteId ? updatedAgente : agente
         )
       )
