@@ -133,6 +133,8 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
         <ModalPrompt
           onClose={() => props.setModalPrompt(false)}
           agente={props.selectedAgente}
+          onUpdatePrompt={props.updateAgentePrompt}
+          isUpdating={props.updatingPrompt}
         />
       )}
     </PageComponent>
