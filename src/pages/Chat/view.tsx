@@ -191,11 +191,9 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                         {/* Botões de avaliação para mensagens do bot */}
                         <div className="flex items-center gap-2 ml-2">
                           <button
-                            onClick={() =>
-                              evaluateMessage(message.id, 'positive')
-                            }
+                            onClick={() => evaluateMessage(message.id, 'S')}
                             className={`p-1 rounded-full transition-colors ${
-                              message.avaliacao === 'positive'
+                              message.avaliacao === 'S'
                                 ? 'bg-green-100 text-green-600'
                                 : 'text-gray-400 hover:text-green-600 hover:bg-green-50'
                             }`}
@@ -204,11 +202,9 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                             <MdThumbUp size={16} />
                           </button>
                           <button
-                            onClick={() =>
-                              evaluateMessage(message.id, 'negative')
-                            }
+                            onClick={() => evaluateMessage(message.id, 'N')}
                             className={`p-1 rounded-full transition-colors ${
-                              message.avaliacao === 'negative'
+                              message.avaliacao === 'N'
                                 ? 'bg-red-100 text-red-600'
                                 : 'text-gray-400 hover:text-red-600 hover:bg-red-50'
                             }`}
