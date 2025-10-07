@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams, useLocation } from '@tanstack/react-router'
 import { Conversacoes, IConversacaoResponse } from '../../services/conversacoes'
 import { Sessoes, ISessaoResponse } from '../../services/sessoes'
@@ -32,6 +32,7 @@ export const useChat = () => {
   const [isCreatingSession, setIsCreatingSession] = useState(false)
   const [graphEnabled, setGraphEnabled] = useState(true)
   const location = useLocation()
+  const previousSessaoId = useRef<string | null>(null)
 
   const router = useRouter()
   const params = useParams({ from: '/chat/$token' })
@@ -69,9 +70,14 @@ export const useChat = () => {
 
   // Carregar mensagens quando a sessão atual mudar
   useEffect(() => {
-    // Limpar gráficos e insights ao trocar ou entrar em uma sessão
-    setGraph('')
-    setInsight('')
+    const currentSessaoId = currentSessao?.id || null
+
+    // Só limpar gráficos e insights se for uma mudança real de sessão (não um reload)
+    if (previousSessaoId.current !== currentSessaoId) {
+      setGraph('')
+      setInsight('')
+      previousSessaoId.current = currentSessaoId
+    }
 
     if (currentSessao?.historico) {
       const chatMessages: ChatMessage[] = currentSessao.historico.map(
@@ -159,9 +165,6 @@ export const useChat = () => {
   const createNewSessao = async (nome: string, descricao: string = '') => {
     try {
       setIsCreatingSession(true)
-      // Limpar gráficos e insights ao criar nova sessão
-      setGraph('')
-      setInsight('')
       const newSessao = await Sessoes.createSessao({
         nome,
         descricao,
@@ -240,9 +243,6 @@ export const useChat = () => {
   const selectSessao = async (sessaoId: string) => {
     try {
       setIsLoadingSessao(true)
-      // Limpar gráficos e insights ao trocar de sessão
-      setGraph('')
-      setInsight('')
       const sessao = await Sessoes.getSessaoById(sessaoId)
       setCurrentSessao(sessao)
     } catch (error) {
