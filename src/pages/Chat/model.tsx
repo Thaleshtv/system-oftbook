@@ -317,82 +317,145 @@ export const useChat = () => {
 
       // Criar root do React
       const root = createRoot(tempContainer)
-      
+
       // Renderizar o markdown
       root.render(
-        <ReactMarkdown 
+        <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            h1: ({ children }) => <h1 style={{ fontSize: '18px', fontWeight: 'bold', margin: '10px 0 5px 0', color: '#333' }}>{children}</h1>,
-            h2: ({ children }) => <h2 style={{ fontSize: '16px', fontWeight: 'bold', margin: '8px 0 4px 0', color: '#333' }}>{children}</h2>,
-            h3: ({ children }) => <h3 style={{ fontSize: '14px', fontWeight: 'bold', margin: '6px 0 3px 0', color: '#333' }}>{children}</h3>,
-            p: ({ children }) => <p style={{ margin: '4px 0', lineHeight: '1.5' }}>{children}</p>,
-            ul: ({ children }) => <ul style={{ margin: '4px 0', paddingLeft: '20px' }}>{children}</ul>,
-            ol: ({ children }) => <ol style={{ margin: '4px 0', paddingLeft: '20px' }}>{children}</ol>,
-            li: ({ children }) => <li style={{ margin: '2px 0' }}>{children}</li>,
-            strong: ({ children }) => <strong style={{ fontWeight: 'bold' }}>{children}</strong>,
-            em: ({ children }) => <em style={{ fontStyle: 'italic' }}>{children}</em>,
+            h1: ({ children }) => (
+              <h1
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  margin: '10px 0 5px 0',
+                  color: '#333'
+                }}
+              >
+                {children}
+              </h1>
+            ),
+            h2: ({ children }) => (
+              <h2
+                style={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  margin: '8px 0 4px 0',
+                  color: '#333'
+                }}
+              >
+                {children}
+              </h2>
+            ),
+            h3: ({ children }) => (
+              <h3
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  margin: '6px 0 3px 0',
+                  color: '#333'
+                }}
+              >
+                {children}
+              </h3>
+            ),
+            p: ({ children }) => (
+              <p style={{ margin: '4px 0', lineHeight: '1.5' }}>{children}</p>
+            ),
+            ul: ({ children }) => (
+              <ul style={{ margin: '4px 0', paddingLeft: '20px' }}>
+                {children}
+              </ul>
+            ),
+            ol: ({ children }) => (
+              <ol style={{ margin: '4px 0', paddingLeft: '20px' }}>
+                {children}
+              </ol>
+            ),
+            li: ({ children }) => (
+              <li style={{ margin: '2px 0' }}>{children}</li>
+            ),
+            strong: ({ children }) => (
+              <strong style={{ fontWeight: 'bold' }}>{children}</strong>
+            ),
+            em: ({ children }) => (
+              <em style={{ fontStyle: 'italic' }}>{children}</em>
+            ),
             code: ({ children }) => (
-              <code style={{ 
-                backgroundColor: '#f5f5f5', 
-                padding: '2px 4px', 
-                borderRadius: '3px', 
-                fontSize: '12px', 
-                fontFamily: 'monospace' 
-              }}>
+              <code
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  padding: '2px 4px',
+                  borderRadius: '3px',
+                  fontSize: '12px',
+                  fontFamily: 'monospace'
+                }}
+              >
                 {children}
               </code>
             ),
             pre: ({ children }) => (
-              <pre style={{ 
-                backgroundColor: '#f5f5f5', 
-                padding: '10px', 
-                borderRadius: '5px', 
-                overflow: 'auto', 
-                margin: '8px 0',
-                fontSize: '12px',
-                fontFamily: 'monospace'
-              }}>
+              <pre
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  overflow: 'auto',
+                  margin: '8px 0',
+                  fontSize: '12px',
+                  fontFamily: 'monospace'
+                }}
+              >
                 {children}
               </pre>
             ),
             blockquote: ({ children }) => (
-              <blockquote style={{ 
-                borderLeft: '3px solid #ccc', 
-                paddingLeft: '10px', 
-                margin: '8px 0', 
-                fontStyle: 'italic',
-                color: '#666'
-              }}>
+              <blockquote
+                style={{
+                  borderLeft: '3px solid #ccc',
+                  paddingLeft: '10px',
+                  margin: '8px 0',
+                  fontStyle: 'italic',
+                  color: '#666'
+                }}
+              >
                 {children}
               </blockquote>
             ),
             table: ({ children }) => (
-              <table style={{ 
-                borderCollapse: 'collapse', 
-                width: '100%', 
-                margin: '8px 0',
-                fontSize: '12px'
-              }}>
+              <table
+                style={{
+                  borderCollapse: 'collapse',
+                  width: '100%',
+                  margin: '8px 0',
+                  fontSize: '12px'
+                }}
+              >
                 {children}
               </table>
             ),
-            thead: ({ children }) => <thead style={{ backgroundColor: '#f8f8f8' }}>{children}</thead>,
+            thead: ({ children }) => (
+              <thead style={{ backgroundColor: '#f8f8f8' }}>{children}</thead>
+            ),
             th: ({ children }) => (
-              <th style={{ 
-                border: '1px solid #ddd', 
-                padding: '6px 8px', 
-                textAlign: 'left', 
-                fontWeight: 'bold'
-              }}>
+              <th
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '6px 8px',
+                  textAlign: 'left',
+                  fontWeight: 'bold'
+                }}
+              >
                 {children}
               </th>
             ),
             td: ({ children }) => (
-              <td style={{ 
-                border: '1px solid #ddd', 
-                padding: '6px 8px' 
-              }}>
+              <td
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '6px 8px'
+                }}
+              >
                 {children}
               </td>
             )
@@ -480,7 +543,7 @@ export const useChat = () => {
         messageContent.style.lineHeight = '1.5'
         messageContent.style.color = '#333'
         messageContent.style.marginBottom = '8px'
-        
+
         // Renderizar markdown para HTML
         const htmlContent = await renderMarkdownToHTML(message.text)
         messageContent.innerHTML = htmlContent
