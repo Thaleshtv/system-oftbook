@@ -167,8 +167,6 @@ export const ChatPageComponent = ({
                 )}
               </ul>
             </div>
-
-
           </div>
         </div>
 
