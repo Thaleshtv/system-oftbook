@@ -7,6 +7,9 @@ import { useAuthStore } from '../../store/userStore'
 import { useToastStore } from '../../store/toastStore'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { createRoot } from 'react-dom/client'
 
 interface ChatMessage {
   id: string
@@ -302,6 +305,113 @@ export const useChat = () => {
     })
   }
 
+  // Função auxiliar para renderizar markdown para HTML
+  const renderMarkdownToHTML = (markdown: string): Promise<string> => {
+    return new Promise((resolve) => {
+      // Criar um container temporário
+      const tempContainer = document.createElement('div')
+      tempContainer.style.position = 'absolute'
+      tempContainer.style.top = '-9999px'
+      tempContainer.style.left = '-9999px'
+      document.body.appendChild(tempContainer)
+
+      // Criar root do React
+      const root = createRoot(tempContainer)
+      
+      // Renderizar o markdown
+      root.render(
+        <ReactMarkdown 
+          remarkPlugins={[remarkGfm]}
+          components={{
+            h1: ({ children }) => <h1 style={{ fontSize: '18px', fontWeight: 'bold', margin: '10px 0 5px 0', color: '#333' }}>{children}</h1>,
+            h2: ({ children }) => <h2 style={{ fontSize: '16px', fontWeight: 'bold', margin: '8px 0 4px 0', color: '#333' }}>{children}</h2>,
+            h3: ({ children }) => <h3 style={{ fontSize: '14px', fontWeight: 'bold', margin: '6px 0 3px 0', color: '#333' }}>{children}</h3>,
+            p: ({ children }) => <p style={{ margin: '4px 0', lineHeight: '1.5' }}>{children}</p>,
+            ul: ({ children }) => <ul style={{ margin: '4px 0', paddingLeft: '20px' }}>{children}</ul>,
+            ol: ({ children }) => <ol style={{ margin: '4px 0', paddingLeft: '20px' }}>{children}</ol>,
+            li: ({ children }) => <li style={{ margin: '2px 0' }}>{children}</li>,
+            strong: ({ children }) => <strong style={{ fontWeight: 'bold' }}>{children}</strong>,
+            em: ({ children }) => <em style={{ fontStyle: 'italic' }}>{children}</em>,
+            code: ({ children }) => (
+              <code style={{ 
+                backgroundColor: '#f5f5f5', 
+                padding: '2px 4px', 
+                borderRadius: '3px', 
+                fontSize: '12px', 
+                fontFamily: 'monospace' 
+              }}>
+                {children}
+              </code>
+            ),
+            pre: ({ children }) => (
+              <pre style={{ 
+                backgroundColor: '#f5f5f5', 
+                padding: '10px', 
+                borderRadius: '5px', 
+                overflow: 'auto', 
+                margin: '8px 0',
+                fontSize: '12px',
+                fontFamily: 'monospace'
+              }}>
+                {children}
+              </pre>
+            ),
+            blockquote: ({ children }) => (
+              <blockquote style={{ 
+                borderLeft: '3px solid #ccc', 
+                paddingLeft: '10px', 
+                margin: '8px 0', 
+                fontStyle: 'italic',
+                color: '#666'
+              }}>
+                {children}
+              </blockquote>
+            ),
+            table: ({ children }) => (
+              <table style={{ 
+                borderCollapse: 'collapse', 
+                width: '100%', 
+                margin: '8px 0',
+                fontSize: '12px'
+              }}>
+                {children}
+              </table>
+            ),
+            thead: ({ children }) => <thead style={{ backgroundColor: '#f8f8f8' }}>{children}</thead>,
+            th: ({ children }) => (
+              <th style={{ 
+                border: '1px solid #ddd', 
+                padding: '6px 8px', 
+                textAlign: 'left', 
+                fontWeight: 'bold'
+              }}>
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td style={{ 
+                border: '1px solid #ddd', 
+                padding: '6px 8px' 
+              }}>
+                {children}
+              </td>
+            )
+          }}
+        >
+          {markdown}
+        </ReactMarkdown>
+      )
+
+      // Aguardar um pouco para garantir que o componente foi renderizado
+      setTimeout(() => {
+        const htmlContent = tempContainer.innerHTML
+        root.unmount()
+        document.body.removeChild(tempContainer)
+        resolve(htmlContent)
+      }, 100)
+    })
+  }
+
   const generateChatReport = async () => {
     try {
       // Criar um elemento temporário para renderizar o conteúdo do chat
@@ -339,7 +449,8 @@ export const useChat = () => {
       const messagesContainer = document.createElement('div')
       messagesContainer.style.marginTop = '20px'
 
-      messages.forEach((message) => {
+      // Processar mensagens uma por uma com markdown
+      for (const message of messages) {
         const messageDiv = document.createElement('div')
         messageDiv.style.marginBottom = '20px'
         messageDiv.style.padding = '15px'
@@ -363,13 +474,16 @@ export const useChat = () => {
         senderName.textContent =
           message.sender === 'user' ? 'Você' : 'Inteligência Artificial'
 
-        // Conteúdo da mensagem
+        // Conteúdo da mensagem com markdown renderizado
         const messageContent = document.createElement('div')
         messageContent.style.fontSize = '13px'
         messageContent.style.lineHeight = '1.5'
         messageContent.style.color = '#333'
         messageContent.style.marginBottom = '8px'
-        messageContent.textContent = message.text
+        
+        // Renderizar markdown para HTML
+        const htmlContent = await renderMarkdownToHTML(message.text)
+        messageContent.innerHTML = htmlContent
 
         // Timestamp
         const timestamp = document.createElement('div')
@@ -382,7 +496,7 @@ export const useChat = () => {
         messageDiv.appendChild(messageContent)
         messageDiv.appendChild(timestamp)
         messagesContainer.appendChild(messageDiv)
-      })
+      }
 
       // Adicionar elementos ao container principal
       reportElement.appendChild(header)
