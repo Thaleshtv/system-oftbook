@@ -264,21 +264,19 @@ export const useChat = () => {
     }
   }
 
-  const archiveSessao = async (sessaoId: string) => {
+  const deleteSessao = async (sessaoId: string) => {
     try {
-      await Sessoes.archiveSessao(sessaoId)
-      setSessoes((prev) =>
-        prev.map((s) => (s.id === sessaoId ? { ...s, arquivada: true } : s))
-      )
+      await Sessoes.deleteSessao(sessaoId)
+      setSessoes((prev) => prev.filter((s) => s.id !== sessaoId))
 
       if (currentSessao?.id === sessaoId) {
         setCurrentSessao(null)
       }
 
-      showToast('success', 'Sessão arquivada com sucesso!')
+      showToast('success', 'Sessão deletada com sucesso!')
     } catch (error) {
-      console.error('Erro ao arquivar sessão:', error)
-      showToast('error', 'Erro ao arquivar sessão')
+      console.error('Erro ao deletar sessão:', error)
+      showToast('error', 'Erro ao deletar sessão')
     }
   }
 
@@ -458,7 +456,7 @@ export const useChat = () => {
     setGraphEnabled,
     createNewSessao,
     selectSessao,
-    archiveSessao,
+    deleteSessao,
     evaluateMessage,
     refreshData: loadInitialData,
     handleBack,

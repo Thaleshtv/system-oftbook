@@ -61,6 +61,19 @@ export const Sessoes = {
     return response.data as ISessaoResponse
   },
 
+  deleteSessao: async (sessaoId: string): Promise<{ [key: string]: any }> => {
+    const response = await api.patch(
+      `sessoes/${sessaoId}/archive`,
+      {},
+      {
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        }
+      }
+    )
+    return response.data
+  },
+
   archiveSessao: async (sessaoId: string): Promise<{ [key: string]: any }> => {
     const response = await api.patch(
       `sessoes/${sessaoId}/archive`,

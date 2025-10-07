@@ -1,10 +1,9 @@
 import {
   MdOutlineFolder,
   MdOutlineChat,
-  MdOutlineHistory,
   MdOutlineAdd,
   MdOutlineLogout,
-  MdArchive,
+  MdDelete,
   MdArrowBackIosNew
 } from 'react-icons/md'
 
@@ -23,7 +22,7 @@ interface ChatPageComponentProps {
   currentSessao?: ISessaoResponse | null
   onSelectSessao?: (sessaoId: string) => void
   onCreateNewSessao?: () => void
-  onArchiveSessao?: (sessaoId: string) => void
+  onDeleteSessao?: (sessaoId: string) => void
   onCreateNewPasta?: () => void
   onBack?: () => void
   isLoadingInitialData?: boolean
@@ -38,7 +37,7 @@ export const ChatPageComponent = ({
   currentSessao,
   onSelectSessao,
   onCreateNewSessao,
-  onArchiveSessao,
+  onDeleteSessao,
   onCreateNewPasta,
   onBack,
   isLoadingInitialData = false
@@ -149,12 +148,12 @@ export const ChatPageComponent = ({
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
-                              onArchiveSessao?.(sessao.id)
+                              onDeleteSessao?.(sessao.id)
                             }}
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-600 rounded transition-all"
-                            title="Arquivar sessão"
+                            title="Deletar sessão"
                           >
-                            <MdArchive size={12} />
+                            <MdDelete size={12} />
                           </button>
                         </div>
                       </li>
@@ -169,31 +168,7 @@ export const ChatPageComponent = ({
               </ul>
             </div>
 
-            {/* Chats Arquivados */}
-            {sessoes.filter((s) => s.arquivada).length > 0 && (
-              <div>
-                <div className="flex items-center mb-3">
-                  <h3 className="text-[14px] font-medium text-[#0A1B39]">
-                    Chats Arquivados
-                  </h3>
-                </div>
-                <ul className="flex flex-col gap-2 max-h-32 overflow-y-auto">
-                  {sessoes
-                    .filter((s) => s.arquivada)
-                    .map((sessao) => (
-                      <li key={sessao.id}>
-                        <div
-                          onClick={() => onSelectSessao?.(sessao.id)}
-                          className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]"
-                        >
-                          <MdOutlineHistory size={18} />
-                          <span className="flex-1 truncate">{sessao.nome}</span>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
+
           </div>
         </div>
 

@@ -32,7 +32,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
     setGraphEnabled,
     createNewSessao,
     selectSessao,
-    archiveSessao,
+    deleteSessao,
     evaluateMessage,
     handleBack,
     generateChatReport
@@ -72,7 +72,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
       currentSessao={currentSessao}
       onSelectSessao={selectSessao}
       onCreateNewSessao={handleCreateNewSession}
-      onArchiveSessao={archiveSessao}
+      onDeleteSessao={deleteSessao}
       onBack={handleBack}
       isLoadingInitialData={isLoadingInitialData}
     >
