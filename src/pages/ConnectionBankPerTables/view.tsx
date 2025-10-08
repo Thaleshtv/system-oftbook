@@ -91,6 +91,7 @@ export const ConnectionBankPerTablesView = (
           'Ativa',
           'Ação'
         ]}
+        columnWidths={['20%', '30%', '12%', '18%', '8%', '12%']}
         searchable={true}
         searchPlaceholder="Buscar por nome ou descrição da tabela..."
         onSearch={props.handleSearch}
@@ -102,10 +103,14 @@ export const ConnectionBankPerTablesView = (
             onClick={() => props.handleDirectToColumn(item.id.toString())}
           >
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.nome}
+              <div className="truncate" title={item.nome}>
+                {item.nome}
+              </div>
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.descricao}
+              <div className="truncate" title={item.descricao || ''}>
+                {item.descricao || 'Sem descrição'}
+              </div>
             </td>
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
               {item.qtd_colunas}

@@ -11,6 +11,7 @@ interface TableProps {
   searchable?: boolean
   searchPlaceholder?: string
   onSearch?: (searchTerm: string) => void
+  columnWidths?: string[]
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -22,7 +23,8 @@ export const Table: React.FC<TableProps> = ({
   onNextPage,
   searchable = false,
   searchPlaceholder = 'Buscar...',
-  onSearch
+  onSearch,
+  columnWidths
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const rows = React.Children.toArray(children)
@@ -54,12 +56,13 @@ export const Table: React.FC<TableProps> = ({
           </div>
         </div>
       )}
-      <table className="w-full border border-[#E4E4E7] rounded-[8px] border-separate border-spacing-0">
+      <table className="w-full border border-[#E4E4E7] rounded-[8px] border-separate border-spacing-0 table-fixed">
         <thead>
           <tr>
             {headers.map((col, idx) => (
               <th
                 key={col}
+                style={{ width: columnWidths?.[idx] || 'auto' }}
                 className={`px-4 py-2.5 text-[14px] font-medium border-b border-[#E4E4E7] text-[#004080] ${
                   idx === headers.length - 1 ? 'text-right' : 'text-left'
                 }`}
