@@ -64,15 +64,6 @@ export const ConnectionBankPerTablesView = (
         <MdArrowBackIosNew size={9} />
         Voltar
       </button>
-      <div className="mt-[18px] w-[302px] h-[139px] px-[24px] py-[12px] bg-[#F0F0F042] rounded-[8px] border border-[#E4E4E7] flex flex-col justify-between">
-        <div className="text-[15px] font-medium text-[#1D1D1D]">
-          Bloco de status
-        </div>
-        <div className="flex items-center gap-1 justify-end text-[10px] ">
-          <div className="w-[6px] h-[6px] rounded-full bg-[#02D909]"></div>
-          34ms
-        </div>
-      </div>
       <div className="mb-[35px] mt-[60px] flex items-center justify-between">
         <div className="flex items-center gap-1">
           <MdStorage size={14} className="text-[#1D1D1D]" />
