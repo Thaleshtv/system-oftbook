@@ -1,13 +1,7 @@
 import './style.scss'
 import { useConnectionBankPerColumns } from './model'
 import { PageComponent } from '../../components/page-component'
-import {
-  MdArrowBackIosNew,
-  MdDonutLarge,
-  MdInfoOutline,
-  MdOutlineMoreVert,
-  MdStorage
-} from 'react-icons/md'
+import { MdArrowBackIosNew, MdOutlineMoreVert, MdStorage } from 'react-icons/md'
 import { Table } from '../../components/ui/table'
 import { ActionMenu } from '../../components/ui/action-menu'
 import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
