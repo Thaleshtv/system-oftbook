@@ -134,15 +134,17 @@ export const ConnectionBankPerColumnsView = (
             <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
               {item.tipo}
             </td>
-            {item.descricao ? (
-              <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
-                Sem pendências
-              </span>
-            ) : (
-              <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
-                Pendência: {item.descricao ? item.descricao : '1'}
-              </span>
-            )}
+            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
+              {item.descricao ? (
+                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
+                  Sem pendências
+                </span>
+              ) : (
+                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
+                  Pendência: {item.descricao ? item.descricao : '1'}
+                </span>
+              )}
+            </td>
 
             <td
               className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
