@@ -42,7 +42,7 @@ export const ConnectionBankPerColumnsView = (
               </div>
             </div>
           </div>
-          <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+          <div className="mb-[35px] mt-[24px] flex items-center justify-between">
             <div className="flex items-center gap-1">
               <Skeleton variant="circular" width="14px" height="14px" />
               <Skeleton width="200px" height="24px" />
@@ -78,7 +78,7 @@ export const ConnectionBankPerColumnsView = (
         Voltar
       </button>
 
-      <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+      <div className="mb-[35px] mt-[24px] flex items-center justify-between">
         <div className="flex items-center gap-1">
           <MdStorage size={14} className="text-[#1D1D1D]" />
           <div className="text-[24px] font-medium text-[#1D1D1D]">

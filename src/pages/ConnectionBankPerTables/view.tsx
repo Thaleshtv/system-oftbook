@@ -22,14 +22,7 @@ export const ConnectionBankPerTablesView = (
             <Skeleton variant="circular" width="9px" height="9px" />
             <Skeleton width="60px" height="13px" />
           </div>
-          <div className="w-[302px] h-[139px] px-[24px] py-[12px] bg-[#F0F0F042] rounded-[8px] border border-[#E4E4E7] flex flex-col justify-between">
-            <Skeleton width="150px" height="15px" />
-            <div className="flex items-center gap-1 justify-end">
-              <Skeleton variant="circular" width="6px" height="6px" />
-              <Skeleton width="30px" height="10px" />
-            </div>
-          </div>
-          <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+          <div className="mb-[35px] mt-[24px] flex items-center justify-between">
             <div className="flex items-center gap-1">
               <Skeleton variant="circular" width="14px" height="14px" />
               <Skeleton width="200px" height="24px" />
@@ -64,7 +57,7 @@ export const ConnectionBankPerTablesView = (
         <MdArrowBackIosNew size={9} />
         Voltar
       </button>
-      <div className="mb-[35px] mt-[60px] flex items-center justify-between">
+      <div className="mb-[35px] mt-[24px] flex items-center justify-between">
         <div className="flex items-center gap-1">
           <MdStorage size={14} className="text-[#1D1D1D]" />
           <div className="text-[24px] font-medium text-[#1D1D1D]">
