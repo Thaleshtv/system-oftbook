@@ -40,8 +40,8 @@ export const Table: React.FC<TableProps> = ({
       {searchable && (
         <div className="mb-4 relative">
           <div className="relative">
-            <MdSearch 
-              size={20} 
+            <MdSearch
+              size={20}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#71717A]"
             />
             <input

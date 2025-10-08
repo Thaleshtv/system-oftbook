@@ -56,9 +56,11 @@ export const useConnectionBankPerTables = () => {
     if (!getTablesQuery.data) return []
     if (!searchTerm.trim()) return getTablesQuery.data
 
-    return getTablesQuery.data.filter((table) =>
-      table.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (table.descricao && table.descricao.toLowerCase().includes(searchTerm.toLowerCase()))
+    return getTablesQuery.data.filter(
+      (table) =>
+        table.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (table.descricao &&
+          table.descricao.toLowerCase().includes(searchTerm.toLowerCase()))
     )
   }, [getTablesQuery.data, searchTerm])
 
