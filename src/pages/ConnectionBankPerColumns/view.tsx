@@ -10,8 +10,8 @@ import {
 } from 'react-icons/md'
 import { Table } from '../../components/ui/table'
 import { ActionMenu } from '../../components/ui/action-menu'
-import { ModalConfirm } from '../../components/ui/modal-confirmation'
 import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
+import { ModalEditColumn } from './components/modal-edit-column'
 
 export const ConnectionBankPerColumnsView = (
   props: ReturnType<typeof useConnectionBankPerColumns>
@@ -165,30 +165,18 @@ export const ConnectionBankPerColumnsView = (
                 >
                   Editar
                 </button>
-                <button
-                  onClick={() => {
-                    props.setSelectedColumnId(item.id.toString())
-                    props.handleOpenModalConfirm(
-                      `Tem certeza que deseja apagar a coluna [${item.nome}]?`
-                    )
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Apagar
-                </button>
               </ActionMenu>
             </td>
           </tr>
         ))}
       </Table>
-      {props.modalConfirmOpen && (
-        <ModalConfirm
-          onCancel={() => props.handleCloseModalConfirm()}
-          onConfirm={async () => {
-            props.deleteColumnMutation.mutate(props.selectedColumnId)
-          }}
-          question={props.textModalConfirm}
-          loading={props.deleteColumnMutation.isPending}
+      {props.modalEditOpen && (
+        <ModalEditColumn
+          data={props.getColumnByIdQuery.data}
+          onClose={() => props.setModalEditOpen(false)}
+          onSave={props.handleEditColumn}
+          loading={props.getColumnByIdQuery.isLoading}
+          loadingSave={props.updateColumnMutation.isPending}
         />
       )}
     </PageComponent>

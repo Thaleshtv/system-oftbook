@@ -34,15 +34,6 @@ export const Columns = {
     return response.data as IColumnResponse
   },
 
-  deleteColumn: async (coluna_id: string): Promise<void> => {
-    const response = await api.delete(`colunas/${coluna_id}`, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true'
-      }
-    })
-    return response.data
-  },
-
   updateColumn: async (
     coluna_id: string,
     data: IColumnPayload

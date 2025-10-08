@@ -18,19 +18,6 @@ export const useConnectionBankPerColumns = () => {
   const [selectedColumnId, setSelectedColumnId] = useState<string>('')
 
   const [modalEditOpen, setModalEditOpen] = useState(false)
-  const [modalConfirmOpen, setModalConfirmOpen] = useState(false)
-  const [textModalConfirm, setTextModalConfirm] = useState('')
-
-  const handleOpenModalConfirm = (text: string) => {
-    setModalConfirmOpen(true)
-    setTextModalConfirm(text)
-  }
-
-  const handleCloseModalConfirm = () => {
-    setModalConfirmOpen(false)
-    setSelectedColumnId('')
-    setTextModalConfirm('')
-  }
 
   const getTableByIdQuery = useQuery({
     queryKey: ['getTableById', tableId],
@@ -98,26 +85,12 @@ export const useConnectionBankPerColumns = () => {
     }
   })
 
-  const deleteColumnMutation = useMutation({
-    mutationFn: async (columnId: string) => {
-      const response = await Columns.deleteColumn(columnId)
-      return response
-    },
-    onSuccess: () => {
-      getColumnsQuery.refetch()
-      getColumnByIdQuery.refetch()
-      dispatchToast.setOpenToast('success', 'Coluna deletada com sucesso')
-      setModalConfirmOpen(false)
-    },
-    onError: (error: AxiosError) => {
-      const data = error.response?.data as { detail: string } | undefined
-      dispatchToast.setOpenToast(
-        'error',
-        data?.detail || 'Erro ao deletar coluna'
-      )
-      setModalConfirmOpen(false)
-    }
-  })
+  const handleEditColumn = (data: IColumnPayload) => {
+    updateColumnMutation.mutate({
+      columnId: selectedColumnId,
+      data
+    })
+  }
 
   const handleBack = () => {
     router.navigate({
@@ -137,10 +110,6 @@ export const useConnectionBankPerColumns = () => {
     setSelectedColumnId,
     modalEditOpen,
     setModalEditOpen,
-    modalConfirmOpen,
-    textModalConfirm,
-    handleOpenModalConfirm,
-    handleCloseModalConfirm,
-    deleteColumnMutation
+    handleEditColumn
   }
 }
