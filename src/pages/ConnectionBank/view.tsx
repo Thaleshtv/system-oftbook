@@ -236,14 +236,14 @@ export const ConnectionBankView = (
               ''
             ]}
             columnWidths={[
-              '15%',   // Nome
-              '12%',   // Driver
-              '15%',   // Server
-              '12%',   // Database
-              '10%',   // Schema
-              '15%',   // Tipo de banco
-              '12%',   // Catalogo
-              '9%'     // Ações
+              '15%', // Nome
+              '12%', // Driver
+              '15%', // Server
+              '12%', // Database
+              '10%', // Schema
+              '15%', // Tipo de banco
+              '12%', // Catalogo
+              '9%' // Ações
             ]}
           >
             {props.getConnectionsQuery.data?.map((item, index) => (
@@ -252,13 +252,27 @@ export const ConnectionBankView = (
                 className="hover:bg-gray-100 cursor-pointer"
                 onClick={() => props.handleDirectToTable(String(item.id))}
               >
-                <td className="px-4 py-3 truncate" title={item.nome}>{item.nome}</td>
-                <td className="px-4 py-3 truncate" title={item.driver}>{item.driver}</td>
-                <td className="px-4 py-3 truncate" title={item.server}>{item.server}</td>
-                <td className="px-4 py-3 truncate" title={item.database}>{item.database}</td>
-                <td className="px-4 py-3 truncate" title={item.db_schema}>{item.db_schema}</td>
-                <td className="px-4 py-3 truncate" title={item.tipo_banco}>{item.tipo_banco}</td>
-                <td className="px-4 py-3 truncate" title={item.catalogo}>{item.catalogo}</td>
+                <td className="px-4 py-3 truncate" title={item.nome}>
+                  {item.nome}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.driver}>
+                  {item.driver}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.server}>
+                  {item.server}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.database}>
+                  {item.database}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.db_schema}>
+                  {item.db_schema}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.tipo_banco}>
+                  {item.tipo_banco}
+                </td>
+                <td className="px-4 py-3 truncate" title={item.catalogo}>
+                  {item.catalogo}
+                </td>
                 <td
                   className="px-4 py-3 text-center"
                   onClick={(e) => e.stopPropagation()} // evita abrir a linha
