@@ -56,6 +56,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
       e.preventDefault()
       handleSendMessage()
     }
+    // Se for Shift+Enter, permite a quebra de linha (comportamento padrão)
   }
 
   const handleCreateNewSession = () => {
@@ -173,7 +174,7 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                           borderRadius: '12px 0 12px 12px'
                         }}
                       >
-                        <p className="text-sm leading-normal m-0">
+                        <p className="text-sm leading-normal m-0 whitespace-pre-wrap">
                           {message.text}
                         </p>
                       </div>
@@ -308,13 +309,23 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                 </button>
 
                 {/* Input */}
-                <input
-                  type="text"
+                <textarea
                   value={currentMessage}
                   onChange={(e) => setCurrentMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Digite a mensagem"
-                  className="flex-1 bg-transparent border-none outline-none text-sm text-gray-800 placeholder:text-gray-500"
+                  placeholder="Digite a mensagem (Shift+Enter para quebrar linha)"
+                  rows={1}
+                  className="flex-1 bg-transparent border-none outline-none text-sm text-gray-800 placeholder:text-gray-500 resize-none overflow-hidden"
+                  style={{
+                    minHeight: '20px',
+                    maxHeight: '120px'
+                  }}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement
+                    target.style.height = 'auto'
+                    target.style.height =
+                      Math.min(target.scrollHeight, 120) + 'px'
+                  }}
                 />
 
                 {/* Ícone de enviar */}
