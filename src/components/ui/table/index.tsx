@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
-import { MdArrowBackIos } from 'react-icons/md'
+import React, { ReactNode, useState } from 'react'
+import { MdArrowBackIos, MdSearch } from 'react-icons/md'
 
 interface TableProps {
   headers: string[]
@@ -8,6 +8,9 @@ interface TableProps {
   totalPages?: number
   onPrevPage?: () => void
   onNextPage?: () => void
+  searchable?: boolean
+  searchPlaceholder?: string
+  onSearch?: (searchTerm: string) => void
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -16,13 +19,41 @@ export const Table: React.FC<TableProps> = ({
   currentPage = 1,
   totalPages = 1,
   onPrevPage,
-  onNextPage
+  onNextPage,
+  searchable = false,
+  searchPlaceholder = 'Buscar...',
+  onSearch
 }) => {
+  const [searchTerm, setSearchTerm] = useState('')
   const rows = React.Children.toArray(children)
   const hasData = rows.length > 0
 
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value)
+    if (onSearch) {
+      onSearch(value)
+    }
+  }
+
   return (
     <div className="w-full">
+      {searchable && (
+        <div className="mb-4 relative">
+          <div className="relative">
+            <MdSearch 
+              size={20} 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#71717A]"
+            />
+            <input
+              type="text"
+              placeholder={searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border border-[#E4E4E7] rounded-[8px] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#004080] focus:border-transparent"
+            />
+          </div>
+        </div>
+      )}
       <table className="w-full border border-[#E4E4E7] rounded-[8px] border-separate border-spacing-0">
         <thead>
           <tr>

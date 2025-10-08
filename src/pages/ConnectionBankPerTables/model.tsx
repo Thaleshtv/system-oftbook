@@ -3,7 +3,7 @@ import { useParams, useRouter } from '@tanstack/react-router'
 import { Connections } from '../../services/connections'
 import { Tables, ITablePayload } from '../../services/tables'
 import { useToastStore } from '../../store/toastStore'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { AxiosError } from 'axios'
 
 export const useConnectionBankPerTables = () => {
@@ -15,6 +15,7 @@ export const useConnectionBankPerTables = () => {
   const [selectedTableId, setSelectedTableId] = useState<string>('')
 
   const [modalEditOpen, setModalEditOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const { connectionId } = useParams({
     from: '/configuracoes/conexao-banco/$connectionId'
@@ -49,6 +50,17 @@ export const useConnectionBankPerTables = () => {
     },
     enabled: !!connectionId
   })
+
+  // Filtrar tabelas com base no termo de busca
+  const filteredTables = useMemo(() => {
+    if (!getTablesQuery.data) return []
+    if (!searchTerm.trim()) return getTablesQuery.data
+
+    return getTablesQuery.data.filter((table) =>
+      table.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (table.descricao && table.descricao.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+  }, [getTablesQuery.data, searchTerm])
 
   const updateTableMutation = useMutation({
     mutationFn: async ({
@@ -123,11 +135,19 @@ export const useConnectionBankPerTables = () => {
       }
     })
   }
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
+  }
+
   return {
     handleBack,
     handleDirectToColumn,
     getConnectionByIdQuery,
     getTablesQuery,
+    filteredTables,
+    handleSearch,
+    searchTerm,
     modalConfirmOpen,
     handleOpenModalConfirm,
     textModalConfirm,

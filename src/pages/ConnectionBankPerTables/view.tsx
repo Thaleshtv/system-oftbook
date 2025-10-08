@@ -91,8 +91,11 @@ export const ConnectionBankPerTablesView = (
           'Ativa',
           'Ação'
         ]}
+        searchable={true}
+        searchPlaceholder="Buscar por nome ou descrição da tabela..."
+        onSearch={props.handleSearch}
       >
-        {props.getTablesQuery.data?.map((item, index) => (
+        {props.filteredTables?.map((item, index) => (
           <tr
             key={index}
             className="hover:bg-gray-100 cursor-pointer"
