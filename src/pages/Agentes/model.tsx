@@ -73,6 +73,50 @@ export const useAgentes = () => {
     }
   }
 
+  const updateAgenteConfig = async (agenteId: string, novoModeloId: string) => {
+    try {
+      setUpdatingPrompt(true) // Usar o mesmo estado de loading
+      setError(null)
+
+      // Buscar os dados atuais do agente
+      const currentAgente = agentes.find((agente) => agente.id === agenteId)
+      if (!currentAgente) {
+        throw new Error('Agente não encontrado')
+      }
+
+      // Atualizar o agente com o novo modelo_id
+      const updatedAgente = await Agentes.updateAgente(agenteId, {
+        nome: currentAgente.nome,
+        modelo_id: novoModeloId,
+        cod: currentAgente.cod,
+        prompt_template: currentAgente.prompt_template
+      })
+
+      // Atualizar a lista local de agentes
+      setAgentes((prevAgentes) =>
+        prevAgentes.map((agente) =>
+          agente.id === agenteId ? updatedAgente : agente
+        )
+      )
+
+      // Atualizar o agente selecionado se for o mesmo
+      if (selectedAgente?.id === agenteId) {
+        setSelectedAgente(updatedAgente)
+      }
+
+      return updatedAgente
+    } catch (err) {
+      setError('Erro ao atualizar configuração do agente')
+      console.error('Erro ao atualizar configuração:', err)
+      throw err
+    } finally {
+      setUpdatingPrompt(false)
+      if (!error) {
+        dispatchToast.setOpenToast('success', 'Configuração atualizada com sucesso!')
+      }
+    }
+  }
+
   useEffect(() => {
     fetchAgentes()
   }, [])
@@ -89,6 +133,7 @@ export const useAgentes = () => {
     error,
     fetchAgentes,
     updateAgentePrompt,
+    updateAgenteConfig,
     updatingPrompt
   }
 }

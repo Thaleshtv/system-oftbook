@@ -31,7 +31,7 @@ type CreateApiKeyFormData = z.infer<typeof createApiKeySchema>
 
 interface ModalConfigProps {
   onClose: () => void
-  onSave: (data: ConfigFormData) => void
+  onSave: (data: ConfigFormData) => void | Promise<void>
   agente?: IAgenteResponse // agente opcional para edição
 }
 
@@ -44,6 +44,7 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
   const [showCreateApiKeyModal, setShowCreateApiKeyModal] = useState(false)
   const [creatingModelo, setCreatingModelo] = useState(false)
   const [creatingApiKey, setCreatingApiKey] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   const {
     handleSubmit,
@@ -133,9 +134,17 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
         setModelos(modelosData)
         setApiKeys(apiKeysData)
 
-        // Definir valores padrão se houver dados - seleciona o primeiro modelo e sua API key correspondente
-        if (modelosData.length > 0) {
-          handleModeloSelect(modelosData[0])
+        // Se há um agente sendo editado, selecionar o modelo correspondente
+        if (agente) {
+          const agenteModelo = modelosData.find(m => m.id === agente.modelo_id)
+          if (agenteModelo) {
+            handleModeloSelect(agenteModelo)
+          }
+        } else {
+          // Definir valores padrão se houver dados - seleciona o primeiro modelo e sua API key correspondente
+          if (modelosData.length > 0) {
+            handleModeloSelect(modelosData[0])
+          }
         }
       } catch (err) {
         setError('Erro ao carregar dados')
@@ -146,10 +155,31 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
     }
 
     fetchData()
-  }, [setValue])
+  }, [setValue, agente])
 
-  const onSubmit = (data: ConfigFormData) => {
-    onSave(data)
+  const onSubmit = async (data: ConfigFormData) => {
+    // Se há um agente sendo editado, verificar se houve alteração
+    if (agente) {
+      if (data.modelo_id !== agente.modelo_id) {
+        // Houve alteração, salvar as mudanças
+        try {
+          setSaving(true)
+          await onSave(data)
+        } catch (error) {
+          console.error('Erro ao salvar configuração:', error)
+          // Aqui você pode adicionar um toast ou notificação de erro
+          return
+        } finally {
+          setSaving(false)
+        }
+      } else {
+        // Não houve alteração, apenas fechar o modal
+        onSave(data)
+      }
+    } else {
+      // Novo agente ou sem agente especificado
+      onSave(data)
+    }
   }
 
   if (loading) {
@@ -213,7 +243,9 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Header */}
           <div className="flex items-center justify-between">
-            <h2 className="text-[24px] font-medium">Configurações</h2>
+            <h2 className="text-[24px] font-medium">
+              {agente ? `Configurações - ${agente.cod}` : 'Configurações'}
+            </h2>
             <button
               type="button"
               className="text-[#000]/60 hover:text-[#000]/100"
@@ -257,7 +289,18 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
                       : 'border border-[#E4E4E7] text-[#141414]/80 hover:bg-gray-100'
                   }`}
                 >
-                  <div className="font-medium">{modelo.nome}</div>
+                  <div className="font-medium flex items-center gap-2">
+                    {modelo.nome}
+                    {agente && modelo.id === agente.modelo_id && (
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        selectedModeloId === modelo.id 
+                          ? 'bg-white/20 text-white' 
+                          : 'bg-blue-100 text-blue-600'
+                      }`}>
+                        Atual
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs opacity-75 mt-1">
                     Modelo: {modelo.modelo} | ID: {modelo.id}
                   </div>
@@ -331,9 +374,10 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
             </button>
             <button
               type="submit"
-              className="px-[24px] py-[12px] text-[14px] text-white bg-[#004080] rounded-[8px] hover:bg-[#003366] transition-colors"
+              disabled={saving}
+              className="px-[24px] py-[12px] text-[14px] text-white bg-[#004080] rounded-[8px] hover:bg-[#003366] transition-colors disabled:opacity-50"
             >
-              Salvar
+              {saving ? 'Salvando...' : 'Salvar'}
             </button>
           </div>
         </form>

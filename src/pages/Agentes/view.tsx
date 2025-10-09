@@ -112,6 +112,7 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
                   </button>
                   <button
                     onClick={() => {
+                      props.setSelectedAgente(agente)
                       props.setModalConfig(true)
                     }}
                   >
@@ -126,7 +127,13 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
       {props.modalConfig && (
         <ModalConfig
           onClose={() => props.setModalConfig(false)}
-          onSave={() => {}}
+          onSave={async (data) => {
+            if (props.selectedAgente) {
+              await props.updateAgenteConfig(props.selectedAgente.id, data.modelo_id)
+              props.setModalConfig(false)
+            }
+          }}
+          agente={props.selectedAgente || undefined}
         />
       )}
       {props.modalPrompt && (
