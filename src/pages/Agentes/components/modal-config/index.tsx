@@ -136,7 +136,9 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
 
         // Se há um agente sendo editado, selecionar o modelo correspondente
         if (agente) {
-          const agenteModelo = modelosData.find(m => m.id === agente.modelo_id)
+          const agenteModelo = modelosData.find(
+            (m) => m.id === agente.modelo_id
+          )
           if (agenteModelo) {
             handleModeloSelect(agenteModelo)
           }
@@ -292,11 +294,13 @@ export const ModalConfig = ({ onClose, onSave, agente }: ModalConfigProps) => {
                   <div className="font-medium flex items-center gap-2">
                     {modelo.nome}
                     {agente && modelo.id === agente.modelo_id && (
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        selectedModeloId === modelo.id 
-                          ? 'bg-white/20 text-white' 
-                          : 'bg-blue-100 text-blue-600'
-                      }`}>
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          selectedModeloId === modelo.id
+                            ? 'bg-white/20 text-white'
+                            : 'bg-blue-100 text-blue-600'
+                        }`}
+                      >
                         Atual
                       </span>
                     )}

@@ -112,7 +112,10 @@ export const useAgentes = () => {
     } finally {
       setUpdatingPrompt(false)
       if (!error) {
-        dispatchToast.setOpenToast('success', 'Configuração atualizada com sucesso!')
+        dispatchToast.setOpenToast(
+          'success',
+          'Configuração atualizada com sucesso!'
+        )
       }
     }
   }

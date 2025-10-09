@@ -129,7 +129,10 @@ export const AgentesView = (props: ReturnType<typeof useAgentes>) => {
           onClose={() => props.setModalConfig(false)}
           onSave={async (data) => {
             if (props.selectedAgente) {
-              await props.updateAgenteConfig(props.selectedAgente.id, data.modelo_id)
+              await props.updateAgenteConfig(
+                props.selectedAgente.id,
+                data.modelo_id
+              )
               props.setModalConfig(false)
             }
           }}
