@@ -1,9 +1,15 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useState, useMemo } from 'react'
 import { MdArrowBackIos, MdSearch } from 'react-icons/md'
 
 interface TableProps {
   headers: string[]
   children: ReactNode
+  // Frontend pagination props
+  data?: any[]
+  itemsPerPage?: number
+  itemsPerPageOptions?: number[]
+  renderRow?: (item: any, index: number) => ReactNode
+  // Legacy props for external pagination (optional)
   currentPage?: number
   totalPages?: number
   onPrevPage?: () => void
@@ -12,22 +18,110 @@ interface TableProps {
   searchPlaceholder?: string
   onSearch?: (searchTerm: string) => void
   columnWidths?: string[]
+  // Search filtering
+  searchFields?: string[]
 }
 
 export const Table: React.FC<TableProps> = ({
   headers,
   children,
-  currentPage = 1,
-  totalPages = 1,
-  onPrevPage,
-  onNextPage,
+  // Frontend pagination props
+  data,
+  itemsPerPage = 10,
+  itemsPerPageOptions = [5, 10, 25, 50],
+  renderRow,
+  // Legacy props for external pagination (optional)
+  currentPage: externalCurrentPage,
+  totalPages: externalTotalPages,
+  onPrevPage: externalOnPrevPage,
+  onNextPage: externalOnNextPage,
   searchable = false,
   searchPlaceholder = 'Buscar...',
   onSearch,
-  columnWidths
+  columnWidths,
+  searchFields = []
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
-  const rows = React.Children.toArray(children)
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1)
+  const [internalItemsPerPage, setInternalItemsPerPage] = useState(itemsPerPage)
+
+  // Use frontend pagination if data is provided, otherwise fall back to external pagination
+  const isFrontendPagination = !!data && !!renderRow
+
+  // Filter data based on search term
+  const filteredData = useMemo(() => {
+    if (!isFrontendPagination || !data) return []
+    if (!searchTerm.trim()) return data
+
+    return data.filter((item) => {
+      if (searchFields.length === 0) {
+        // If no search fields specified, search all string values
+        return Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      }
+
+      // Search only in specified fields
+      return searchFields.some((field) => {
+        const value = item[field]
+        return (
+          value &&
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })
+    })
+  }, [data, searchTerm, searchFields, isFrontendPagination])
+
+  // Calculate pagination for frontend mode
+  const actualItemsPerPage = isFrontendPagination
+    ? internalItemsPerPage
+    : itemsPerPage
+  const totalPages = isFrontendPagination
+    ? Math.ceil(filteredData.length / actualItemsPerPage)
+    : externalTotalPages || 1
+  const currentPage = isFrontendPagination
+    ? internalCurrentPage
+    : externalCurrentPage || 1
+
+  // Get current page data for frontend pagination
+  const currentPageData = useMemo(() => {
+    if (!isFrontendPagination) return []
+    const startIndex = (internalCurrentPage - 1) * actualItemsPerPage
+    const endIndex = startIndex + actualItemsPerPage
+    return filteredData.slice(startIndex, endIndex)
+  }, [
+    filteredData,
+    internalCurrentPage,
+    actualItemsPerPage,
+    isFrontendPagination
+  ])
+
+  // Pagination handlers
+  const handlePrevPage = () => {
+    if (isFrontendPagination) {
+      setInternalCurrentPage((prev) => Math.max(1, prev - 1))
+    } else if (externalOnPrevPage) {
+      externalOnPrevPage()
+    }
+  }
+
+  const handleNextPage = () => {
+    if (isFrontendPagination) {
+      setInternalCurrentPage((prev) => Math.min(totalPages, prev + 1))
+    } else if (externalOnNextPage) {
+      externalOnNextPage()
+    }
+  }
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setInternalItemsPerPage(newItemsPerPage)
+    setInternalCurrentPage(1) // Reset to first page when changing items per page
+  }
+
+  // For frontend pagination, use the filtered rows. For external, use children
+  const rows = isFrontendPagination
+    ? currentPageData
+    : React.Children.toArray(children)
   const hasData = rows.length > 0
 
   const handleSearchChange = (value: string) => {
@@ -74,7 +168,13 @@ export const Table: React.FC<TableProps> = ({
         </thead>
         <tbody>
           {hasData ? (
-            children
+            isFrontendPagination ? (
+              // Render frontend pagination data
+              currentPageData.map((item, index) => renderRow!(item, index))
+            ) : (
+              // Render external pagination children
+              children
+            )
           ) : (
             <tr>
               <td
@@ -90,13 +190,44 @@ export const Table: React.FC<TableProps> = ({
 
       {hasData && (
         <div className="flex items-center justify-between mt-4 text-[14px] text-[#0A1B39]">
-          <span className="text-[#71717A]">
-            {rows.length} de {rows.length} linhas nesta página
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-[#71717A]">
+              {isFrontendPagination
+                ? `${Math.min(
+                    (currentPage - 1) * actualItemsPerPage + 1,
+                    filteredData.length
+                  )} - ${Math.min(
+                    currentPage * actualItemsPerPage,
+                    filteredData.length
+                  )} de ${filteredData.length} linhas`
+                : `${rows.length} de ${rows.length} linhas nesta página`}
+            </span>
+
+            {isFrontendPagination && itemsPerPageOptions.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span className="text-[#71717A] text-sm">
+                  Linhas por página:
+                </span>
+                <select
+                  value={internalItemsPerPage}
+                  onChange={(e) =>
+                    handleItemsPerPageChange(Number(e.target.value))
+                  }
+                  className="border border-[#E4E4E7] rounded-[4px] px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#004080] focus:border-transparent"
+                >
+                  {itemsPerPageOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center gap-3">
             <button
-              onClick={onPrevPage}
+              onClick={handlePrevPage}
               disabled={currentPage === 1}
               className="p-[10px] border border-[#D9D9D9] rounded-[8px] hover:bg-gray-200 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -108,7 +239,7 @@ export const Table: React.FC<TableProps> = ({
             </span>
 
             <button
-              onClick={onNextPage}
+              onClick={handleNextPage}
               disabled={currentPage === totalPages}
               className="p-[10px] border border-[#D9D9D9] rounded-[8px] bg-[#004080] hover:bg-gray-200 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
