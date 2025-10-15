@@ -51,10 +51,7 @@ export const ConnectionBankPerTablesView = (
       >
         <ActionMenu
           trigger={
-            <MdOutlineMoreVert
-              size={20}
-              className="mx-auto cursor-pointer"
-            />
+            <MdOutlineMoreVert size={20} className="mx-auto cursor-pointer" />
           }
         >
           <button

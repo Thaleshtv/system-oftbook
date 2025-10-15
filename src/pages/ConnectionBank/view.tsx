@@ -49,16 +49,11 @@ export const ConnectionBankView = (
       >
         <ActionMenu
           trigger={
-            <MdOutlineMoreVert
-              size={20}
-              className="mx-auto cursor-pointer"
-            />
+            <MdOutlineMoreVert size={20} className="mx-auto cursor-pointer" />
           }
         >
           <button
-            onClick={() =>
-              props.handleOpenModalEditConnection(String(item.id))
-            }
+            onClick={() => props.handleOpenModalEditConnection(String(item.id))}
             className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
           >
             Editar
@@ -317,7 +312,13 @@ export const ConnectionBankView = (
             // Search configuration
             searchable={true}
             searchPlaceholder="Buscar por nome, driver, server ou database..."
-            searchFields={['nome', 'driver', 'server', 'database', 'tipo_banco']}
+            searchFields={[
+              'nome',
+              'driver',
+              'server',
+              'database',
+              'tipo_banco'
+            ]}
           >
             {/* Children vazio para frontend pagination */}
             <></>

@@ -30,10 +30,7 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
       >
         <ActionMenu
           trigger={
-            <MdOutlineMoreVert
-              size={20}
-              className="mx-auto cursor-pointer"
-            />
+            <MdOutlineMoreVert size={20} className="mx-auto cursor-pointer" />
           }
         >
           <button
@@ -68,10 +65,7 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
       >
         <ActionMenu
           trigger={
-            <MdOutlineMoreVert
-              size={20}
-              className="mx-auto cursor-pointer"
-            />
+            <MdOutlineMoreVert size={20} className="mx-auto cursor-pointer" />
           }
         >
           <button
@@ -148,7 +142,7 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
           </button>
         </div>
       </div>
-      <Table 
+      <Table
         headers={['Nome da tabela', 'Banco de dados ', '']}
         // Frontend pagination props
         data={props.getGroupIdQuery.data || []}
@@ -182,7 +176,7 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
         </div>
       </div>
 
-      <Table 
+      <Table
         headers={['ID do Usuário', 'ID do Grupo', '']}
         // Frontend pagination props
         data={props.getGroupUsersQuery.data || []}
