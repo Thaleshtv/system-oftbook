@@ -15,6 +15,81 @@ import { ModalConfirm } from '../../components/ui/modal-confirmation'
 import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 
 export const GroupView = (props: ReturnType<typeof useGroup>) => {
+  // Função para renderizar cada linha da tabela de tabelas
+  const renderTableRow = (item: any) => (
+    <tr key={item.tabela_id} className="hover:bg-gray-100">
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.tabela_nome}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.conexao_nome}
+      </td>
+      <td
+        className="px-4 py-3 text-center border-b border-[#E4E4E7]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() => {
+              props.setSelectedTableId(item.tabela_id.toString())
+              props.handleOpenModalConfirmation(
+                `Tem certeza que deseja desfazer a associação da tabela [${item.tabela_nome}]?`,
+                { nameAction: 'dissociate-table' }
+              )
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Desassociar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
+
+  // Função para renderizar cada linha da tabela de usuários
+  const renderUserRow = (item: any) => (
+    <tr key={item.usuario_id} className="hover:bg-gray-100">
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.usuario_id}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.grupo_id}
+      </td>
+      <td
+        className="px-4 py-3 text-center border-b border-[#E4E4E7]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() => {
+              props.setSelectedUserId(item.usuario_id)
+              props.handleOpenModalConfirmation(
+                `Tem certeza que deseja desfazer a associação do usuário [${item.usuario_id}]?`,
+                { nameAction: 'dissociate-user' }
+              )
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Desassociar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
   if (props.getGroupIdQuery.isLoading || props.getGroupUsersQuery.isLoading) {
     return (
       <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupo">
@@ -73,44 +148,20 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
           </button>
         </div>
       </div>
-      <Table headers={['Nome da tabela', 'Banco de dados ', '']}>
-        {props.getGroupIdQuery.data?.map((item, index) => (
-          <tr key={index} className="hover:bg-gray-100">
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.tabela_nome}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.conexao_nome}
-            </td>
-
-            <td
-              className="px-4 py-3 text-center border-b border-[#E4E4E7]"
-              onClick={(e) => e.stopPropagation()} // evita abrir a linha
-            >
-              <ActionMenu
-                trigger={
-                  <MdOutlineMoreVert
-                    size={20}
-                    className="mx-auto cursor-pointer"
-                  />
-                }
-              >
-                <button
-                  onClick={() => {
-                    props.setSelectedTableId(item.tabela_id.toString())
-                    props.handleOpenModalConfirmation(
-                      `Tem certeza que deseja desfazer a associação da tabela [${item.tabela_nome}]?`,
-                      { nameAction: 'dissociate-table' }
-                    )
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Desassociar
-                </button>
-              </ActionMenu>
-            </td>
-          </tr>
-        ))}
+      <Table 
+        headers={['Nome da tabela', 'Banco de dados ', '']}
+        // Frontend pagination props
+        data={props.getGroupIdQuery.data || []}
+        renderRow={renderTableRow}
+        itemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 25, 50]}
+        // Search configuration
+        searchable={true}
+        searchPlaceholder="Buscar por nome da tabela ou banco..."
+        searchFields={['tabela_nome', 'conexao_nome']}
+      >
+        {/* Children vazio para frontend pagination */}
+        <></>
       </Table>
 
       {/* Seção de Usuários */}
@@ -131,43 +182,20 @@ export const GroupView = (props: ReturnType<typeof useGroup>) => {
         </div>
       </div>
 
-      <Table headers={['ID do Usuário', 'ID do Grupo', '']}>
-        {props.getGroupUsersQuery.data?.map((item, index) => (
-          <tr key={index} className="hover:bg-gray-100">
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.usuario_id}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.grupo_id}
-            </td>
-            <td
-              className="px-4 py-3 text-center border-b border-[#E4E4E7]"
-              onClick={(e) => e.stopPropagation()} // evita abrir a linha
-            >
-              <ActionMenu
-                trigger={
-                  <MdOutlineMoreVert
-                    size={20}
-                    className="mx-auto cursor-pointer"
-                  />
-                }
-              >
-                <button
-                  onClick={() => {
-                    props.setSelectedUserId(item.usuario_id)
-                    props.handleOpenModalConfirmation(
-                      `Tem certeza que deseja desfazer a associação do usuário [${item.usuario_id}]?`,
-                      { nameAction: 'dissociate-user' }
-                    )
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Desassociar
-                </button>
-              </ActionMenu>
-            </td>
-          </tr>
-        ))}
+      <Table 
+        headers={['ID do Usuário', 'ID do Grupo', '']}
+        // Frontend pagination props
+        data={props.getGroupUsersQuery.data || []}
+        renderRow={renderUserRow}
+        itemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 25, 50]}
+        // Search configuration
+        searchable={true}
+        searchPlaceholder="Buscar por ID do usuário..."
+        searchFields={['usuario_id']}
+      >
+        {/* Children vazio para frontend pagination */}
+        <></>
       </Table>
 
       {props.modalAssociateUserOpen && (

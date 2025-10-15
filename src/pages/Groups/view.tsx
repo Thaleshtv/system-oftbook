@@ -13,6 +13,62 @@ export const GroupsView = (props: ReturnType<typeof useGroups>) => {
   const { register, formState } = form
   const { errors } = formState
 
+  // Função para renderizar cada linha da tabela
+  const renderGroupRow = (item: any) => (
+    <tr
+      key={item.id}
+      className="hover:bg-gray-100 cursor-pointer"
+      onClick={() => props.handleDirectGroup(item.id.toString())}
+    >
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.nome}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.qtd_tabelas}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.qtd_usuarios}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.ativa ? 'Sim' : 'Não'}
+      </td>
+      <td
+        className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() => {
+              props.setSelectedGroupId(item.id.toString())
+              props.setModalEditOpen(true)
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => {
+              props.setSelectedGroupId(item.id.toString())
+              props.handleOpenModalConfirm(
+                `Tem certeza que deseja apagar o grupo [${item.nome}]?`
+              )
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Apagar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
+
   if (props.getGroupsQuery.isLoading) {
     return (
       <PageComponent topbarIcon={<MdStorage />} topbarTitle="Grupos">
@@ -78,61 +134,18 @@ export const GroupsView = (props: ReturnType<typeof useGroups>) => {
       </form>
       <Table
         headers={['Nome do grupos', 'Qtd Tabelas', 'Qtd Usuários', 'Ativo', '']}
+        // Frontend pagination props
+        data={props.getGroupsQuery.data || []}
+        renderRow={renderGroupRow}
+        itemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 25, 50]}
+        // Search configuration
+        searchable={true}
+        searchPlaceholder="Buscar por nome do grupo..."
+        searchFields={['nome']}
       >
-        {props.getGroupsQuery.data?.map((item, index) => (
-          <tr
-            key={index}
-            className="hover:bg-gray-100s cursor-pointer"
-            onClick={() => props.handleDirectGroup(item.id.toString())}
-          >
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.nome}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.qtd_tabelas}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.qtd_usuarios}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.ativa ? 'Sim' : 'Não'}
-            </td>
-            <td
-              className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ActionMenu
-                trigger={
-                  <MdOutlineMoreVert
-                    size={20}
-                    className="mx-auto cursor-pointer"
-                  />
-                }
-              >
-                <button
-                  onClick={() => {
-                    props.setSelectedGroupId(item.id.toString())
-                    props.setModalEditOpen(true)
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => {
-                    props.setSelectedGroupId(item.id.toString())
-                    props.handleOpenModalConfirm(
-                      `Tem certeza que deseja apagar o grupo [${item.nome}]?`
-                    )
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Apagar
-                </button>
-              </ActionMenu>
-            </td>
-          </tr>
-        ))}
+        {/* Children vazio para frontend pagination */}
+        <></>
       </Table>
       {props.modalConfirmOpen && (
         <ModalConfirm

@@ -15,6 +15,70 @@ export const ConnectionBankView = (
   const { register, formState } = form
   const { errors } = formState
 
+  // Função para renderizar cada linha da tabela
+  const renderConnectionRow = (item: any) => (
+    <tr
+      key={item.id}
+      className="hover:bg-gray-100 cursor-pointer"
+      onClick={() => props.handleDirectToTable(String(item.id))}
+    >
+      <td className="px-4 py-3 truncate" title={item.nome}>
+        {item.nome}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.driver}>
+        {item.driver}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.server}>
+        {item.server}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.database}>
+        {item.database}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.db_schema}>
+        {item.db_schema}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.tipo_banco}>
+        {item.tipo_banco}
+      </td>
+      <td className="px-4 py-3 truncate" title={item.catalogo}>
+        {item.catalogo}
+      </td>
+      <td
+        className="px-4 py-3 text-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() =>
+              props.handleOpenModalEditConnection(String(item.id))
+            }
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => {
+              props.setConnectionIdSelected(String(item.id))
+              props.handleOpenModalConfirmation(
+                `Tem certeza que deseja apagar a conexao ${item.nome}?`
+              )
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Apagar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
+
   if (props.getConnectionsQuery.isLoading) {
     return (
       <PageComponent
@@ -245,69 +309,18 @@ export const ConnectionBankView = (
               '12%', // Catalogo
               '9%' // Ações
             ]}
+            // Frontend pagination props
+            data={props.getConnectionsQuery.data || []}
+            renderRow={renderConnectionRow}
+            itemsPerPage={10}
+            itemsPerPageOptions={[5, 10, 25, 50]}
+            // Search configuration
+            searchable={true}
+            searchPlaceholder="Buscar por nome, driver, server ou database..."
+            searchFields={['nome', 'driver', 'server', 'database', 'tipo_banco']}
           >
-            {props.getConnectionsQuery.data?.map((item, index) => (
-              <tr
-                key={index}
-                className="hover:bg-gray-100 cursor-pointer"
-                onClick={() => props.handleDirectToTable(String(item.id))}
-              >
-                <td className="px-4 py-3 truncate" title={item.nome}>
-                  {item.nome}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.driver}>
-                  {item.driver}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.server}>
-                  {item.server}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.database}>
-                  {item.database}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.db_schema}>
-                  {item.db_schema}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.tipo_banco}>
-                  {item.tipo_banco}
-                </td>
-                <td className="px-4 py-3 truncate" title={item.catalogo}>
-                  {item.catalogo}
-                </td>
-                <td
-                  className="px-4 py-3 text-center"
-                  onClick={(e) => e.stopPropagation()} // evita abrir a linha
-                >
-                  <ActionMenu
-                    trigger={
-                      <MdOutlineMoreVert
-                        size={20}
-                        className="mx-auto cursor-pointer"
-                      />
-                    }
-                  >
-                    <button
-                      onClick={() =>
-                        props.handleOpenModalEditConnection(String(item.id))
-                      }
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => {
-                        props.setConnectionIdSelected(String(item.id))
-                        props.handleOpenModalConfirmation(
-                          `Tem certeza que deseja apagar a conexao ${item.nome}?`
-                        )
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      Apagar
-                    </button>
-                  </ActionMenu>
-                </td>
-              </tr>
-            ))}
+            {/* Children vazio para frontend pagination */}
+            <></>
           </Table>
         </div>
       </div>

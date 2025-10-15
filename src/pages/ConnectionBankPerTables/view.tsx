@@ -11,6 +11,76 @@ import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 export const ConnectionBankPerTablesView = (
   props: ReturnType<typeof useConnectionBankPerTables>
 ) => {
+  // Função para renderizar cada linha da tabela
+  const renderTableRow = (item: any) => (
+    <tr
+      key={item.id}
+      className="hover:bg-gray-100 cursor-pointer"
+      onClick={() => props.handleDirectToColumn(item.id.toString())}
+    >
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        <div className="truncate" title={item.nome}>
+          {item.nome}
+        </div>
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        <div className="truncate" title={item.descricao || ''}>
+          {item.descricao || 'Sem descrição'}
+        </div>
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.qtd_colunas}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
+        {item.descricao ? (
+          <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
+            Sem pendências
+          </span>
+        ) : (
+          <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
+            Pendência: {item.descricao ? item.descricao : '1'}
+          </span>
+        )}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        SIM
+      </td>
+      <td
+        className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() => {
+              props.setModalEditOpen(true)
+              props.setSelectedTableId(item.id.toString())
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => {
+              props.setSelectedTableId(item.id.toString())
+              props.handleOpenModalConfirm(
+                `Tem certeza que deseja apagar a tabela [${item.nome}] ?`
+              )
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Apagar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
   if (
     props.getTablesQuery.isLoading ||
     props.getConnectionByIdQuery.isLoading
@@ -76,79 +146,18 @@ export const ConnectionBankPerTablesView = (
           'Ação'
         ]}
         columnWidths={['20%', '30%', '12%', '18%', '8%', '12%']}
+        // Frontend pagination props
+        data={props.getTablesQuery.data || []}
+        renderRow={renderTableRow}
+        itemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 25, 50]}
+        // Search configuration
         searchable={true}
         searchPlaceholder="Buscar por nome ou descrição da tabela..."
-        onSearch={props.handleSearch}
+        searchFields={['nome', 'descricao']}
       >
-        {props.filteredTables?.map((item, index) => (
-          <tr
-            key={index}
-            className="hover:bg-gray-100 cursor-pointer"
-            onClick={() => props.handleDirectToColumn(item.id.toString())}
-          >
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              <div className="truncate" title={item.nome}>
-                {item.nome}
-              </div>
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              <div className="truncate" title={item.descricao || ''}>
-                {item.descricao || 'Sem descrição'}
-              </div>
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.qtd_colunas}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
-              {item.descricao ? (
-                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
-                  Sem pendências
-                </span>
-              ) : (
-                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
-                  Pendência: {item.descricao ? item.descricao : '1'}
-                </span>
-              )}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              SIM
-            </td>
-            <td
-              className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ActionMenu
-                trigger={
-                  <MdOutlineMoreVert
-                    size={20}
-                    className="mx-auto cursor-pointer"
-                  />
-                }
-              >
-                <button
-                  onClick={() => {
-                    props.setModalEditOpen(true)
-                    props.setSelectedTableId(item.id.toString())
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => {
-                    props.setSelectedTableId(item.id.toString())
-                    props.handleOpenModalConfirm(
-                      `Tem certeza que deseja apagar a tabela [${item.nome}] ?`
-                    )
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Apagar
-                </button>
-              </ActionMenu>
-            </td>
-          </tr>
-        ))}
+        {/* Children vazio para frontend pagination */}
+        <></>
       </Table>
       {props.modalConfirmOpen && (
         <ModalConfirm

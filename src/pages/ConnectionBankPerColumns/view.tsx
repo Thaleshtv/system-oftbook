@@ -10,6 +10,54 @@ import { ModalEditColumn } from './components/modal-edit-column'
 export const ConnectionBankPerColumnsView = (
   props: ReturnType<typeof useConnectionBankPerColumns>
 ) => {
+  // Função para renderizar cada linha da tabela
+  const renderColumnRow = (item: any) => (
+    <tr key={item.id} className="hover:bg-gray-100">
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.nome}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.descricao}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
+        {item.tipo}
+      </td>
+      <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
+        {item.descricao ? (
+          <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
+            Sem pendências
+          </span>
+        ) : (
+          <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
+            Pendência: {item.descricao ? item.descricao : '1'}
+          </span>
+        )}
+      </td>
+      <td
+        className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          trigger={
+            <MdOutlineMoreVert
+              size={20}
+              className="mx-auto cursor-pointer"
+            />
+          }
+        >
+          <button
+            onClick={() => {
+              props.setModalEditOpen(true)
+              props.setSelectedColumnId(item.id.toString())
+            }}
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            Editar
+          </button>
+        </ActionMenu>
+      </td>
+    </tr>
+  )
   if (
     props.getColumnsQuery.isLoading ||
     props.getTableByIdQuery.isLoading ||
@@ -95,55 +143,18 @@ export const ConnectionBankPerColumnsView = (
           'Pendências ',
           ''
         ]}
+        // Frontend pagination props
+        data={props.getColumnsQuery.data || []}
+        renderRow={renderColumnRow}
+        itemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 25, 50]}
+        // Search configuration
+        searchable={true}
+        searchPlaceholder="Buscar por nome ou descrição da coluna..."
+        searchFields={['nome', 'descricao', 'tipo']}
       >
-        {props.getColumnsQuery.data?.map((item, index) => (
-          <tr key={index} className="hover:bg-gray-100s ">
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.nome}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.descricao}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-              {item.tipo}
-            </td>
-            <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
-              {item.descricao ? (
-                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
-                  Sem pendências
-                </span>
-              ) : (
-                <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
-                  Pendência: {item.descricao ? item.descricao : '1'}
-                </span>
-              )}
-            </td>
-
-            <td
-              className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ActionMenu
-                trigger={
-                  <MdOutlineMoreVert
-                    size={20}
-                    className="mx-auto cursor-pointer"
-                  />
-                }
-              >
-                <button
-                  onClick={() => {
-                    props.setModalEditOpen(true)
-                    props.setSelectedColumnId(item.id.toString())
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Editar
-                </button>
-              </ActionMenu>
-            </td>
-          </tr>
-        ))}
+        {/* Children vazio para frontend pagination */}
+        <></>
       </Table>
       {props.modalEditOpen && (
         <ModalEditColumn
