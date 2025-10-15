@@ -7,12 +7,13 @@ import { ActionMenu } from '../../components/ui/action-menu'
 import { ModalConfirm } from '../../components/ui/modal-confirmation'
 import { ModalEditTable } from './components/modal-edit'
 import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
+import { ITableResponse } from '../../services/tables'
 
 export const ConnectionBankPerTablesView = (
   props: ReturnType<typeof useConnectionBankPerTables>
 ) => {
   // Função para renderizar cada linha da tabela
-  const renderTableRow = (item: any) => (
+  const renderTableRow = (item: ITableResponse) => (
     <tr
       key={item.id}
       className="hover:bg-gray-100 cursor-pointer"
@@ -38,7 +39,7 @@ export const ConnectionBankPerTablesView = (
           </span>
         ) : (
           <span className="rounded-[26px] px-[10px] py-[4px] bg-[#FB7373] text-white">
-            Pendência: {item.descricao ? item.descricao : '1'}
+            Pendência: {item.pendencias}
           </span>
         )}
       </td>

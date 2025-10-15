@@ -6,6 +6,7 @@ export interface ITableResponse {
   descricao: string
   qtd_colunas: number
   conexao_id: number
+  pendencias: number
 }
 
 export interface ITablePayload {
