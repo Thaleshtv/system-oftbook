@@ -19,7 +19,11 @@ export const ConnectionBankPerTablesView = (
 ) => {
   // Wrapper para a função de ordenação
   const handleSortWrapper = (field: string) => {
-    if (field === 'qtd_colunas' || field === 'pendencias' || field === 'ativo') {
+    if (
+      field === 'qtd_colunas' ||
+      field === 'pendencias' ||
+      field === 'ativo'
+    ) {
       props.handleSort(field as 'qtd_colunas' | 'pendencias' | 'ativo')
     }
   }

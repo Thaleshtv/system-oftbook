@@ -18,7 +18,7 @@ export const useConnectionBankPerTables = () => {
   const [selectedTableId, setSelectedTableId] = useState<string>('')
 
   const [modalEditOpen, setModalEditOpen] = useState(false)
-  
+
   // Estados para ordenação
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
