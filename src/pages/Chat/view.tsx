@@ -105,7 +105,9 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
                     return (
                       <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
                         <MdOutlineBarChart size={48} />
-                        <span className="text-sm">Gráfico será exibido aqui</span>
+                        <span className="text-sm">
+                          Gráfico será exibido aqui
+                        </span>
                         <span className="text-xs text-center px-4">
                           Faça uma pergunta que requeira visualização de dados
                         </span>
