@@ -180,11 +180,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
     )
   } catch (error) {
     console.error('Erro ao renderizar gráfico:', error)
-    return (
-      <div className="flex items-center justify-center h-full text-red-500">
-        <span className="text-sm">Erro ao carregar gráfico</span>
-      </div>
-    )
+    return null
   }
 }
 

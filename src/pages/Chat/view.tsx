@@ -86,14 +86,33 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
               {isLoadingResponse && !graph ? (
                 <GraphSkeleton />
               ) : graph ? (
-                <div className="flex-1 flex flex-col gap-4">
-                  <h3 className="text-sm font-medium text-gray-700 m-0">
-                    Gráfico Gerado
-                  </h3>
-                  <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-hidden">
-                    <ChartComponent chartData={graph} />
-                  </div>
-                </div>
+                (() => {
+                  // Verificar se o gráfico é válido antes de tentar renderizar
+                  try {
+                    JSON.parse(graph)
+                    return (
+                      <div className="flex-1 flex flex-col gap-4">
+                        <h3 className="text-sm font-medium text-gray-700 m-0">
+                          Gráfico Gerado
+                        </h3>
+                        <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-hidden">
+                          <ChartComponent chartData={graph} />
+                        </div>
+                      </div>
+                    )
+                  } catch (error) {
+                    // Se houve erro no parsing, mostrar placeholder em vez de erro
+                    return (
+                      <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
+                        <MdOutlineBarChart size={48} />
+                        <span className="text-sm">Gráfico será exibido aqui</span>
+                        <span className="text-xs text-center px-4">
+                          Faça uma pergunta que requeira visualização de dados
+                        </span>
+                      </div>
+                    )
+                  }
+                })()
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 min-h-[200px]">
                   <MdOutlineBarChart size={48} />
