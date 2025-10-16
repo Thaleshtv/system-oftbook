@@ -1,5 +1,10 @@
 import React, { ReactNode, useState, useMemo } from 'react'
-import { MdArrowBackIos, MdSearch, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md'
+import {
+  MdArrowBackIos,
+  MdSearch,
+  MdKeyboardArrowUp,
+  MdKeyboardArrowDown
+} from 'react-icons/md'
 
 interface SortableHeader {
   label: string
@@ -172,7 +177,7 @@ export const Table: React.FC<TableProps> = ({
               const sortKey = isString ? null : col.sortKey
               const isSortable = sortKey && onSort
               const isCurrentSort = sortKey === sortField
-              
+
               return (
                 <th
                   key={isString ? col : col.label}
