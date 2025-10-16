@@ -1,8 +1,13 @@
 import React, { ReactNode, useState, useMemo } from 'react'
-import { MdArrowBackIos, MdSearch } from 'react-icons/md'
+import { MdArrowBackIos, MdSearch, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md'
+
+interface SortableHeader {
+  label: string
+  sortKey?: string
+}
 
 interface TableProps {
-  headers: string[]
+  headers: (string | SortableHeader)[]
   children: ReactNode
   // Frontend pagination props
   data?: any[]
@@ -20,6 +25,10 @@ interface TableProps {
   columnWidths?: string[]
   // Search filtering
   searchFields?: string[]
+  // Sorting props
+  sortField?: string | null
+  sortDirection?: 'asc' | 'desc'
+  onSort?: (field: any) => void
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -39,7 +48,11 @@ export const Table: React.FC<TableProps> = ({
   searchPlaceholder = 'Buscar...',
   onSearch,
   columnWidths,
-  searchFields = []
+  searchFields = [],
+  // Sorting props
+  sortField,
+  sortDirection,
+  onSort
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [internalCurrentPage, setInternalCurrentPage] = useState(1)
@@ -153,17 +166,48 @@ export const Table: React.FC<TableProps> = ({
       <table className="w-full border border-[#E4E4E7] rounded-[8px] border-separate border-spacing-0 table-fixed">
         <thead>
           <tr>
-            {headers.map((col, idx) => (
-              <th
-                key={col}
-                style={{ width: columnWidths?.[idx] || 'auto' }}
-                className={`px-4 py-2.5 text-[14px] font-medium border-b border-[#E4E4E7] text-[#004080] ${
-                  idx === headers.length - 1 ? 'text-right' : 'text-left'
-                }`}
-              >
-                {col}
-              </th>
-            ))}
+            {headers.map((col, idx) => {
+              const isString = typeof col === 'string'
+              const label = isString ? col : col.label
+              const sortKey = isString ? null : col.sortKey
+              const isSortable = sortKey && onSort
+              const isCurrentSort = sortKey === sortField
+              
+              return (
+                <th
+                  key={isString ? col : col.label}
+                  style={{ width: columnWidths?.[idx] || 'auto' }}
+                  className={`px-4 py-2.5 text-[14px] font-medium border-b border-[#E4E4E7] text-[#004080] ${
+                    idx === headers.length - 1 ? 'text-right' : 'text-left'
+                  } ${isSortable ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+                  onClick={() => isSortable && onSort(sortKey)}
+                >
+                  <div className="flex items-center gap-1">
+                    {label}
+                    {isSortable && (
+                      <div className="flex flex-col">
+                        <MdKeyboardArrowUp
+                          size={16}
+                          className={`${
+                            isCurrentSort && sortDirection === 'asc'
+                              ? 'text-[#004080]'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                        <MdKeyboardArrowDown
+                          size={16}
+                          className={`-mt-1 ${
+                            isCurrentSort && sortDirection === 'desc'
+                              ? 'text-[#004080]'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </th>
+              )
+            })}
           </tr>
         </thead>
         <tbody>

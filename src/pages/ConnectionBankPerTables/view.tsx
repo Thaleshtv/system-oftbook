@@ -9,9 +9,31 @@ import { ModalEditTable } from './components/modal-edit'
 import { TableSkeleton, Skeleton } from '../../components/ui/skeleton'
 import { ITableResponse } from '../../services/tables'
 
+type SortableHeader = {
+  label: string
+  sortKey?: string
+}
+
 export const ConnectionBankPerTablesView = (
   props: ReturnType<typeof useConnectionBankPerTables>
 ) => {
+  // Wrapper para a função de ordenação
+  const handleSortWrapper = (field: string) => {
+    if (field === 'qtd_colunas' || field === 'pendencias' || field === 'ativo') {
+      props.handleSort(field as 'qtd_colunas' | 'pendencias' | 'ativo')
+    }
+  }
+
+  // Definir headers com tipos explícitos
+  const tableHeaders: (string | SortableHeader)[] = [
+    'Nome da tabela',
+    'Descrição ',
+    { label: 'Qtd Colunas', sortKey: 'qtd_colunas' },
+    { label: 'Pendências ', sortKey: 'pendencias' },
+    { label: 'Ativa', sortKey: 'ativo' },
+    'Ação'
+  ]
+
   // Função para renderizar cada linha da tabela
   const renderTableRow = (item: ITableResponse) => (
     <tr
@@ -33,7 +55,7 @@ export const ConnectionBankPerTablesView = (
         {item.qtd_colunas}
       </td>
       <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[12px] border-b border-[#E4E4E7]">
-        {item.descricao ? (
+        {item.pendencias === 0 ? (
           <span className="rounded-[26px] px-[10px] py-[4px] bg-[#02D909] text-white">
             Sem pendências
           </span>
@@ -44,7 +66,7 @@ export const ConnectionBankPerTablesView = (
         )}
       </td>
       <td className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]">
-        SIM
+        {item.descricao ? 'SIM' : 'NÃO'}
       </td>
       <td
         className="px-4 py-3 text-[#1E1E1E] font-regular text-[14px] border-b border-[#E4E4E7]"
@@ -135,17 +157,10 @@ export const ConnectionBankPerTablesView = (
         <div className="text-[12px] text-[#6C6C6C]">Ativar/Desativar todas</div>
       </div>
       <Table
-        headers={[
-          'Nome da tabela',
-          'Descrição ',
-          'Qtd Colunas',
-          'Pendências ',
-          'Ativa',
-          'Ação'
-        ]}
+        headers={tableHeaders}
         columnWidths={['20%', '30%', '12%', '18%', '8%', '12%']}
         // Frontend pagination props
-        data={props.getTablesQuery.data || []}
+        data={props.sortedTables || []}
         renderRow={renderTableRow}
         itemsPerPage={10}
         itemsPerPageOptions={[5, 10, 25, 50]}
@@ -153,6 +168,10 @@ export const ConnectionBankPerTablesView = (
         searchable={true}
         searchPlaceholder="Buscar por nome ou descrição da tabela..."
         searchFields={['nome', 'descricao']}
+        // Sorting configuration
+        sortField={props.sortField}
+        sortDirection={props.sortDirection}
+        onSort={handleSortWrapper}
       >
         {/* Children vazio para frontend pagination */}
         <></>

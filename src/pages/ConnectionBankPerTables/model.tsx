@@ -3,8 +3,11 @@ import { useParams, useRouter } from '@tanstack/react-router'
 import { Connections } from '../../services/connections'
 import { Tables, ITablePayload } from '../../services/tables'
 import { useToastStore } from '../../store/toastStore'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { AxiosError } from 'axios'
+
+export type SortField = 'pendencias' | 'qtd_colunas' | 'ativo'
+export type SortDirection = 'asc' | 'desc'
 
 export const useConnectionBankPerTables = () => {
   const router = useRouter()
@@ -15,6 +18,10 @@ export const useConnectionBankPerTables = () => {
   const [selectedTableId, setSelectedTableId] = useState<string>('')
 
   const [modalEditOpen, setModalEditOpen] = useState(false)
+  
+  // Estados para ordenação
+  const [sortField, setSortField] = useState<SortField | null>(null)
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
 
   const { connectionId } = useParams({
     from: '/configuracoes/conexao-banco/$connectionId'
@@ -49,6 +56,61 @@ export const useConnectionBankPerTables = () => {
     },
     enabled: !!connectionId
   })
+
+  // Função para lidar com a ordenação
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Se já está ordenando por este campo, inverte a direção
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      // Se é um novo campo, define como ascendente
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+
+  // Dados ordenados usando useMemo para otimização
+  const sortedTables = useMemo(() => {
+    if (!getTablesQuery.data || !sortField) {
+      return getTablesQuery.data || []
+    }
+
+    const sorted = [...getTablesQuery.data].sort((a, b) => {
+      let aValue: number | boolean
+      let bValue: number | boolean
+
+      switch (sortField) {
+        case 'pendencias':
+          aValue = a.pendencias
+          bValue = b.pendencias
+          break
+        case 'qtd_colunas':
+          aValue = a.qtd_colunas
+          bValue = b.qtd_colunas
+          break
+        case 'ativo':
+          // Para o campo "ativo", vamos considerar que tabelas com descrição são ativas
+          // Você pode ajustar essa lógica conforme necessário
+          aValue = !!a.descricao
+          bValue = !!b.descricao
+          break
+        default:
+          return 0
+      }
+
+      if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+        // Para valores boolean, true > false
+        const comparison = aValue === bValue ? 0 : aValue ? 1 : -1
+        return sortDirection === 'asc' ? comparison : -comparison
+      }
+
+      // Para valores numéricos
+      const comparison = (aValue as number) - (bValue as number)
+      return sortDirection === 'asc' ? comparison : -comparison
+    })
+
+    return sorted
+  }, [getTablesQuery.data, sortField, sortDirection])
 
   const updateTableMutation = useMutation({
     mutationFn: async ({
@@ -139,6 +201,11 @@ export const useConnectionBankPerTables = () => {
     getTableByIdQuery,
     modalEditOpen,
     setModalEditOpen,
-    updateTableMutation
+    updateTableMutation,
+    // Novos campos para ordenação
+    sortedTables,
+    sortField,
+    sortDirection,
+    handleSort
   }
 }
