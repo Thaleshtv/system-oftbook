@@ -154,29 +154,29 @@ export const useChat = () => {
           setCurrentSessao(newSessao)
         } catch (createError: any) {
           console.error('Erro ao criar sessão automática:', createError)
-          
+
           let errorMessage = 'Erro ao criar sessão inicial'
-          
+
           if (createError?.response?.data?.detail) {
             errorMessage = createError.response.data.detail
           } else if (createError?.message) {
             errorMessage = createError.message
           }
-          
+
           showToast('error', errorMessage)
         }
       }
     } catch (error: any) {
       console.error('Erro ao carregar dados iniciais:', error)
-      
+
       let errorMessage = 'Erro ao carregar dados do chat'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     } finally {
       setIsLoadingInitialData(false)
@@ -196,15 +196,15 @@ export const useChat = () => {
       showToast('success', 'Nova sessão criada com sucesso!')
     } catch (error: any) {
       console.error('Erro ao criar sessão:', error)
-      
+
       let errorMessage = 'Erro ao criar nova sessão'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     } finally {
       setIsCreatingSession(false)
@@ -262,16 +262,16 @@ export const useChat = () => {
       await reloadCurrentSessao()
     } catch (error: any) {
       console.error('Erro ao enviar mensagem:', error)
-      
+
       // Tentar extrair o campo detail do error response
       let errorMessage = 'Erro ao enviar mensagem. Tente novamente.'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     } finally {
       setIsLoadingResponse(false)
@@ -285,15 +285,15 @@ export const useChat = () => {
       setCurrentSessao(sessao)
     } catch (error: any) {
       console.error('Erro ao carregar sessão:', error)
-      
+
       let errorMessage = 'Erro ao carregar sessão'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     } finally {
       setIsLoadingSessao(false)
@@ -323,15 +323,15 @@ export const useChat = () => {
       showToast('success', 'Sessão deletada com sucesso!')
     } catch (error: any) {
       console.error('Erro ao deletar sessão:', error)
-      
+
       let errorMessage = 'Erro ao deletar sessão'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     }
   }
@@ -348,15 +348,15 @@ export const useChat = () => {
       showToast('success', 'Avaliação registrada!')
     } catch (error: any) {
       console.error('Erro ao avaliar mensagem:', error)
-      
+
       let errorMessage = 'Erro ao registrar avaliação'
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail
       } else if (error?.message) {
         errorMessage = error.message
       }
-      
+
       showToast('error', errorMessage)
     }
   }
