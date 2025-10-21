@@ -27,10 +27,9 @@ const getUserFromCookies = (): User | null => {
 const fetchUserData = async (token: string): Promise<User | null> => {
   try {
     const response = await axios.get<UserApiResponse>(
-      `https://hub.altona.com.br/AltonaAPI.netenvironment/APIUsuario/Usuario/?token=${token}`
+      'https://hub.altona.com.br/AltonaAPI.netenvironment/APIUsuario/Usuario/',
+      { params: { token } }
     )
-
-    console.log(response)
 
     return {
       name: response.data.nome,
@@ -59,7 +58,6 @@ export const useAuthStore = create<AuthStore>((set) => {
         }))
         Cookies.set('token', token)
 
-        // Depois, busca os dados do usuário
         const userData = await fetchUserData(token)
         if (userData) {
           set((state) => ({
