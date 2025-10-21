@@ -1,6 +1,4 @@
 import {
-  MdOutlineDashboard,
-  MdOutlineListAlt,
   MdOutlineSettings,
   MdOutlineArrowDropDown,
   MdOutlineChat,
