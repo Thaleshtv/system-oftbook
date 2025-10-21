@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie'
 import { create } from 'zustand'
-import axios from 'axios'
 import { User, UserApiResponse } from '../types/userType'
 
 interface AuthStore {
@@ -25,15 +24,28 @@ const getUserFromCookies = (): User | null => {
 }
 
 const fetchUserData = async (token: string): Promise<User | null> => {
+  console.log(token)
   try {
-    const response = await axios.get<UserApiResponse>(
-      'https://hub.altona.com.br/AltonaAPI.netenvironment/APIUsuario/Usuario/',
-      { params: { token } }
-    )
+    const base =
+      'https://hub.altona.com.br/AltonaAPI.netenvironment/APIUsuario/Usuario/'
+    const url = `${base}?token=${token}`
+
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error(`Fetch error: ${res.status}`)
+    }
+
+    const responseData = (await res.json()) as UserApiResponse
 
     return {
-      name: response.data.nome,
-      role: response.data.privilegio
+      name: responseData.nome,
+      role: responseData.privilegio
     }
   } catch (error) {
     console.error('Erro ao buscar dados do usuário:', error)
