@@ -97,40 +97,6 @@ export const PageComponent = ({
 
           {/* Menu */}
           <ul className="flex flex-col gap-3">
-            {menuPermissions.dashboard && (
-              <li>
-                <Link
-                  disabled
-                  to="/inicial-page"
-                  className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                    location.pathname === '/'
-                      ? 'bg-gray-200 text-[#004080]'
-                      : 'hover:bg-gray-200 text-[#0A1B39]'
-                  }`}
-                >
-                  <MdOutlineDashboard size={20} />
-                  Dashboard
-                </Link>
-              </li>
-            )}
-
-            {menuPermissions.reports && (
-              <li>
-                <Link
-                  disabled
-                  to="/inicial-page"
-                  className={`px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] cursor-pointer text-[14px] ${
-                    location.pathname.startsWith('/relatorios')
-                      ? 'bg-gray-200 text-[#004080]'
-                      : 'hover:bg-gray-200 text-[#0A1B39]'
-                  }`}
-                >
-                  <MdOutlineListAlt size={20} />
-                  Relatórios
-                </Link>
-              </li>
-            )}
-
             {/* Configurações */}
             {menuPermissions.configurations && (
               <li className="flex flex-col">
