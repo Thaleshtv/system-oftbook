@@ -54,6 +54,7 @@ export const useChat = () => {
       const rawPath = location.pathname
 
       const rawToken = rawPath.replace(/^\/chat\//, '')
+      console.log(rawToken)
 
       setToken(rawToken)
     }

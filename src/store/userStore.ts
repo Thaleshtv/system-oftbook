@@ -24,17 +24,13 @@ const getUserFromCookies = (): User | null => {
 }
 
 const fetchUserData = async (token: string): Promise<User | null> => {
-  console.log(token)
   try {
     const base =
       'https://hub.altona.com.br/AltonaAPI.netenvironment/APIUsuario/Usuario/'
-    const url = `${base}?token=${token}`
+    const url = `${base}${token}`
 
     const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      method: 'GET'
     })
 
     if (!res.ok) {
@@ -61,6 +57,7 @@ export const useAuthStore = create<AuthStore>((set) => {
     },
     dispatch: {
       setToken: async (token: string) => {
+        console.log('Setting token in store:', token)
         // Primeiro, salva o token
         set((state) => ({
           state: {
@@ -68,7 +65,7 @@ export const useAuthStore = create<AuthStore>((set) => {
             token: token
           }
         }))
-        Cookies.set('token', token)
+        document.cookie = `token=${token}; path=/`
 
         const userData = await fetchUserData(token)
         if (userData) {
