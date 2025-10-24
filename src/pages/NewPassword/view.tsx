@@ -1,7 +1,7 @@
 import { useNewPassword } from './model'
 import './styles.scss'
-import loginImage from '../../assets/login.png'
-import Logo from '../../assets/altona.png'
+import loginImage from '../../assets/capa-oftbook.png'
+import Logo from '../../assets/logo-ofbook.png'
 import { MdVpnKey } from 'react-icons/md' // Material Icons
 
 export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
@@ -14,7 +14,7 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
         <div className="">
           <form onSubmit={handleSubmit} className="space-y-5 form">
             <div className="header">
-              <img src={Logo} alt="Logo Altona" />
+              <img src={Logo} alt="Logo Oftbook" />
               <div className="title">
                 Digite sua nova <br /> senha
               </div>

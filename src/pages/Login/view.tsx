@@ -1,7 +1,7 @@
 import './style.scss'
 import { useLogin } from './model'
-import loginImage from '../../assets/login.png'
-import Logo from '../../assets/altona.png'
+import loginImage from '../../assets/capa-oftbook.png'
+import Logo from '../../assets/logo-ofbook.png'
 import { MdPerson, MdVpnKey } from 'react-icons/md' // Material Icons
 
 export const LoginView = (props: ReturnType<typeof useLogin>) => {
@@ -12,9 +12,9 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
       {/* Lado Esquerdo - Formulário */}
       <div className="flex flex-col justify-center items-center w-1/2 bg-white">
         <div className="">
-          <form onSubmit={handleSubmit} className="space-y-5 form">
+          <form onSubmit={handleSubmit} className="space-y-5 w-[410px]">
+            <img src={Logo} alt="Logo Oftbook" className="mb-[64px]" />
             <div className="header">
-              <img src={Logo} alt="Logo Altona" />
               <div className="title">Login</div>
               <div className="subTitle">Seja bem vindo de volta! </div>
             </div>
@@ -61,14 +61,14 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
             <div className="flex align-center justify-end">
               <a
                 onClick={props.handleDirectionRedefinir}
-                className="text-sm text-[#004080] text-right underline cursor-pointer"
+                className="text-sm text-[#0F0A49] text-right underline cursor-pointer"
               >
                 Esqueceu sua senha?
               </a>
             </div>
             <button
               type="submit"
-              className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
+              className="w-full py-3 mt-5 text-white text-[12px] bg-[#0F0A49] rounded-[8px] hover:bg-[#0A0836]"
               disabled={isLoading}
             >
               {isLoading ? (

@@ -26,12 +26,6 @@ const notFoundRoute = createRoute({
   component: Pages.NotFound
 })
 
-const chatRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/chat/$token',
-  component: Pages.Chat
-})
-
 const catchAllRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '*',
@@ -43,6 +37,5 @@ export const publicRoutes = [
   redefinirRoute,
   newPasswordRoute,
   notFoundRoute,
-  chatRoute,
   catchAllRoute
 ]

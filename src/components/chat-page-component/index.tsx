@@ -8,7 +8,7 @@ import {
 } from 'react-icons/md'
 
 import { ReactNode, ReactElement } from 'react'
-import Altona from '../../assets/altona.svg'
+import Logo from '../../assets/logo-ofbook.png'
 import { ISessaoResponse } from '../../services/sessoes'
 import { SessionListSkeleton } from '../ui/skeleton'
 import { useAuthStore } from '../../store/userStore'
@@ -199,7 +199,7 @@ export const ChatPageComponent = ({
             </button>
           )}
         </div>
-        <img src={Altona} alt="Altona" />
+        <img src={Logo} alt="Oftbook" />
       </div>
 
       {/* Conteúdo */}

@@ -1,7 +1,7 @@
 import './style.scss'
 import { useRedefinir } from './model'
-import loginImage from '../../assets/login.png'
-import Logo from '../../assets/altona.png'
+import loginImage from '../../assets/capa-oftbook.png'
+import Logo from '../../assets/logo-ofbook.png'
 import { MdPerson } from 'react-icons/md' // Material Icons
 
 export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
@@ -14,7 +14,7 @@ export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
         <div className="">
           <form onSubmit={handleSubmit} className="space-y-5 form">
             <div className="header">
-              <img src={Logo} alt="Logo Altona" />
+              <img src={Logo} alt="Logo Oftbook" />
               <div className="title">
                 Redefinir sua <br /> senha
               </div>

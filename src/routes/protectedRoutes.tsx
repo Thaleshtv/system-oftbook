@@ -1,8 +1,5 @@
-import { createRoute } from '@tanstack/react-router'
-import { rootRoute } from './router'
 import { AccessControl } from '../utils/accessControl'
-import { isAllowed, defaultAcl, Roles } from './acl'
-import * as Pages from '../pages'
+import { isAllowed } from './acl'
 import { useAuthStore } from '../store/userStore'
 import { useToastStore } from '../store/toastStore'
 import { useEffect, useState } from 'react'
@@ -56,69 +53,13 @@ const withProtection = (
 }
 
 export const protectedRoutes = [
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/inicial-page',
-    component: withProtection(Pages.InicialPage, '/inicial-page', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.USUARIO]: { allow: false }
-    })
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/conexao-bancos',
-    component: withProtection(
-      Pages.ConnectionBank,
-      '/configuracoes/conexao-bancos',
-      {
-        ...defaultAcl
-      }
-    )
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/conexao-banco/$connectionId',
-    component: withProtection(
-      Pages.ConnectionBankPerTables,
-      '/configuracoes/conexao-banco/$connectionId',
-      {
-        ...defaultAcl
-      }
-    )
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/conexao-banco/$connectionId/$tableId',
-    component: withProtection(
-      Pages.ConnectionBankPerColumns,
-      '/configuracoes/conexao-banco/$connectionId/$tableId',
-      {
-        ...defaultAcl
-      }
-    )
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/grupos',
-    component: withProtection(Pages.Groups, '/configuracoes/grupos', {
-      ...defaultAcl,
-      [Roles.ADMINISTRADOR]: { allow: true },
-      [Roles.USUARIO]: { allow: true }
-    })
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/grupo/$groupId',
-    component: withProtection(Pages.Group, '/configuracoes/grupo/$groupId', {
-      ...defaultAcl
-    })
-  }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/configuracoes/agentes',
-    component: withProtection(Pages.Agentes, '/configuracoes/agentes', {
-      ...defaultAcl
-    })
-  })
+  // createRoute({
+  //   getParentRoute: () => rootRoute,
+  //   path: '/inicial-page',
+  //   component: withProtection(Pages.InicialPage, '/inicial-page', {
+  //     ...defaultAcl,
+  //     [Roles.ADMINISTRADOR]: { allow: true },
+  //     [Roles.USUARIO]: { allow: false }
+  //   })
+  // })
 ]
