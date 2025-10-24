@@ -1,4 +1,3 @@
-import './style.scss'
 import { useRedefinir } from './model'
 import loginImage from '../../assets/capa-oftbook.png'
 import Logo from '../../assets/logo-ofbook.png'
@@ -12,13 +11,15 @@ export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
       {/* Lado Esquerdo - Formulário */}
       <div className="flex flex-col justify-center items-center w-1/2 bg-white">
         <div className="">
-          <form onSubmit={handleSubmit} className="space-y-5 form">
-            <div className="header">
-              <img src={Logo} alt="Logo Oftbook" />
-              <div className="title">
+          <form onSubmit={handleSubmit} className="space-y-5 w-[410px]">
+            <img src={Logo} alt="Logo Oftbook" className="mb-[64px]" />
+            <div className="flex flex-col items-start">
+              <div className="text-5xl font-medium leading-tight">
                 Redefinir sua <br /> senha
               </div>
-              <div className="subTitle">Informe o seu email</div>
+              <div className="text-base font-light text-[#CACACA]">
+                Informe o seu email
+              </div>
             </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
@@ -44,14 +45,14 @@ export const RedefinirView = (props: ReturnType<typeof useRedefinir>) => {
             <div className="flex align-center justify-end">
               <a
                 onClick={props.handleNavigationToLogin}
-                className="text-sm text-[#004080] text-right underline cursor-pointer"
+                className="text-sm text-[#0F0A49] text-right underline cursor-pointer"
               >
                 Lembrei minha senha
               </a>
             </div>
             <button
               type="submit"
-              className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
+              className="w-full py-3 mt-5 text-white text-[12px] bg-[#0F0A49] rounded-[8px] hover:bg-[#0A0836]"
               disabled={isLoading}
             >
               {isLoading ? (

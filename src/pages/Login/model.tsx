@@ -42,10 +42,15 @@ export const useLogin = () => {
     router.navigate({ to: '/redefinir' })
   }
 
+  const handleDirectionRegister = () => {
+    router.navigate({ to: '/cadastro' })
+  }
+
   return {
     form,
     handleSubmit,
     isLoading: loginMutation.isPending,
-    handleDirectionRedefinir
+    handleDirectionRedefinir,
+    handleDirectionRegister
   }
 }

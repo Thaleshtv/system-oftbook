@@ -14,6 +14,12 @@ export const redefinirRoute = createRoute({
   component: Pages.Redefinir
 })
 
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/cadastro',
+  component: Pages.Register
+})
+
 const newPasswordRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/nova-senha',
@@ -35,6 +41,7 @@ const catchAllRoute = createRoute({
 export const publicRoutes = [
   indexRoute,
   redefinirRoute,
+  registerRoute,
   newPasswordRoute,
   notFoundRoute,
   catchAllRoute

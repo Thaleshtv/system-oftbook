@@ -1,5 +1,4 @@
 import { useNewPassword } from './model'
-import './styles.scss'
 import loginImage from '../../assets/capa-oftbook.png'
 import Logo from '../../assets/logo-ofbook.png'
 import { MdVpnKey } from 'react-icons/md' // Material Icons
@@ -12,13 +11,15 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
       {/* Lado Esquerdo - Formulário */}
       <div className="flex flex-col justify-center items-center w-1/2 bg-white">
         <div className="">
-          <form onSubmit={handleSubmit} className="space-y-5 form">
-            <div className="header">
-              <img src={Logo} alt="Logo Oftbook" />
-              <div className="title">
+          <form onSubmit={handleSubmit} className="space-y-5 w-[410px]">
+            <img src={Logo} alt="Logo Oftbook" className="mb-[64px]" />
+            <div className="flex flex-col items-start">
+              <div className="text-5xl font-medium">
                 Digite sua nova <br /> senha
               </div>
-              <div className="subTitle">Informa a sua nova senha</div>
+              <div className="text-base font-light text-[#CACACA]">
+                Informa a sua nova senha
+              </div>
             </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
@@ -63,7 +64,7 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
             </div>
             <button
               type="submit"
-              className="w-full py-3 mt-5 text-white text-[12px] bg-[#004080] rounded-[8px] hover:bg-[#003366]"
+              className="w-full py-3 mt-5 text-white text-[12px] bg-[#0F0A49] rounded-[8px] hover:bg-[#0A0836]"
               disabled={isLoading}
             >
               {isLoading ? (

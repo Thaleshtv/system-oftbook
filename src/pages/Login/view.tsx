@@ -1,4 +1,3 @@
-import './style.scss'
 import { useLogin } from './model'
 import loginImage from '../../assets/capa-oftbook.png'
 import Logo from '../../assets/logo-ofbook.png'
@@ -14,16 +13,18 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
         <div className="">
           <form onSubmit={handleSubmit} className="space-y-5 w-[410px]">
             <img src={Logo} alt="Logo Oftbook" className="mb-[64px]" />
-            <div className="header">
-              <div className="title">Login</div>
-              <div className="subTitle">Seja bem vindo de volta! </div>
+            <div className="flex flex-col items-start">
+              <div className="text-5xl font-medium">Login</div>
+              <div className="text-base font-light text-[#636363]">
+                Eleve sua prática oftalmológica hoje.
+              </div>
             </div>
             <div>
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
                 E-mail
               </label>
 
-              <div className="flex items-center border border-[#CACACA] rounded-[8px]  bg-[#FAFAFA] px-[24px] py-[16px]">
+              <div className="flex items-center border border-[#636363] rounded-[8px]  bg-[#FAFAFA] px-[24px] py-[16px]">
                 <MdPerson className="text-gray-400 mr-2" />
                 <input
                   type="email"
@@ -42,7 +43,7 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
                 Senha
               </label>
-              <div className="flex items-center border border-[#CACACA] rounded-[8px] bg-[#FAFAFA] px-[24px] py-[16px]">
+              <div className="flex items-center border border-[#636363] rounded-[8px] bg-[#FAFAFA] px-[24px] py-[16px]">
                 <MdVpnKey className="text-gray-400 mr-2" />
                 <input
                   type="password"
@@ -80,6 +81,18 @@ export const LoginView = (props: ReturnType<typeof useLogin>) => {
                 'Entrar'
               )}
             </button>
+
+            <div className="flex align-center justify-center mt-4">
+              <span className="text-sm text-[#636363]">
+                Não tem uma conta?{' '}
+                <a
+                  onClick={props.handleDirectionRegister}
+                  className="text-[#0F0A49] underline cursor-pointer"
+                >
+                  Cadastre-se
+                </a>
+              </span>
+            </div>
           </form>
         </div>
       </div>
