@@ -26,6 +26,12 @@ const newPasswordRoute = createRoute({
   component: Pages.NewPassword
 })
 
+const arquivosRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/arquivos',
+  component: Pages.Arquivos
+})
+
 const notFoundRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/not-found',
@@ -43,6 +49,7 @@ export const publicRoutes = [
   redefinirRoute,
   registerRoute,
   newPasswordRoute,
+  arquivosRoute,
   notFoundRoute,
   catchAllRoute
 ]
