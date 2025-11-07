@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { ChatPageComponent } from '../../components/chat-page-component'
 import { useChat } from './model'
 import { PiPaperclip } from 'react-icons/pi'
@@ -8,18 +9,32 @@ import { BiMessageSquareEdit } from 'react-icons/bi'
 import logoOfbook from '../../assets/logo-ofbook.png'
 
 export const ChatView = (props: ReturnType<typeof useChat>) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [props.messages, props.isLoading])
+  // Convert chat sessions to the format expected by ChatPageComponent
+  const sessoes = props.chatSessions.map((session) => ({
+    id: session.id,
+    nome: session.name,
+    ultimaMensagem: session.lastMessage,
+    timestamp: session.lastMessageTime
+  }))
+
   return (
     <ChatPageComponent
       topbarTitle="Chat"
       topbarIcon={<RiChatAiLine size={24} className="text-[#071176]" />}
-      sessoes={[]}
+      sessoes={sessoes}
       pastas={[]}
-      currentSessao={null}
-      onSelectSessao={() => {}}
-      onCreateNewSessao={() => {}}
-      onDeleteSessao={() => {}}
+      currentSessao={props.currentChatId}
+      onSelectSessao={props.handleSelectSession}
+      onCreateNewSessao={props.handleCreateNewSession}
+      onDeleteSessao={props.handleDeleteSession}
       onCreateNewPasta={() => {}}
-      isLoadingInitialData={false}
+      isLoadingInitialData={props.isLoading}
     >
       <div className="flex flex-col h-full">
         {/* Chat content area */}
@@ -62,26 +77,60 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
               </div>
             </>
           ) : (
-            <div className="w-full max-w-[1568px]">
-              {/* Messages will be displayed here */}
-              {props.messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`mb-4 ${
-                    msg.sender === 'user' ? 'text-right' : 'text-left'
-                  }`}
-                >
+            <div className="w-full max-w-[1568px] overflow-y-auto">
+              {/* Messages */}
+              <div className="space-y-4 py-4">
+                {props.messages.map((msg) => (
                   <div
-                    className={`inline-block p-3 rounded-lg ${
-                      msg.sender === 'user'
-                        ? 'bg-[#071176] text-white'
-                        : 'bg-gray-100 text-[#1E1E1E]'
+                    key={msg.id}
+                    className={`flex ${
+                      msg.sender === 'user' ? 'justify-end' : 'justify-start'
                     }`}
                   >
-                    {msg.text}
+                    {msg.sender === 'ai' && (
+                      <div className="w-8 h-8 rounded-full bg-[#071176] flex items-center justify-center mr-2 flex-shrink-0">
+                        <RiChatAiLine size={18} className="text-white" />
+                      </div>
+                    )}
+                    <div
+                      className={`max-w-[70%] p-4 rounded-2xl ${
+                        msg.sender === 'user'
+                          ? 'bg-[#071176] text-white rounded-br-sm'
+                          : 'bg-[#F5F5F5] text-[#1E1E1E] rounded-bl-sm'
+                      }`}
+                    >
+                      <p className="text-[14px] leading-[1.6] whitespace-pre-wrap break-words">
+                        {msg.text}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+
+                {/* Loading indicator */}
+                {props.isLoading && (
+                  <div className="flex justify-start">
+                    <div className="w-8 h-8 rounded-full bg-[#071176] flex items-center justify-center mr-2 flex-shrink-0">
+                      <RiChatAiLine size={18} className="text-white" />
+                    </div>
+                    <div className="max-w-[70%] p-4 rounded-2xl bg-[#F5F5F5] text-[#1E1E1E] rounded-bl-sm">
+                      <div className="flex space-x-2">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div
+                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.2s' }}
+                        ></div>
+                        <div
+                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.4s' }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Scroll anchor */}
+                <div ref={messagesEndRef} />
+              </div>
             </div>
           )}
         </div>
@@ -103,7 +152,8 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
               />
               <button
                 onClick={props.handleSendMessage}
-                className="w-[24px] h-[24px] flex items-center justify-center ml-[8px]"
+                disabled={props.isLoading || !props.message.trim()}
+                className="w-[24px] h-[24px] flex items-center justify-center ml-[8px] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <IoSendSharp size={20} className="text-[#071176]" />
               </button>
