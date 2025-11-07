@@ -1,7 +1,7 @@
 import { useNewPassword } from './model'
 import loginImage from '../../assets/capa-oftbook.png'
 import Logo from '../../assets/logo-ofbook.png'
-import { MdVpnKey } from 'react-icons/md' // Material Icons
+import { MdVpnKey, MdPerson } from 'react-icons/md' // Material Icons
 
 export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
   const { form, handleSubmit, isLoading } = props
@@ -15,12 +15,73 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
             <img src={Logo} alt="Logo Oftbook" className="mb-[64px]" />
             <div className="flex flex-col items-start">
               <div className="text-5xl font-medium">
-                Digite sua nova <br /> senha
+                Alterar senha <br /> temporária
               </div>
               <div className="text-base font-light text-[#CACACA]">
-                Informa a sua nova senha
+                Informe seus dados e sua nova senha
               </div>
             </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
+                E-mail
+              </label>
+              <div className="flex items-center border border-[#CACACA] rounded-[8px]  bg-[#FAFAFA] px-[24px] py-[16px]">
+                <MdPerson className="text-gray-400 mr-2" />
+                <input
+                  type="email"
+                  {...form.register('email')}
+                  className="w-full outline-none text-[16px] bg-[#FAFAFA]"
+                  placeholder="seu@email.com"
+                />
+              </div>
+              {form.formState.errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
+                Senha Temporária
+              </label>
+              <div className="flex items-center border border-[#CACACA] rounded-[8px]  bg-[#FAFAFA] px-[24px] py-[16px]">
+                <MdVpnKey className="text-gray-400 mr-2" />
+                <input
+                  type="password"
+                  {...form.register('temporaryPassword')}
+                  className="w-full outline-none text-[16px] bg-[#FAFAFA]"
+                  placeholder="Senha temporária"
+                />
+              </div>
+              {form.formState.errors.temporaryPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.temporaryPassword.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
+                Sessão
+              </label>
+              <div className="flex items-center border border-[#CACACA] rounded-[8px]  bg-[#FAFAFA] px-[24px] py-[16px]">
+                <MdVpnKey className="text-gray-400 mr-2" />
+                <input
+                  type="text"
+                  {...form.register('session')}
+                  className="w-full outline-none text-[16px] bg-[#FAFAFA]"
+                  placeholder="ID da sessão"
+                />
+              </div>
+              {form.formState.errors.session && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.session.message}
+                </p>
+              )}
+            </div>
+
             <div>
               <label className="block mb-1 text-sm font-medium text-[#1E1E1E]">
                 Nova Senha
@@ -70,10 +131,10 @@ export const NewPasswordView = (props: ReturnType<typeof useNewPassword>) => {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Redefinindo...</span>
+                  <span>Alterando senha...</span>
                 </div>
               ) : (
-                'Redefinir'
+                'Alterar Senha'
               )}
             </button>
           </form>
