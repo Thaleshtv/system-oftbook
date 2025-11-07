@@ -76,8 +76,13 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
                 </button>
               </div>
               {props.isLoading ? (
-                <div className="text-[#979797] text-[14px]">
-                  Carregando pastas...
+                <div className="flex gap-[12px] flex-wrap">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="w-[128px] h-[48px] bg-[#F5F5F5] rounded-[6px] animate-pulse"
+                    />
+                  ))}
                 </div>
               ) : props.folders.length > 0 ? (
                 <div className="flex gap-[12px] flex-wrap">
@@ -129,8 +134,13 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
               Arquivos
             </div>
             {props.isLoading ? (
-              <div className="text-[#979797] text-[14px]">
-                Carregando arquivos...
+              <div className="flex gap-[12px] flex-wrap">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div
+                    key={i}
+                    className="w-[209px] h-[196px] bg-[#F5F5F5] rounded-[6px] animate-pulse"
+                  />
+                ))}
               </div>
             ) : props.arquivos.length > 0 ? (
               <div className="flex gap-[12px] flex-wrap">

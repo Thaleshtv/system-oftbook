@@ -164,9 +164,7 @@ export const ModalUpload = ({
             <p className="text-[14px] leading-[20px] text-[#979797]">
               Páginas:{' '}
               {analyzing ? (
-                <span className="font-semibold text-[#979797]">
-                  Analisando...
-                </span>
+                <span className="inline-block h-[14px] w-[30px] bg-[#E0E0E0] rounded animate-pulse"></span>
               ) : tokenData ? (
                 <span className="font-semibold text-[#1E1E1E]">
                   {tokenData.num_pages}
@@ -178,9 +176,7 @@ export const ModalUpload = ({
             <p className="text-[14px] leading-[20px] text-[#979797]">
               Tokens Estimados:{' '}
               {analyzing ? (
-                <span className="font-semibold text-[#979797]">
-                  Analisando...
-                </span>
+                <span className="inline-block h-[14px] w-[80px] bg-[#E0E0E0] rounded animate-pulse"></span>
               ) : tokenData ? (
                 <span className="font-semibold text-[#1E1E1E]">
                   {tokenData.total_tokens_estimated.min.toLocaleString()} - {tokenData.total_tokens_estimated.max.toLocaleString()}
@@ -194,7 +190,7 @@ export const ModalUpload = ({
               <p className="text-[12px] text-white leading-[20px]">
                 Custo Estimado:{' '}
                 {analyzing ? (
-                  <span className="font-semibold">Calculando...</span>
+                  <span className="inline-block h-[12px] w-[70px] bg-white/30 rounded animate-pulse"></span>
                 ) : tokenData ? (
                   <span className="font-semibold">
                     R${tokenData.estimated_cost_estimated.min} - R${tokenData.estimated_cost_estimated.max}
@@ -243,10 +239,7 @@ export const ModalUpload = ({
             }`}
           >
             {loading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Processando...</span>
-              </div>
+              <div className="h-[18px] w-[60px] bg-white/30 rounded animate-pulse"></div>
             ) : (
               'Confirmar'
             )}

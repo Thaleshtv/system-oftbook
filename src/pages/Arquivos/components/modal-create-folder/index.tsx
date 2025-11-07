@@ -90,10 +90,7 @@ export const ModalCreateFolder = ({
             }`}
           >
             {loading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Criando...</span>
-              </div>
+              <div className="h-[18px] w-[70px] bg-white/30 rounded animate-pulse"></div>
             ) : (
               'Criar Pasta'
             )}
