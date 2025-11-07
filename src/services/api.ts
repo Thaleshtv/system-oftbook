@@ -29,7 +29,6 @@ api.interceptors.request.use(
     return config
   },
   (error) => {
-    console.error('Request Interceptor Error:', error)
     return Promise.reject(error)
   }
 )
@@ -82,7 +81,6 @@ const refreshAccessToken = async () => {
 
     return response
   } catch (error) {
-    console.error('Failed to refresh token:', error)
     throw error
   }
 }

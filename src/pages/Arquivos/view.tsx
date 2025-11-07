@@ -98,13 +98,8 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
                       <button
                         key={folder.name}
                         onClick={() => {
-                          console.log('Folder clicked:', folder)
-                          console.log('Current path:', props.currentPath)
-                          console.log('Folder name:', folderName)
-
                           // Se folderName já contém o caminho completo, usa ele diretamente
                           const newPath = folderName
-                          console.log('New path:', newPath)
                           props.navigateToFolder(newPath)
                         }}
                         className="w-[128px] h-[48px] border border-[#DADCE0] rounded-[6px] hover:bg-[#F5F5F5] transition-colors"

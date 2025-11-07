@@ -151,7 +151,7 @@ src/
 - Type inference: `type Schema = z.infer<typeof schema>`
 
 ### Environment Variables
-- `VITE_BACKEND_URL`: Backend API base URL (currently: https://ailton-api.altona.com.br/)
+- `VITE_BACKEND_URL`: Backend API base URL
 - Accessed via `import.meta.env.VITE_[NAME]`
 
 ## TypeScript Configuration

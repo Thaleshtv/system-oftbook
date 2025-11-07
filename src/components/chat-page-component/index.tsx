@@ -3,7 +3,8 @@ import {
   MdOutlineAdd,
   MdOutlineLogout,
   MdDelete,
-  MdArrowBackIosNew
+  MdArrowBackIosNew,
+  MdOutlineFolder
 } from 'react-icons/md'
 
 import { ReactNode, ReactElement } from 'react'
@@ -46,10 +47,11 @@ export const ChatPageComponent = ({
   }
 
   const handleLogout = () => {
-    const token = state.token
-    if (token) {
-      window.location.href = `https://hub.altona.com.br/Investimentos_18Producao/hubCallback.aspx?${token}`
-    }
+    window.location.href = '/'
+  }
+
+  const handleBackToFiles = () => {
+    window.location.href = '/arquivos'
   }
 
   return (
@@ -132,8 +134,15 @@ export const ChatPageComponent = ({
           </div>
         </div>
 
-        {/* Sair */}
-        <div className="mt-6">
+        {/* Botões de navegação e sair */}
+        <div className="mt-6 flex flex-col gap-2">
+          <div
+            onClick={handleBackToFiles}
+            className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-blue-100 cursor-pointer text-[14px] text-[#676E85] font-medium"
+          >
+            <MdOutlineFolder size={20} />
+            Voltar para Arquivos
+          </div>
           <div
             onClick={handleLogout}
             className="px-[16px] py-[12px] flex items-center gap-[10px] rounded-[18px] hover:bg-red-100 cursor-pointer text-[14px] text-[#676E85] font-medium"

@@ -47,9 +47,7 @@ export const Auth = {
     return response.data
   },
 
-  changePassword: async (
-    data: ChangePasswordSchema
-  ): Promise<AuthResponse> => {
+  changePassword: async (data: ChangePasswordSchema): Promise<AuthResponse> => {
     const response = await api.post('auth/change-password', data)
     return response.data
   },
@@ -57,9 +55,7 @@ export const Auth = {
   logout: async (): Promise<void> => {
     try {
       await api.post('auth/logout')
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error)
-    }
+    } catch (error) {}
   },
 
   getMe: async (): Promise<any> => {

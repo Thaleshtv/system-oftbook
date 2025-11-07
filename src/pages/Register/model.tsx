@@ -77,9 +77,8 @@ export const useRegister = () => {
 
   // TODO: Implementar a função de cadastro no serviço de autenticação
   const registerMutation = useMutation({
-    mutationFn: async (data: RegisterSchema) => {
+    mutationFn: async (_data: RegisterSchema) => {
       // Simular chamada da API por enquanto
-      console.log('Dados de cadastro:', data)
       return { status: 200, message: 'Usuário cadastrado com sucesso' }
     },
     onSuccess: (res) => {

@@ -1,8 +1,11 @@
 import { AccessControl } from '../utils/accessControl'
-import { isAllowed } from './acl'
+import { isAllowed, Roles } from './acl'
 import { useAuthStore } from '../store/userStore'
 import { useToastStore } from '../store/toastStore'
 import { useEffect, useState } from 'react'
+import { createRoute } from '@tanstack/react-router'
+import { rootRoute } from './router'
+import * as Pages from '../pages'
 
 const withProtection = (
   Component: React.ComponentType,
@@ -52,14 +55,22 @@ const withProtection = (
   }
 }
 
-export const protectedRoutes = [
-  // createRoute({
-  //   getParentRoute: () => rootRoute,
-  //   path: '/inicial-page',
-  //   component: withProtection(Pages.InicialPage, '/inicial-page', {
-  //     ...defaultAcl,
-  //     [Roles.ADMINISTRADOR]: { allow: true },
-  //     [Roles.USUARIO]: { allow: false }
-  //   })
-  // })
-]
+const arquivosRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/arquivos',
+  component: withProtection(Pages.Arquivos, '/arquivos', {
+    [Roles.ADMINISTRADOR]: { allow: true },
+    [Roles.USUARIO]: { allow: true }
+  })
+})
+
+const chatRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/chat',
+  component: withProtection(Pages.Chat, '/chat', {
+    [Roles.ADMINISTRADOR]: { allow: true },
+    [Roles.USUARIO]: { allow: true }
+  })
+})
+
+export const protectedRoutes = [arquivosRoute, chatRoute]

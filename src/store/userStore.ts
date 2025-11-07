@@ -29,7 +29,6 @@ const getUserFromCookies = (): User | null => {
   return userCookie ? JSON.parse(userCookie) : null
 }
 
-
 export const useAuthStore = create<AuthStore>((set) => {
   return {
     state: {
@@ -39,7 +38,6 @@ export const useAuthStore = create<AuthStore>((set) => {
     },
     dispatch: {
       setToken: (token: string) => {
-        console.log('Setting token in store:', token)
         set((state) => ({
           state: {
             ...state.state,

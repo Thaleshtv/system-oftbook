@@ -36,16 +36,13 @@ export const useNewPassword = () => {
     mutationFn: Auth.changePassword,
     onSuccess: async (response) => {
       try {
-        // If the API returns new tokens after password change
         if (response.data?.access_token) {
           await setToken(response.data.access_token)
           setRefreshToken(response.data.refresh_token)
         }
 
-        // Navigate to dashboard
         router.navigate({ to: '/' })
       } catch (error) {
-        console.error('Erro ao processar mudança de senha:', error)
         form.setError('password', {
           message: 'Erro ao processar mudança de senha'
         })

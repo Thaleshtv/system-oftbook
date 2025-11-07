@@ -15,28 +15,22 @@ export const useArquivos = () => {
     queryKey: ['folders', currentPath],
     queryFn: async () => {
       const response = await Arquivos.listFolders(currentPath || undefined)
-      console.log('Folders API Response:', response)
-      console.log('Folders response.data:', response.data)
 
       if (response.status === 200 && response.data) {
         // Se tem contents, usa ele
         if (response.data.contents && Array.isArray(response.data.contents)) {
-          console.log('Folders data.contents is array:', response.data.contents)
           return response.data.contents
         }
         // Se response.data é um array direto
         if (Array.isArray(response.data)) {
-          console.log('Folders data is array:', response.data)
           return response.data
         }
         // Se tem data
         if (response.data.data && Array.isArray(response.data.data)) {
-          console.log('Folders data.data is array:', response.data.data)
           return response.data.data
         }
       }
 
-      console.log('Returning empty array for folders')
       return []
     },
     retry: 1
@@ -46,30 +40,21 @@ export const useArquivos = () => {
     queryKey: ['documents', currentPath],
     queryFn: async () => {
       const response = await Arquivos.listDocuments(currentPath || undefined)
-      console.log('Documents API Response:', response)
-      console.log('Documents response.data:', response.data)
 
       if (response.status === 200 && response.data) {
         // Se tem documents, usa ele
         if (response.data.documents && Array.isArray(response.data.documents)) {
-          console.log(
-            'Documents data.documents is array:',
-            response.data.documents
-          )
           return response.data.documents
         }
         // Se response.data é um array direto
         if (Array.isArray(response.data)) {
-          console.log('Documents data is array:', response.data)
           return response.data
         }
         // Se tem data
         if (response.data.data && Array.isArray(response.data.data)) {
-          console.log('Documents data.data is array:', response.data.data)
           return response.data.data
         }
       }
-      console.log('Returning empty array for documents')
       return []
     },
     retry: 1
@@ -77,9 +62,6 @@ export const useArquivos = () => {
 
   const folders = foldersData?.filter((item) => item.type === 'folder') || []
   const arquivos = documentsData || []
-
-  console.log('Computed folders:', folders)
-  console.log('Computed arquivos:', arquivos)
 
   // Filtrar pastas e arquivos com base no termo de pesquisa
   const filteredFolders = folders.filter((folder) => {
@@ -99,7 +81,6 @@ export const useArquivos = () => {
 
   const uploadMutation = useMutation({
     mutationFn: (file: File) => {
-      console.log('Uploading file to path:', currentPath || 'root')
       return Arquivos.uploadDocument(file, currentPath || undefined)
     },
     onSuccess: (response) => {
@@ -114,7 +95,6 @@ export const useArquivos = () => {
       }
     },
     onError: (error: any) => {
-      console.error('Erro ao fazer upload:', error)
       const errorMessage =
         error?.response?.data?.message || 'Erro ao fazer upload do arquivo'
       setOpenToast('error', errorMessage)
@@ -149,7 +129,6 @@ export const useArquivos = () => {
       }
     },
     onError: (error: any) => {
-      console.error('Erro ao criar pasta:', error)
       const errorMessage =
         error?.response?.data?.message || 'Erro ao criar pasta'
       setOpenToast('error', errorMessage)
