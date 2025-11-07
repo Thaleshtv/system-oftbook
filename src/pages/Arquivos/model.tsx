@@ -7,6 +7,7 @@ export const useArquivos = () => {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false)
   const [currentPath, setCurrentPath] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const { setOpenToast } = useToastStore((state) => state.dispatch)
   const queryClient = useQueryClient()
 
@@ -79,6 +80,22 @@ export const useArquivos = () => {
 
   console.log('Computed folders:', folders)
   console.log('Computed arquivos:', arquivos)
+
+  // Filtrar pastas e arquivos com base no termo de pesquisa
+  const filteredFolders = folders.filter((folder) => {
+    const folderName = folder.name.endsWith('/')
+      ? folder.name.slice(0, -1)
+      : folder.name
+    return folderName.toLowerCase().includes(searchTerm.toLowerCase())
+  })
+
+  const filteredArquivos = arquivos.filter((arquivo) =>
+    arquivo.file_name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value)
+  }
 
   const uploadMutation = useMutation({
     mutationFn: (file: File) => {
@@ -180,9 +197,10 @@ export const useArquivos = () => {
   }
 
   return {
-    arquivos,
-    folders,
+    arquivos: filteredArquivos,
+    folders: filteredFolders,
     currentPath,
+    searchTerm,
     isLoading:
       isFoldersLoading ||
       isDocumentsLoading ||
@@ -195,6 +213,7 @@ export const useArquivos = () => {
     handleCloseUploadModal,
     handleOpenCreateFolderModal,
     handleCloseCreateFolderModal,
+    handleSearchChange,
     uploadArquivo,
     deleteArquivo,
     createFolder,

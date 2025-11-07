@@ -25,6 +25,8 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
           <input
             type="text"
             placeholder="Pesquisar"
+            value={props.searchTerm}
+            onChange={(e) => props.handleSearchChange(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-[#D9D9D9] rounded-[16px] focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
         </div>
