@@ -8,7 +8,10 @@ import {
   HiOutlineDocument,
   HiOutlineUpload,
   HiOutlineChevronLeft,
-  HiOutlinePlus
+  HiOutlinePlus,
+  HiOutlineEye,
+  HiOutlineTrash,
+  HiOutlineDownload
 } from 'react-icons/hi'
 
 export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
@@ -44,7 +47,7 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
             <div className="flex items-center gap-[8px]">
               <button
                 onClick={props.navigateBack}
-                className="flex items-center gap-[4px] text-[#1849D6] text-[13px] font-medium hover:underline"
+                className="flex items-center gap-[4px] text-[#0F0A49] text-[13px] font-medium hover:underline"
               >
                 <HiOutlineChevronLeft size={16} />
                 Voltar
@@ -66,7 +69,7 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
                 </div>
                 <button
                   onClick={props.handleOpenCreateFolderModal}
-                  className="flex items-center gap-[6px] text-[#1849D6] text-[12px] font-medium hover:underline"
+                  className="flex items-center gap-[6px] text-[#0F0A49] text-[12px] font-medium hover:underline"
                 >
                   <HiOutlinePlus size={14} />
                   Nova Pasta
@@ -100,7 +103,10 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
                         className="w-[128px] h-[48px] border border-[#DADCE0] rounded-[6px] hover:bg-[#F5F5F5] transition-colors"
                       >
                         <div className="flex gap-[16px] items-center justify-center h-full">
-                          <HiOutlineFolder size={20} className="text-[#5F6367]" />
+                          <HiOutlineFolder
+                            size={20}
+                            className="text-[#5F6367]"
+                          />
                           <div className="text-[13px] font-semibold truncate max-w-[70px]">
                             {folderName}
                           </div>
@@ -128,20 +134,99 @@ export const ArquivosView = (props: ReturnType<typeof useArquivos>) => {
               </div>
             ) : props.arquivos.length > 0 ? (
               <div className="flex gap-[12px] flex-wrap">
-                {props.arquivos.map((arquivo) => (
-                  <div
-                    key={arquivo.s3_key}
-                    className="w-[209px] h-[196px] border border-[#DADCE0] rounded-[6px] flex flex-col"
-                  >
-                    <div className="flex-1"></div>
-                    <div className="h-[40px] gap-[6px] flex items-center justify-start px-[12px]">
-                      <HiOutlineDocument size={20} className="text-[#5F6367]" />
-                      <div className="text-[12px] font-medium text-[#5F6367] truncate">
-                        {arquivo.file_name}
+                {props.arquivos.map((arquivo) => {
+                  const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
+                    arquivo.file_name
+                  )
+                  const isPdf = /\.pdf$/i.test(arquivo.file_name)
+
+                  return (
+                    <div
+                      key={arquivo.file_name}
+                      className="w-[209px] h-[196px] border border-[#DADCE0] rounded-[6px] flex flex-col overflow-hidden hover:shadow-md transition-shadow group cursor-pointer"
+                      onClick={() => window.open(arquivo.signed_url, '_blank')}
+                    >
+                      {/* Preview Area */}
+                      <div className="flex-1 bg-[#F8F9FA] flex items-center justify-center relative">
+                        {isImage ? (
+                          <img
+                            src={arquivo.signed_url}
+                            alt={arquivo.file_name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center gap-2">
+                            <HiOutlineDocument
+                              size={48}
+                              className="text-[#5F6367]"
+                            />
+                            <span className="text-[10px] text-[#979797] uppercase">
+                              {isPdf
+                                ? 'PDF'
+                                : arquivo.file_name.split('.').pop()}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Action buttons on hover */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <a
+                            href={arquivo.signed_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                            title="Visualizar"
+                          >
+                            <HiOutlineEye
+                              size={16}
+                              className="text-[#0F0A49]"
+                            />
+                          </a>
+                          <a
+                            href={arquivo.signed_url}
+                            download={arquivo.file_name}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                            title="Baixar"
+                          >
+                            <HiOutlineDownload
+                              size={16}
+                              className="text-[#0F0A49]"
+                            />
+                          </a>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              props.deleteArquivo(arquivo.file_name)
+                            }}
+                            className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-red-100 transition-colors"
+                            title="Deletar"
+                          >
+                            <HiOutlineTrash
+                              size={16}
+                              className="text-red-600"
+                            />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* File info */}
+                      <div className="h-[40px] gap-[6px] flex items-center justify-start px-[12px] bg-white border-t border-[#DADCE0]">
+                        <HiOutlineDocument
+                          size={16}
+                          className="text-[#5F6367]"
+                        />
+                        <div
+                          className="text-[11px] font-medium text-[#5F6367] truncate"
+                          title={arquivo.file_name}
+                        >
+                          {arquivo.file_name}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             ) : (
               <div className="text-[#979797] text-[14px]">

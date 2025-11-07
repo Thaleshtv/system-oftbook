@@ -63,7 +63,7 @@ export const ModalCreateFolder = ({
             onChange={(e) => setFolderName(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Nome da pasta"
-            className="w-full px-[16px] py-[10px] border border-[#D9D9D9] rounded-[12px] bg-[#FAFAFA] text-[14px] text-[#0B0B0B] leading-[20px] outline-none focus:border-[#1849D6]"
+            className="w-full px-[16px] py-[10px] border border-[#D9D9D9] rounded-[12px] bg-[#FAFAFA] text-[14px] text-[#0B0B0B] leading-[20px] outline-none focus:border-[#0F0A49]"
             autoFocus
             disabled={loading}
           />
@@ -83,10 +83,10 @@ export const ModalCreateFolder = ({
             type="button"
             onClick={handleConfirm}
             disabled={!folderName.trim() || loading}
-            className={`px-[12px] py-[6px] bg-[#1849D6] text-white text-[12px] font-semibold rounded-[8px] leading-[18px] flex items-center justify-center ${
+            className={`px-[12px] py-[6px] bg-[#0F0A49] text-white text-[12px] font-semibold rounded-[8px] leading-[18px] flex items-center justify-center ${
               !folderName.trim() || loading
                 ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-[#1849D6]/90'
+                : 'hover:bg-[#0F0A49]/90'
             }`}
           >
             {loading ? (

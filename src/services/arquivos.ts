@@ -15,11 +15,13 @@ export const Arquivos = {
   ): Promise<UploadDocumentResponse> => {
     const formData = new FormData()
     formData.append('file', file)
-    if (folder) {
-      formData.append('folder', folder)
-    }
 
+    const params = folder ? { folder } : {}
     const response = await api.post('/upload', formData, {
+      params,
+      paramsSerializer: {
+        encode: (value: string) => encodeURIComponent(value)
+      },
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -38,8 +40,17 @@ export const Arquivos = {
     return { status: response.status, data: response.data }
   },
 
-  deleteDocument: async (fileName: string): Promise<DeleteDocumentResponse> => {
-    const response = await api.delete(`/documents/${fileName}`)
+  deleteDocument: async (
+    fileName: string,
+    folder?: string
+  ): Promise<DeleteDocumentResponse> => {
+    const params = folder ? { folder } : {}
+    const response = await api.delete(`/documents/${fileName}`, {
+      params,
+      paramsSerializer: {
+        encode: (value: string) => encodeURIComponent(value)
+      }
+    })
     return { status: response.status, data: response.data }
   },
 

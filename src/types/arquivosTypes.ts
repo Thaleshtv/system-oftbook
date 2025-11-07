@@ -28,7 +28,8 @@ export interface UploadDocumentData {
 }
 
 export interface ListDocumentsData {
-  message: string
+  message?: string
+  documents?: Document[]
   data?: Document[]
 }
 

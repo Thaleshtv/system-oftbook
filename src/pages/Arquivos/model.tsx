@@ -48,9 +48,25 @@ export const useArquivos = () => {
       console.log('Documents API Response:', response)
       console.log('Documents response.data:', response.data)
 
-      if (response.status === 200 && response.data.data) {
-        console.log('Documents data.data:', response.data.data)
-        return response.data.data
+      if (response.status === 200 && response.data) {
+        // Se tem documents, usa ele
+        if (response.data.documents && Array.isArray(response.data.documents)) {
+          console.log(
+            'Documents data.documents is array:',
+            response.data.documents
+          )
+          return response.data.documents
+        }
+        // Se response.data é um array direto
+        if (Array.isArray(response.data)) {
+          console.log('Documents data is array:', response.data)
+          return response.data
+        }
+        // Se tem data
+        if (response.data.data && Array.isArray(response.data.data)) {
+          console.log('Documents data.data is array:', response.data.data)
+          return response.data.data
+        }
       }
       console.log('Returning empty array for documents')
       return []
@@ -58,8 +74,7 @@ export const useArquivos = () => {
     retry: 1
   })
 
-  const folders =
-    foldersData?.filter((item) => item.type === 'folder') || []
+  const folders = foldersData?.filter((item) => item.type === 'folder') || []
   const arquivos = documentsData || []
 
   console.log('Computed folders:', folders)
@@ -90,7 +105,8 @@ export const useArquivos = () => {
   })
 
   const deleteMutation = useMutation({
-    mutationFn: Arquivos.deleteDocument,
+    mutationFn: (fileName: string) =>
+      Arquivos.deleteDocument(fileName, currentPath || undefined),
     onSuccess: (response) => {
       if (response.status === 200) {
         setOpenToast('success', response.data.message)
@@ -99,7 +115,6 @@ export const useArquivos = () => {
       }
     },
     onError: (error: any) => {
-      console.error('Erro ao deletar arquivo:', error)
       const errorMessage =
         error?.response?.data?.message || 'Erro ao deletar arquivo'
       setOpenToast('error', errorMessage)
