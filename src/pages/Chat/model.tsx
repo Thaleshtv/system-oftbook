@@ -95,7 +95,12 @@ export const useChat = () => {
   })
 
   useEffect(() => {
-    console.log('History effect triggered, historyData:', historyData, 'currentChatId:', currentChatId)
+    console.log(
+      'History effect triggered, historyData:',
+      historyData,
+      'currentChatId:',
+      currentChatId
+    )
     if (historyData?.data && currentChatId) {
       try {
         console.log('Raw history data:', historyData.data)
@@ -112,7 +117,7 @@ export const useChat = () => {
         console.log('Parsed history:', parsedHistory)
         if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
           const loadedMessages: Message[] = []
-          
+
           parsedHistory.forEach((conversation: any, index: number) => {
             // Add user message
             if (conversation.user) {
@@ -120,24 +125,28 @@ export const useChat = () => {
                 id: `${currentChatId}-user-${index}`,
                 text: conversation.user,
                 sender: 'user',
-                timestamp: conversation.timestamp ? new Date(conversation.timestamp).getTime() : Date.now()
+                timestamp: conversation.timestamp
+                  ? new Date(conversation.timestamp).getTime()
+                  : Date.now()
               })
             }
-            
+
             // Add AI message
             if (conversation.ai) {
               loadedMessages.push({
                 id: `${currentChatId}-ai-${index}`,
                 text: conversation.ai,
                 sender: 'ai',
-                timestamp: conversation.timestamp ? new Date(conversation.timestamp).getTime() : Date.now()
+                timestamp: conversation.timestamp
+                  ? new Date(conversation.timestamp).getTime()
+                  : Date.now()
               })
             }
           })
-          
+
           // Sort messages by timestamp to maintain order
           loadedMessages.sort((a, b) => a.timestamp - b.timestamp)
-          
+
           console.log('Loaded messages:', loadedMessages)
           setMessages(loadedMessages)
         } else {
