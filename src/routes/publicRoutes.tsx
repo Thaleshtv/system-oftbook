@@ -32,6 +32,12 @@ const arquivosRoute = createRoute({
   component: Pages.Arquivos
 })
 
+const chatRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/chat',
+  component: Pages.Chat
+})
+
 const notFoundRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/not-found',
@@ -50,6 +56,7 @@ export const publicRoutes = [
   registerRoute,
   newPasswordRoute,
   arquivosRoute,
+  chatRoute,
   notFoundRoute,
   catchAllRoute
 ]

@@ -1,5 +1,6 @@
 import { LuFile } from 'react-icons/lu'
 import { IoLogOutOutline } from 'react-icons/io5'
+import { RiChatAiLine } from 'react-icons/ri'
 import { useRouter } from '@tanstack/react-router'
 import { useAuthStore } from '../../store/userStore'
 import { Auth } from '../../services/auth'
@@ -24,7 +25,14 @@ export default function Sidebar() {
     {
       name: 'Arquivos',
       icon: <LuFile size={20} />,
-      active: true
+      active: router.state.location.pathname === '/arquivos',
+      path: '/arquivos'
+    },
+    {
+      name: 'Chat',
+      icon: <RiChatAiLine size={20} />,
+      active: router.state.location.pathname === '/chat',
+      path: '/chat'
     }
   ]
 
@@ -48,9 +56,9 @@ export default function Sidebar() {
           <ul className="space-y-2">
             {navLinks.map((link) => (
               <li key={link.name}>
-                <a
-                  href="#"
-                  className={`flex items-center py-[12px] px-[12px] font-regular rounded-lg transition-colors duration-200 relative ${
+                <button
+                  onClick={() => router.navigate({ to: link.path })}
+                  className={`flex items-center py-[12px] px-[12px] font-regular rounded-lg transition-colors duration-200 relative w-full text-left ${
                     link.active
                       ? 'text-white '
                       : 'text-[#918F8F] hover:bg-gray-700 hover:text-white'
@@ -59,7 +67,7 @@ export default function Sidebar() {
                 >
                   <span className="mr-3">{link.icon}</span>
                   {link.name}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
