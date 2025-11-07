@@ -19,22 +19,25 @@ export const ChatView = (props: ReturnType<typeof useChat>) => {
   const sessoes = props.chatSessions.map((session) => ({
     id: session.id,
     nome: session.name,
+    arquivada: false, // All active chats are not archived
     ultimaMensagem: session.lastMessage,
     timestamp: session.lastMessageTime
   }))
+
+  // Find current session object
+  const currentSessao =
+    sessoes.find((s) => s.id === props.currentChatId) || null
 
   return (
     <ChatPageComponent
       topbarTitle="Chat"
       topbarIcon={<RiChatAiLine size={24} className="text-[#071176]" />}
       sessoes={sessoes}
-      pastas={[]}
-      currentSessao={props.currentChatId}
+      currentSessao={currentSessao}
       onSelectSessao={props.handleSelectSession}
       onCreateNewSessao={props.handleCreateNewSession}
       onDeleteSessao={props.handleDeleteSession}
-      onCreateNewPasta={() => {}}
-      isLoadingInitialData={props.isLoading}
+      isLoadingInitialData={props.isLoadingInitialData}
     >
       <div className="flex flex-col h-full">
         {/* Chat content area */}

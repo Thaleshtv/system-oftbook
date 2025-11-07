@@ -3,9 +3,19 @@ export interface QueryRequest {
   chat_id: string
 }
 
+export interface Reference {
+  file_name: string
+  page_number: number
+}
+
+export interface QueryResponseData {
+  answer: string
+  references: Reference[]
+}
+
 export interface QueryResponse {
   status: number
-  data: string
+  data: QueryResponseData
 }
 
 export interface ChatHistoryResponse {
@@ -20,7 +30,9 @@ export interface ClearHistoryResponse {
 
 export interface AllChatIdsResponse {
   status: number
-  data: string
+  data: {
+    chat_ids: string[]
+  }
 }
 
 export interface Message {
@@ -28,6 +40,7 @@ export interface Message {
   text: string
   sender: 'user' | 'ai'
   timestamp: number
+  references?: Reference[]
 }
 
 export interface ChatSession {

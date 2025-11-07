@@ -1,5 +1,4 @@
 import {
-  MdOutlineFolder,
   MdOutlineChat,
   MdOutlineAdd,
   MdOutlineLogout,
@@ -9,7 +8,7 @@ import {
 
 import { ReactNode, ReactElement } from 'react'
 import Logo from '../../assets/logo-ofbook.png'
-import { ISessaoResponse } from '../../services/sessoes'
+import { ISessaoResponse } from '../../services/sessoes.ts'
 import { SessionListSkeleton } from '../ui/skeleton'
 import { useAuthStore } from '../../store/userStore'
 
@@ -18,12 +17,10 @@ interface ChatPageComponentProps {
   topbarTitle: string
   topbarIcon: ReactElement
   sessoes?: ISessaoResponse[]
-  pastas?: string[]
   currentSessao?: ISessaoResponse | null
   onSelectSessao?: (sessaoId: string) => void
   onCreateNewSessao?: () => void
   onDeleteSessao?: (sessaoId: string) => void
-  onCreateNewPasta?: () => void
   onBack?: () => void
   isLoadingInitialData?: boolean
 }
@@ -33,12 +30,10 @@ export const ChatPageComponent = ({
   topbarTitle,
   topbarIcon,
   sessoes = [],
-  pastas = [],
   currentSessao,
   onSelectSessao,
   onCreateNewSessao,
   onDeleteSessao,
-  onCreateNewPasta,
   onBack,
   isLoadingInitialData = false
 }: ChatPageComponentProps) => {
@@ -77,39 +72,6 @@ export const ChatPageComponent = ({
 
           {/* Menu do Chat */}
           <div className="flex flex-col gap-6">
-            {/* Pastas */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-[14px] font-medium text-[#0A1B39]">
-                  Pastas
-                </h3>
-                <button
-                  onClick={onCreateNewPasta}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-gray-200 text-[#83899F]"
-                >
-                  <MdOutlineAdd size={16} />
-                </button>
-              </div>
-              <ul className="flex flex-col gap-2">
-                {pastas.length > 0 ? (
-                  pastas.map((pasta, index) => (
-                    <li key={index}>
-                      <div className="px-[16px] py-[8px] flex items-center gap-[10px] rounded-[12px] cursor-pointer text-[14px] hover:bg-gray-100 text-[#83899F]">
-                        <MdOutlineFolder size={18} />
-                        {pasta}
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <li>
-                    <div className="px-[16px] py-[8px] text-[12px] text-[#83899F] italic">
-                      Nenhuma pasta encontrada
-                    </div>
-                  </li>
-                )}
-              </ul>
-            </div>
-
             {/* Chats Ativos */}
             <div>
               <div className="flex items-center justify-between mb-3">

@@ -14,51 +14,143 @@ export const useChat = () => {
   const generateChatId = () => {
     return `chat-${Date.now()}-${Math.random().toString(36).substring(7)}`
   }
-  useEffect(() => {
-    const newChatId = generateChatId()
-    setCurrentChatId(newChatId)
-    const newSession: ChatSession = {
-      id: newChatId,
-      name: 'Nova Conversa'
-    }
-    setChatSessions([newSession])
-  }, [])
-
-  const { data: allChatIdsData } = useQuery({
+  const { data: allChatIdsData, isLoading: isLoadingInitialData } = useQuery({
     queryKey: ['chatIds'],
     queryFn: () => ChatService.getAllChatIds(),
-    enabled: false
+    enabled: true
   })
-  const { data: historyData, refetch: refetchHistory } = useQuery({
+
+  useEffect(() => {
+    console.log('useEffect triggered, allChatIdsData:', allChatIdsData)
+
+    if (allChatIdsData?.data?.chat_ids) {
+      try {
+        // The API returns an object with chat_ids property containing the array
+        const chatIds = allChatIdsData.data.chat_ids
+        console.log('Chat IDs from API:', chatIds)
+
+        if (Array.isArray(chatIds) && chatIds.length > 0) {
+          const sessions: ChatSession[] = chatIds.map(
+            (chatId: string, index: number) => ({
+              id: chatId,
+              name: `Chat ${index + 1}`
+            })
+          )
+          console.log('Generated sessions:', sessions)
+          setChatSessions(sessions)
+
+          // Set the first chat as current if no current chat is set
+          if (!currentChatId) {
+            console.log('Setting current chat ID to:', sessions[0].id)
+            setCurrentChatId(sessions[0].id)
+          }
+        } else {
+          console.log('No chat IDs found or invalid format')
+          // If no existing chats, create a new one only if we don't have sessions
+          if (chatSessions.length === 0) {
+            const newChatId = generateChatId()
+            setCurrentChatId(newChatId)
+            const newSession: ChatSession = {
+              id: newChatId,
+              name: 'Nova Conversa'
+            }
+            setChatSessions([newSession])
+          }
+        }
+      } catch (error) {
+        console.error('Error processing all chat IDs:', error)
+        // Fallback to creating a new chat only if we don't have sessions
+        if (chatSessions.length === 0) {
+          const newChatId = generateChatId()
+          setCurrentChatId(newChatId)
+          const newSession: ChatSession = {
+            id: newChatId,
+            name: 'Nova Conversa'
+          }
+          setChatSessions([newSession])
+        }
+      }
+    } else {
+      console.log(
+        'No allChatIdsData.data.chat_ids available, chatSessions.length:',
+        chatSessions.length
+      )
+      if (chatSessions.length === 0) {
+        // If no data, create a new chat only if we don't have sessions
+        const newChatId = generateChatId()
+        setCurrentChatId(newChatId)
+        const newSession: ChatSession = {
+          id: newChatId,
+          name: 'Nova Conversa'
+        }
+        setChatSessions([newSession])
+      }
+    }
+  }, [allChatIdsData])
+  const { data: historyData } = useQuery({
     queryKey: ['chatHistory', currentChatId],
     queryFn: () => ChatService.getHistory(currentChatId),
-    enabled: !!currentChatId && messages.length === 0,
+    enabled: !!currentChatId,
     retry: false
   })
 
   useEffect(() => {
-    if (historyData?.data) {
+    console.log('History effect triggered, historyData:', historyData, 'currentChatId:', currentChatId)
+    if (historyData?.data && currentChatId) {
       try {
-        const parsedHistory =
+        console.log('Raw history data:', historyData.data)
+        let parsedHistory =
           typeof historyData.data === 'string'
             ? JSON.parse(historyData.data)
             : historyData.data
 
+        // Check if the data has a 'history' property
+        if (parsedHistory && parsedHistory.history) {
+          parsedHistory = parsedHistory.history
+        }
+
+        console.log('Parsed history:', parsedHistory)
         if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
-          const loadedMessages: Message[] = parsedHistory.map(
-            (msg: any, index: number) => ({
-              id: `${currentChatId}-${index}`,
-              text: msg.content || msg.text || msg.message || '',
-              sender:
-                msg.role === 'user' || msg.sender === 'user' ? 'user' : 'ai',
-              timestamp: msg.timestamp || Date.now()
-            })
-          )
+          const loadedMessages: Message[] = []
+          
+          parsedHistory.forEach((conversation: any, index: number) => {
+            // Add user message
+            if (conversation.user) {
+              loadedMessages.push({
+                id: `${currentChatId}-user-${index}`,
+                text: conversation.user,
+                sender: 'user',
+                timestamp: conversation.timestamp ? new Date(conversation.timestamp).getTime() : Date.now()
+              })
+            }
+            
+            // Add AI message
+            if (conversation.ai) {
+              loadedMessages.push({
+                id: `${currentChatId}-ai-${index}`,
+                text: conversation.ai,
+                sender: 'ai',
+                timestamp: conversation.timestamp ? new Date(conversation.timestamp).getTime() : Date.now()
+              })
+            }
+          })
+          
+          // Sort messages by timestamp to maintain order
+          loadedMessages.sort((a, b) => a.timestamp - b.timestamp)
+          
+          console.log('Loaded messages:', loadedMessages)
           setMessages(loadedMessages)
+        } else {
+          console.log('No valid history found or empty array')
+          setMessages([])
         }
       } catch (error) {
         console.error('Error parsing chat history:', error)
+        setMessages([])
       }
+    } else if (currentChatId && !historyData?.data) {
+      console.log('No history data for chat, setting empty messages')
+      setMessages([])
     }
   }, [historyData, currentChatId])
 
@@ -68,9 +160,10 @@ export const useChat = () => {
     onSuccess: (response) => {
       const aiMessage: Message = {
         id: `ai-${Date.now()}`,
-        text: response.data,
+        text: response.data.answer,
         sender: 'ai',
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        references: response.data.references
       }
       setMessages((prev) => [...prev, aiMessage])
 
@@ -79,7 +172,7 @@ export const useChat = () => {
           session.id === currentChatId
             ? {
                 ...session,
-                lastMessage: response.data.substring(0, 50) + '...',
+                lastMessage: response.data.answer.substring(0, 50) + '...',
                 lastMessageTime: Date.now()
               }
             : session
@@ -142,12 +235,18 @@ export const useChat = () => {
     setChatSessions((prev) => [newSession, ...prev])
     setCurrentChatId(newChatId)
     setMessages([])
+
+    // Invalidate chat IDs query to refresh the list
+    queryClient.invalidateQueries({
+      queryKey: ['chatIds']
+    })
   }
 
   const handleSelectSession = (sessionId: string) => {
+    console.log('handleSelectSession called with:', sessionId)
     setCurrentChatId(sessionId)
     setMessages([])
-    refetchHistory()
+    console.log('About to refetch history for chat:', sessionId)
   }
 
   const handleDeleteSession = (sessionId: string) => {
@@ -174,6 +273,11 @@ export const useChat = () => {
 
       return filtered
     })
+
+    // Invalidate chat IDs query to refresh the list
+    queryClient.invalidateQueries({
+      queryKey: ['chatIds']
+    })
   }
 
   const handleClearCurrentChat = () => {
@@ -188,6 +292,7 @@ export const useChat = () => {
     currentChatId,
     chatSessions,
     isLoading: sendQueryMutation.isPending,
+    isLoadingInitialData,
     handleMessageChange,
     handleSendMessage,
     handleKeyPress,
